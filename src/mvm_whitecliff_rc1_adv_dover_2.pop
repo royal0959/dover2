@@ -4,6 +4,12 @@
 #base robot_standard.pop
 #base robot_giant.pop
 
+#base rotating_shield_whitecliff.pop
+
+#base whitecliff_of_dover_custom.pop
+#base whitecliff_of_dover_bots.pop
+#base whitecliff_of_dover_bot_logics.pop
+
 WaveSchedule
 {
     StartingCurrency 1500
@@ -27,6 +33,7 @@ WaveSchedule
 	CustomUpgradesFile mvm_upgrades_tomboy3.txt
 
 	LuaScriptFile "scripts/freelance_mercenary_logic.lua"
+	LuaScriptFile "scripts/dover2_custom_weapons.lua"
 	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua"
 
     CustomWeapon 
@@ -209,8 +216,8 @@ WaveSchedule
 		}
 		Demoman 
 		{
-			Secondary {Item "Parry Addiction"}
-			Melee {Item "Caber Buster"}
+			// Secondary {Item "Parry Addiction"}
+			// Melee {Item "Caber Buster"}
 		}
 		Engineer 
 		{
@@ -250,9 +257,73 @@ WaveSchedule
 		}
 	}
 
-
 	ExtendedUpgrades
 	{
+		drone_unstable
+		{
+			Name "Unstable Mod: Mothership Delta" 
+			Attribute "throwable damage" 
+			Description "Condenses drone count to 1 powerful drone"
+			Cap 1
+			Increment 1
+			Cost 0
+
+			AllowedWeapons 
+			{
+				ItemName "Drone Walker"
+			}
+		}
+
+		drone_stable
+		{
+			Name "Stable Mod: Engineering Limit" 
+			Attribute "throwable fire speed" 
+			Description "+1 max drone. Replaces Sentry with Mini-Sentry"
+			Cap 1
+			Increment 1
+			Cost 0
+
+			AllowedWeapons 
+			{
+				ItemName "Drone Walker"
+			}
+		}
+
+		dome_unstable
+		{
+			Name "Unstable Mod: Red Sun" 
+			Attribute "throwable damage" 
+			Description "A single shield infront of you that does not rotate. -150 max health"
+			Cap 1
+			Increment 1
+			Cost 0
+
+			SecondaryAttributes
+			{
+				"max health additive penalty" -150
+			}
+
+			AllowedWeapons 
+			{
+				ItemName "Thunderdome"
+			}
+		}
+
+		dome_stable
+		{
+			Name "Stable Mod: Communist Block" 
+			Attribute "throwable fire speed" 
+			Description "A single shield behind you that does not rotate"
+			Cap 1
+			Increment 1
+			Cost 0
+
+			AllowedWeapons 
+			{
+				ItemName "Thunderdome"
+			}
+		}
+
 		redeemer_dmg
 		{
 			Name "+25% damage bonus" 
