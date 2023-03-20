@@ -6,9 +6,7 @@
 
 #base rotating_shield_whitecliff.pop
 
-#base whitecliff_of_dover_custom.pop
-#base whitecliff_of_dover_bots.pop
-#base whitecliff_of_dover_bot_logics.pop
+#base dover2_custom.pop
 
 WaveSchedule
 {
@@ -18,6 +16,7 @@ WaveSchedule
     AddSentryBusterWhenDamageDealtExceeds 3000
     AddSentryBusterWhenKillCountExceeds 15
 
+	PrecacheModel "models/props_mvm/mvm_comically_small_player_shield.mdl"
     PrecacheModel "models/bots/demo/red_sentry_buster.mdl"
 	PrecacheModel "models/rcat/rcat_level2.mdl"
 	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
