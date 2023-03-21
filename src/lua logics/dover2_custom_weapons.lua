@@ -765,11 +765,116 @@ function PHDUnequip(activator, handle)
 	ClearTimers("PHD", activator, handle)
 end
 
+local function weaponMimic(properties, positional)
+	local mimic = ents.CreateWithKeys("tf_point_weapon_mimic", properties)
+	mimic:SetAbsOrigin(positional.Origin)
+	mimic:SetAbsAngles(positional.Angles)
+
+	return mimic
+end
+
+local function getEyeAngles(player)
+	local pitch = player["m_angEyeAngles[0]"]
+	local yaw = player["m_angEyeAngles[1]"]
+
+	return Vector(pitch, yaw, 0)
+end
+
 -- explosive arrow
+local function spawnArrowTip(owner, arrowOrigin, attachEnt)
+	local detonatePosition = Entity("info_target")
+	local detonatePositionName = "detonatePosition"..tostring(detonatePosition:GetHandleIndex())
+	detonatePosition:SetName(detonatePositionName)
+	detonatePosition:SetAbsOrigin(arrowOrigin)
+
+	local flickerParticle = owner.m_iTeamNum == 2 and "stickybomb_pulse_red" or "stickybomb_pulse_blue"
+	local flicker = ents.CreateWithKeys("info_particle_system", {
+		effect_name = flickerParticle,
+		start_active = 0,
+		flag_as_weather = 0,
+	}, true, true)
+	flicker:SetAbsOrigin(arrowOrigin)
+	flicker:SetFakeParent(detonatePosition)
+
+
+	local sound = ents.CreateWithKeys("ambient_generic", {
+		message = "weapons/stickybomblauncher_det.wav",
+		radius = 4000,
+		health = 5,
+		spawnflags = 48,
+	})
+	sound:SetAbsOrigin(arrowOrigin)
+	sound:SetFakeParent(detonatePosition)
+
+	timer.Simple(1, function ()
+		flicker:Start()
+		sound:PlaySound()
+
+		timer.Simple(1, function ()
+			if IsValid(flicker) then
+				flicker:Remove()
+			end
+			if IsValid(sound) then
+				sound:Remove()
+			end
+		end)
+	end)
+
+	local damageMult = owner:GetPlayerItemBySlot(LOADOUT_POSITION_PRIMARY):GetAttributeValueByClass("mult_dmg", 1)
+
+	local mimic = weaponMimic({
+		TeamNum = owner.m_iTeamNum,
+		WeaponType = 3,
+
+		SpeedMax = 0,
+		SpeedMin = 0,
+
+		spawnflags = 3,
+		SplashRadius = 144,
+		Damage = 100 * damageMult,
+	},
+	{
+		Origin = owner:GetAbsOrigin() + Vector(0, 0, 50),
+		Angles = getEyeAngles(owner),
+	})
+
+	mimic["$SetOwner"](mimic, owner)
+
+	mimic:SetAbsOrigin(arrowOrigin)
+	mimic:SetFakeParent(detonatePosition)
+
+	timer.Simple(2, function()
+		mimic:FireOnce()
+		timer.Simple(0.015, function()
+			mimic:DetonateStickies()
+		end)
+		timer.Simple(1, function()
+			mimic:Remove()
+		end)
+	end)
+
+	for _, ent in pairs({mimic, flicker, sound}) do
+		local entName = "detonateComponent"..tostring(ent:GetHandleIndex())
+		ent:SetName(entName)
+	end
+
+	if attachEnt then
+		detonatePosition:SetFakeParent(attachEnt)
+	end
+
+	timer.Simple(5, function ()
+		detonatePosition:Remove()
+	end)
+end
+
 ents.AddCreateCallback("tf_projectile_arrow", function(arrow)
     timer.Simple(0, function()
 		local owner = arrow.m_hOwnerEntity
         local primary = owner:GetPlayerItemBySlot(LOADOUT_POSITION_PRIMARY)
+
+		if classIndices_Internal[owner.m_iClass] ~= "Sniper" then
+			return
+		end
 
         if not primary:GetAttributeValue("throwable damage") then
             return
@@ -777,12 +882,30 @@ ents.AddCreateCallback("tf_projectile_arrow", function(arrow)
 
         print("explosive arrow fired")
 
+		local collided = false
+
         arrow:AddCallback(ON_TOUCH, function(_, other)
             if not other:IsPlayer() and not other:IsNPC() then
                 return
             end
 
+			collided = true
+
             print("collided with attachable entity")
+			local origin = arrow:GetAbsOrigin()
+			spawnArrowTip(owner, origin, other)
+            -- todo
+        end)
+
+        arrow:AddCallback(ON_REMOVE, function()
+			if collided then
+				return
+			end
+
+            print("collided with surface")
+			local origin = arrow:GetAbsOrigin()
+			spawnArrowTip(owner, origin)
+
             -- todo
         end)
     end)

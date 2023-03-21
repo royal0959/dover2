@@ -153,7 +153,7 @@ WaveSchedule
 
 			"special item description" "Fires controlled drones that follow your cursor. Only 2 drones can be active at a time"
 			"special item description 2" "Press alt-fire to toggle stationary state on active drones"
-			"special item description 3" "With gunslinger equipped: +1 max drone and always crit"
+			// "special item description 3" "With gunslinger equipped: +1 max drone and always crit"
 		}
 
 		"No Mercy"
@@ -167,6 +167,14 @@ WaveSchedule
 			"special item description" "Increased gravity and air control on wearer"
 			"special item description 2" "Hold DUCK to rapidly descend"
 			"special item description 3" "Wearer never takes falling damage"
+		}
+
+		"Explosive Touch"
+		{
+			OriginalItemName "The Fortified Compound"
+
+			"throwable damage" 1 // mark to fire explosive tip
+			"arrow hit kill time" 0.1
 		}
 
 		"Seducer"
@@ -228,11 +236,10 @@ WaveSchedule
 		}
 		Sniper
 		{
-			// Primary {Item "Scavenger"}
+			Primary {Item "Explosive Touch"}
 		}
 		Spy 
 		{
-			// PDA2 {Item "Kirin's Ascension"}
 			Secondary {Item "Seducer"}
 		}
 
