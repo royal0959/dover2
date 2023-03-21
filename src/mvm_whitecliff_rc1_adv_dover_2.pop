@@ -173,7 +173,7 @@ WaveSchedule
 		{
 			OriginalItemName "The Fortified Compound"
 
-			"throwable damage" 1 // mark to fire explosive tip
+			"throwable healing" 1 // mark to fire explosive tip
 			"arrow hit kill time" 0.1
 			"special item description" "Fires explosive tipped arrows that sticks to enemies and detonate after 2 seconds"
 		}
@@ -245,6 +245,13 @@ WaveSchedule
 		}
 
 		Action {Item "Freelance Mercenary"}
+	}
+
+	DisallowUpgrade
+	{
+		Upgrade	"projectile penetration" 
+		MaxLevel 0
+		ItemName "Explosive Touch"
 	}
 
 	DisallowUpgrade
@@ -374,6 +381,59 @@ WaveSchedule
 			OnDowngrade
 			{
 				Output "popscript,$ThunderdomeRefresh,,0"
+			}
+			Tier 1
+		}
+
+		ET_unstable
+		{
+			// suggested by colonel
+			Name "Unstable Mod: Trailblazer" 
+			Attribute "throwable damage" 
+			Description "Arrow pierce enemies and leave an explosion on each enemy hit. -50% arrow damage"
+			Cap 1
+			Increment 1
+			Cost 0
+			
+			SecondaryAttributes
+			{
+				"damage penalty" -0.5
+			}
+
+			AllowedWeapons 
+			{
+				ItemName "Explosive Touch"
+			}
+
+			OnApply
+			{
+				Output "!activator,$AddItemAttribute,projectile penetration|1|0,0"
+			}
+			OnDowngrade
+			{
+				Output "!activator,$AddItemAttribute,projectile penetration|1|0,0"
+			}
+			Tier 1
+		}
+
+		ET_stable
+		{
+			Name "Stable Mod: Arrow Jumpman" 
+			Attribute "rocket jump damage reduction" 
+			Description "No damage from self arrow explosion and fall damage. -10% fire rate"
+			Cap 0
+			Increment -1
+			Cost 0
+			
+			SecondaryAttributes
+			{
+				"fire rate penalty" 0.1
+				"cancel falling damage" 1
+			}
+
+			AllowedWeapons 
+			{
+				ItemName "Explosive Touch"
 			}
 			Tier 1
 		}

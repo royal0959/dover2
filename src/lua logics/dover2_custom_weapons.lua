@@ -801,6 +801,7 @@ function ThunderdomeEquipped(_, activator)
 			maxspeed = 60,
 			spawnflags = spawnflags,
 			volume = 0,
+			solid = 0,
 		})
 
 		rotate:SetName(namePrefix..tostring(rotate:GetHandleIndex()))
@@ -817,10 +818,10 @@ function ThunderdomeEquipped(_, activator)
 		local shieldAngles = i == 1 and Vector(0, 0, 0) or Vector(-180, 0, -180)
 
 		if hasRedSun then
-			shieldOffset = Vector(100, 0, 0)
+			shieldOffset = Vector(60, 0, 0)
 			shieldAngles = Vector(0, 0, 0)
 		elseif hasCommunist then
-			shieldOffset = Vector(-100, 0, 0)
+			shieldOffset = Vector(-30, 0, 0)
 			shieldAngles = Vector(-180, 0, -180)
 		end
 
@@ -896,7 +897,7 @@ local function spawnArrowTip(owner, arrowOrigin, attachEnt)
 		end)
 	end)
 
-	local damageMult = owner:GetPlayerItemBySlot(LOADOUT_POSITION_PRIMARY):GetAttributeValueByClass("mult_dmg", 1)
+	local damageMult = owner:GetPlayerItemBySlot(LOADOUT_POSITION_PRIMARY):GetAttributeValue("damage bonus") or 1
 
 	local mimic = weaponMimic({
 		TeamNum = owner.m_iTeamNum,
@@ -954,20 +955,31 @@ ents.AddCreateCallback("tf_projectile_arrow", function(arrow)
 			return
 		end
 
-        if not primary:GetAttributeValue("throwable damage") then
+        if not primary:GetAttributeValue("throwable healing") then
             return
         end
+
+		local shouldPenetrate = primary:GetAttributeValue("projectile penetration")
 
         -- print("explosive arrow fired")
 
 		local collided = false
+		local touchedEnts = {}
 
         arrow:AddCallback(ON_TOUCH, function(_, other)
+			if touchedEnts[other:GetHandleIndex()] then
+				return
+			end
+
             if not other:IsPlayer() and not other:IsNPC() and other.m_iClassname ~= "entity_medigun_shield" then
                 return
             end
 
-			collided = true
+			if not shouldPenetrate then
+				collided = true
+			end
+
+			touchedEnts[other:GetHandleIndex()] = true
 
             -- print("collided with attachable entity")
 			local origin = arrow:GetAbsOrigin()
