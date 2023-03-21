@@ -262,7 +262,7 @@ WaveSchedule
 		{
 			Name "Unstable Mod: Mothership Delta" 
 			Attribute "throwable damage" 
-			Description "Condenses drone count to 1 powerful drone"
+			Description "A single powerful drone. Decreases sentry damage"
 			Cap 1
 			Increment 1
 			Cost 0
@@ -271,6 +271,20 @@ WaveSchedule
 			{
 				ItemName "Drone Walker"
 			}
+			SecondaryAttributes
+			{
+				"Projectile speed decreased" -0.75
+				"engy sentry damage bonus" -0.7
+			}
+			OnApply
+			{
+				Output "popscript,$UpdateDroneCap,,0"
+			}
+			OnDowngrade
+			{
+				Output "popscript,$UpdateDroneCap,,0"
+			}
+			Tier 1
 		}
 
 		drone_stable
@@ -278,7 +292,7 @@ WaveSchedule
 			Name "Stable Mod: Engineering Limit" 
 			Attribute "throwable fire speed" 
 			Description "+1 max drone. Replaces Sentry with Mini-Sentry"
-			Cap 1
+			Cap 2
 			Increment 1
 			Cost 0
 
@@ -286,6 +300,19 @@ WaveSchedule
 			{
 				ItemName "Drone Walker"
 			}
+			// SecondaryAttributes
+			// {
+			// 	"mod wrench builds minisentry" 1
+			// }
+			OnApply
+			{
+				Output "popscript,$UpdateDroneCap,,0"
+			}
+			OnDowngrade
+			{
+				Output "popscript,$UpdateDroneCap,,0"
+			}
+			Tier 1
 		}
 
 		dome_unstable
@@ -306,6 +333,7 @@ WaveSchedule
 			{
 				ItemName "Thunderdome"
 			}
+			Tier 1
 		}
 
 		dome_stable
@@ -313,7 +341,7 @@ WaveSchedule
 			Name "Stable Mod: Communist Block" 
 			Attribute "throwable fire speed" 
 			Description "A single shield behind you that does not rotate"
-			Cap 1
+			Cap 2
 			Increment 1
 			Cost 0
 
@@ -321,6 +349,7 @@ WaveSchedule
 			{
 				ItemName "Thunderdome"
 			}
+			Tier 1
 		}
 
 		redeemer_dmg
@@ -390,6 +419,103 @@ WaveSchedule
 		}
     }
 
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name FreelanceMercenary_Logic
+		ItemName "Freelance Mercenary"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name PHD_Equip
+		ItemName "PHD Jumper"
+	}
+
+	BuildingSpawnTemplate
+	{
+		Name Building_Level2_Spawn
+		BuildingType "Sentry" 
+	}
+
+	BuildingSpawnTemplate
+	{
+		Name Building_Level2_Spawn
+		BuildingType "Dispenser" 
+	}
+	BuildingSpawnTemplate
+	{
+		Name Building_Level2_Spawn
+		BuildingType "Teleporter Entry" 
+	}
+	BuildingSpawnTemplate
+	{
+		Name Building_Level2_Spawn
+		BuildingType "Teleporter Exit" 
+	}
+	
+	PlayerShootTemplate
+	{
+		Name DroneWalker_Shoot
+		ItemName "Drone Walker"
+		AttachToProjectile 1
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name DroneWalker_Equip
+		ItemName "Drone Walker"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name Redeemer_Spawn
+		ItemName "Biker's Redeemer"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name HolyDiver_Spawn
+		ItemName "Holy Diver"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name Thunderdome_Spawn
+		ItemName "Thunderdome"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name ParryAddiction_Spawn
+		ItemName "Parry Addiction"
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name Caber_Buster
+		ItemName "Caber Buster" 
+	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name NoMercy_Spawn
+		ItemName "No Mercy"
+	}
+
+	PlayerSpawnTemplate 
+	{
+		Name Gravity_FailSafe
+	}
+
+	// PlayerShootTemplate
+	// {
+	// 	Name Explosive_Tip_Scavenger
+	// 	ItemName "Scavenger"
+	// 	AttachToProjectile 1
+	// }
+
+	SpawnTemplate Global_Filters
+
     //Mission bots
 	Mission
 	{
@@ -418,5 +544,46 @@ WaveSchedule
             Target wave_finished_relay
             Action Trigger
         }
+
+		
+		WaveSpawn
+		{
+			Name "1_banner_bison"
+			Where flankers
+			TotalCount 20
+			MaxActive 20
+			SpawnCount 5
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+		
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					Attributes AlwaysCrit
+				}
+			}
+		}
     }
 }

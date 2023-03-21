@@ -427,6 +427,23 @@ function DroneFired(sentryName, projectile)
 		sentryEnt.m_hBuilder = owner
 	end)
 
+	local firerateUpgrade = owner:GetPlayerItemBySlot(LOADOUT_POSITION_PDA):GetAttributeValue("engy sentry fire rate increased") or 1
+
+	local primary = owner:GetPlayerItemBySlot(0)
+	local mothershipUpgrade = primary:GetAttributeValue("throwable damage")
+
+	if mothershipUpgrade then
+		sentryEnt.m_flModelScale = 2.5
+		timer.Simple(0.1, function()
+			sentryEnt:SetHealth(250)
+		end)
+		sentryEnt["$attributeoverride"] = 1
+		sentryEnt["$damagemult"] = 0.8
+		sentryEnt["$fireratemult"] = firerateUpgrade + 1
+		-- sentryEnt["$rangemult"] = 0.5
+		sentryEnt["$bulletweapon"] = "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+	end
+
 	local ownerHandle = owner:GetHandleIndex()
 
 	local dronesData = weaponsData.Drone[ownerHandle]
@@ -458,6 +475,42 @@ function DroneFired(sentryName, projectile)
 	end)
 end
 
+function UpdateDroneCap(_, activator)
+	local handle = activator:GetHandleIndex()
+
+	local dronesData = weaponsData.Drone[handle]
+
+	-- remove any existing drones
+	for _, id in pairs(dronesData.DronesStationaryIds) do
+		timer.Stop(id)
+	end
+
+	for _, projectile in pairs(dronesData.DronesList) do
+		projectile:Remove()
+	end
+
+	local droneCount = DRONES_CAP
+
+	local primary = activator:GetPlayerItemBySlot(0)
+	local mothershipUpgrade = primary:GetAttributeValue("throwable damage")
+	local droneCountUpgrade = primary:GetAttributeValue("throwable fire speed")
+
+	if mothershipUpgrade then
+		droneCount = 1
+	elseif droneCountUpgrade then
+		droneCount = droneCount + 1
+	end
+
+	local melee = activator:GetPlayerItemBySlot(LOADOUT_POSITION_MELEE)
+	if droneCountUpgrade then
+		melee:SetAttributeValue("mod wrench builds minisentry", 1)
+	else
+		melee:SetAttributeValue("mod wrench builds minisentry", nil)
+	end
+
+	dronesData.DronesCap = droneCount
+end
+
 local notificationsShown = {}
 
 function DroneWalkerEquip(_, activator)
@@ -478,18 +531,16 @@ function DroneWalkerEquip(_, activator)
 		activator["$DisplayTextCenter"](activator, "Press alt-fire to make drones stationary")
 	end
 
-	local meleeWeapon = activator:GetPlayerItemBySlot(2)
-	local gunslingerEquipped = meleeWeapon.m_iClassname == "tf_weapon_robot_arm"
+	-- local meleeWeapon = activator:GetPlayerItemBySlot(2)
+	-- local gunslingerEquipped = meleeWeapon.m_iClassname == "tf_weapon_robot_arm"
 
-	local primary = activator:GetPlayerItemBySlot(0)
-
-	if gunslingerEquipped then
-		primary:SetAttributeValue("always crit", 1)
-		-- primary:SetAttributeValue("engy sentry damage bonus", 1.25)
-	else
-		primary:SetAttributeValue("always crit", nil)
-		-- primary:SetAttributeValue("engy sentry damage bonus", nil)
-	end
+	-- if gunslingerEquipped then
+	-- 	primary:SetAttributeValue("always crit", 1)
+	-- 	-- primary:SetAttributeValue("engy sentry damage bonus", 1.25)
+	-- else
+	-- 	primary:SetAttributeValue("always crit", nil)
+	-- 	-- primary:SetAttributeValue("engy sentry damage bonus", nil)
+	-- end
 
 	callbacks.Drone[handle] = {}
 	weaponsData.Drone[handle] = {
@@ -497,10 +548,13 @@ function DroneWalkerEquip(_, activator)
 
 		DronesStationaryIds = {},
 
-		DronesCap = not gunslingerEquipped and DRONES_CAP or DRONES_CAP + 1,
+		-- DronesCap = not gunslingerEquipped and DRONES_CAP or DRONES_CAP + 1,
+		DronesCap = DRONES_CAP,
 
-		Buffed = gunslingerEquipped,
+		-- Buffed = gunslingerEquipped,
 	}
+
+	UpdateDroneCap(_, activator)
 
 	local droneCallbacks = callbacks.Drone[handle]
 	local dronesData = weaponsData.Drone[handle]
