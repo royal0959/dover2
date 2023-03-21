@@ -859,6 +859,8 @@ local function spawnArrowTip(owner, arrowOrigin, attachEnt)
 	end
 
 	if attachEnt then
+		local offset = arrowOrigin - attachEnt:GetAbsOrigin()
+		detonatePosition["$fakeparentoffset"] = offset
 		detonatePosition:SetFakeParent(attachEnt)
 	end
 
@@ -880,21 +882,20 @@ ents.AddCreateCallback("tf_projectile_arrow", function(arrow)
             return
         end
 
-        print("explosive arrow fired")
+        -- print("explosive arrow fired")
 
 		local collided = false
 
         arrow:AddCallback(ON_TOUCH, function(_, other)
-            if not other:IsPlayer() and not other:IsNPC() then
+            if not other:IsPlayer() and not other:IsNPC() and other.m_iClassname ~= "entity_medigun_shield" then
                 return
             end
 
 			collided = true
 
-            print("collided with attachable entity")
+            -- print("collided with attachable entity")
 			local origin = arrow:GetAbsOrigin()
 			spawnArrowTip(owner, origin, other)
-            -- todo
         end)
 
         arrow:AddCallback(ON_REMOVE, function()
@@ -902,11 +903,9 @@ ents.AddCreateCallback("tf_projectile_arrow", function(arrow)
 				return
 			end
 
-            print("collided with surface")
+            -- print("collided with surface")
 			local origin = arrow:GetAbsOrigin()
 			spawnArrowTip(owner, origin)
-
-            -- todo
         end)
     end)
 end)
