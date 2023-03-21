@@ -1,0 +1,97 @@
+WaveSchedule
+{
+	PointTemplates
+	{
+		Ambulance_Tank
+		{
+			OnSpawnOutput 
+			{
+				Target "!activator"
+				Action "AddOutput"
+				Param "OnHealthBelow40Percent junior:SetAnimation:panic:0:-1"
+			}
+
+			OnSpawnOutput 
+			{
+				Target "ambulance_support"
+				Action "Enable"
+			}
+
+			OnParentKilledOutput
+			{
+				Target "ambulance_support"
+				Action "Disable"
+			}
+
+			prop_dynamic
+			{
+				"targetname" "ambulance"
+				"spawnflags" "0"
+				"solid" "0"
+				"rendercolor" "255 255 255"
+				"renderamt" "255"
+				"RandomAnimation" "0"
+				"pressuredelay" "0"
+				"physdamagescale" "1.0"
+				"PerformanceMode" "0"
+				"model" "models/workshop/player/items/medic/taunt_the_mannbulance/taunt_the_mannbulance.mdl"
+				"body" "0"
+
+				"origin" "20 0 0"
+				"angles" "0 0 0"
+
+				"modelscale" "3"
+				"skin" "1"
+			}
+
+			prop_dynamic
+			{
+				"targetname" "junior"
+				"spawnflags" "0"
+				"solid" "0"
+				"rendercolor" "255 255 255"
+				"renderamt" "255"
+				"RandomAnimation" "0"
+				"pressuredelay" "0"
+				"physdamagescale" "1.0"
+				"PerformanceMode" "0"
+				"model" "models/bots/bot_worker/bot_worker.mdl"
+				"body" "0"
+
+				"origin" "35 0 45"
+				"angles" "0 0 0"
+
+				"DefaultAnim" "idle"
+				"skin" "1"
+			}
+
+			dispenser_touch_trigger
+			{
+				"targetname" "cart_dispenser_trigger"
+				"mins" "-600 -600 -600"
+				"maxs" "600 600 600"
+				"spawnflags" "1"
+			}
+			
+			mapobj_cart_dispenser
+			{
+				"targetname" "cart_dispenser"
+				"origin" "-80 -20 100"
+				"spawnflags" "10"
+				"TeamNum" "3"
+				"touch_trigger" "cart_dispenser_trigger"
+			}
+		}
+
+		// bosses
+
+		ColDroneman
+		{
+			OnSpawnOutput
+			{
+				Target "popscript"
+				Action "$ColDronemanSpawn"
+			}
+		}
+    }
+}

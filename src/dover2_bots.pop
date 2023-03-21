@@ -1,0 +1,93 @@
+WaveSchedule
+{
+	Templates
+	{
+		MobberBot
+		{
+			Action Mobber 
+
+			CharacterAttributes
+			{
+				"cannot pick up intelligence" 1
+			}
+		}
+
+        Ambulance 
+		{
+			SpawnTemplate Ambulance_Tank
+			ClassIcon tank_regen
+
+			Model "models/empty.mdl" 
+
+			DisableSmokestack 1  
+			TriggerDestroyBuildingFix 1
+			DisableTracks 1  
+			DisableChildModels 1  
+			PingSound "misc/null.wav"
+			EngineLoopSound "misc/null.wav"
+		}
+
+        FollowAmbulance
+		{
+			Action Mobber
+            CharacterAttributes
+			{
+				"cannot pick up intelligence" 1
+			}
+			InterruptAction 
+			{
+				Target "ambulancetank" 
+
+				Delay 0.1
+				Duration 9999999
+				WaitUntilDone 1 
+			}
+		}
+
+		T_TFBot_Soldier_Bison
+		{
+			Name "Bison Soldier"
+
+			Class Soldier
+			ClassIcon soldier_bison
+
+			Skill Normal
+			WeaponRestrictions SecondaryOnly
+			Item "The Righteous Bison"
+		}
+
+        // bosses
+        T_TFBot_Col_Droneman
+        {
+            SpawnTemplate "ColDroneman"
+            Name "Colonel Droneman"
+
+			Class Engineer
+			Health 15000
+
+			Skill Expert
+			WeaponRestrictions SecondaryOnly
+			Item "Dustbowl Devil"
+            Item "The Wrangler"
+			
+			Attributes MiniBoss
+			Attributes AlwaysFireWeapon
+            Attributes UseBossHealthBar
+
+			Action FetchFlag
+
+			ItemAttributes
+			{
+				ItemName "The Frontier Justice"
+			}
+
+			CharacterAttributes
+			{
+				"move speed bonus" 0.5
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 4
+			}
+        }
+    }
+}

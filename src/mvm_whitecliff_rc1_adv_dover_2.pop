@@ -3,10 +3,12 @@
 
 #base robot_standard.pop
 #base robot_giant.pop
+#base dover2_bots.pop
 
 #base rotating_shield_whitecliff.pop
 
 #base dover2_custom.pop
+#base dover2_bot_logic.pop
 
 WaveSchedule
 {
@@ -33,6 +35,7 @@ WaveSchedule
 
 	LuaScriptFile "scripts/freelance_mercenary_logic.lua"
 	LuaScriptFile "scripts/dover2_custom_weapons.lua"
+	LuaScriptFile "scripts/dover2_bosses.lua"
 	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua"
 
     CustomWeapon 
@@ -634,41 +637,17 @@ WaveSchedule
 		
 		WaveSpawn
 		{
-			Name "1_banner_bison"
-			Where flankers
+			Name "1_col_droneman"
+			Where spawnbot
 			TotalCount 20
-			MaxActive 20
-			SpawnCount 5
-			WaitBeforeStarting 1
-			WaitBetweenSpawns 8
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
 			TotalCurrency 50
-		
-			Squad 
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Soldier_Extended_Concheror
-				}
-				TFBot
-				{
-					Template T_TFBot_Soldier_Bison
-					Attributes AlwaysCrit
-				}
-				TFBot
-				{
-					Template T_TFBot_Soldier_Bison
-					Attributes AlwaysCrit
-				}
-				TFBot
-				{
-					Template T_TFBot_Soldier_Bison
-					Attributes AlwaysCrit
-				}
-				TFBot
-				{
-					Template T_TFBot_Soldier_Bison
-					Attributes AlwaysCrit
-				}
+				Template T_TFBot_Col_Droneman
 			}
 		}
     }
