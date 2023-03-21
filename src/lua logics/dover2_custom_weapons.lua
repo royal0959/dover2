@@ -780,6 +780,82 @@ local function getEyeAngles(player)
 	return Vector(pitch, yaw, 0)
 end
 
+-- thunderdome
+function ThunderdomeEquipped(_, activator)
+	local hasRedSun = activator:GetPlayerItemBySlot(LOADOUT_POSITION_PRIMARY):GetAttributeValue("throwable damage")
+	local hasCommunist = activator:GetPlayerItemBySlot(LOADOUT_POSITION_PRIMARY):GetAttributeValue("throwable fire speed")
+
+	local spawnflags = 65
+	if hasRedSun or hasCommunist then
+		spawnflags = 64
+	end
+
+	local namePrefix = "thunderdome"..tostring(activator:GetHandleIndex())
+
+	for i = 1, 2 do
+		local rotate = ents.CreateWithKeys("func_rotating", {
+			mins = Vector(-0.1, -0.1, -0.1),
+			maxs = Vector(0.1, 0.1, 0.1),
+			dmg = 0,
+			fanfriction = 100,
+			maxspeed = 60,
+			spawnflags = spawnflags,
+			volume = 0,
+		})
+
+		rotate:SetName(namePrefix..tostring(rotate:GetHandleIndex()))
+		if not hasCommunist and not hasRedSun then
+			rotate["$positiononly"] = 1
+		end
+		rotate:SetFakeParent(activator)
+
+		if (hasRedSun or hasCommunist) and i == 2 then
+			break
+		end
+
+		local shieldOffset = i == 1 and Vector(100, 0, 0) or Vector(-100, 0, 0)
+		local shieldAngles = i == 1 and Vector(0, 0, 0) or Vector(-180, 0, -180)
+
+		if hasRedSun then
+			shieldOffset = Vector(100, 0, 0)
+			shieldAngles = Vector(0, 0, 0)
+		elseif hasCommunist then
+			shieldOffset = Vector(-100, 0, 0)
+			shieldAngles = Vector(-180, 0, -180)
+		end
+
+		local shield = ents.CreateWithKeys("entity_medigun_shield", {
+			angles = shieldAngles,
+			spawnflags = 1,
+			teamnum = activator.m_iTeamNum,
+		}, true, true)
+
+
+		shield["$fakeparentoffset"] = shieldOffset
+		shield["$fakeparentrotation"] = shieldAngles
+
+		shield:SetModel("models/props_mvm/mvm_comically_small_player_shield.mdl")
+		shield:SetFakeParent(rotate)
+		local shieldName = namePrefix..tostring(shield:GetHandleIndex().."Shield")
+		shield:SetName(shieldName)
+
+		RegisterShieldThunderdome(shieldName, activator)
+	end
+end
+
+function ThunderdomeUnequipped(_, activator)
+	local namePrefix = "thunderdome"..tostring(activator:GetHandleIndex())
+
+	for _, ent in pairs(ents.FindAllByName(namePrefix.."*")) do
+		ent:Remove()
+	end
+end
+
+function ThunderdomeRefresh(_, activator)
+	ThunderdomeUnequipped(nil, activator)
+	ThunderdomeEquipped(nil, activator)
+end
+
 -- explosive arrow
 local function spawnArrowTip(owner, arrowOrigin, attachEnt)
 	local detonatePosition = Entity("info_target")

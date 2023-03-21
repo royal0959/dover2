@@ -119,7 +119,7 @@ WaveSchedule
 
 			"hidden primary max ammo bonus" 0.0001
 			"move speed bonus" 1.5
-			"cannot be upgraded" 1
+			// "cannot be upgraded" 1
 			"special item description" "Create 2 small projectile shields that orbit around you and damage enemies"
 			"special item description 2" "Increased damage for secondary and melee"
 			"special item description 3" "No primary weapon"
@@ -175,6 +175,7 @@ WaveSchedule
 
 			"throwable damage" 1 // mark to fire explosive tip
 			"arrow hit kill time" 0.1
+			"special item description" "Fires explosive tipped arrows that sticks to enemies and detonate after 2 seconds"
 		}
 
 		"Seducer"
@@ -326,19 +327,28 @@ WaveSchedule
 		{
 			Name "Unstable Mod: Red Sun" 
 			Attribute "throwable damage" 
-			Description "A single shield infront of you that does not rotate. -150 max health"
+			Description "A single shield infront of you that does not rotate. -100 max health"
 			Cap 1
 			Increment 1
 			Cost 0
 
 			SecondaryAttributes
 			{
-				"max health additive penalty" -150
+				"max health additive penalty" -100
 			}
 
 			AllowedWeapons 
 			{
 				ItemName "Thunderdome"
+			}
+
+			OnApply
+			{
+				Output "popscript,$ThunderdomeRefresh,,0"
+			}
+			OnDowngrade
+			{
+				Output "popscript,$ThunderdomeRefresh,,0"
 			}
 			Tier 1
 		}
@@ -355,6 +365,15 @@ WaveSchedule
 			AllowedWeapons 
 			{
 				ItemName "Thunderdome"
+			}
+
+			OnApply
+			{
+				Output "popscript,$ThunderdomeRefresh,,0"
+			}
+			OnDowngrade
+			{
+				Output "popscript,$ThunderdomeRefresh,,0"
 			}
 			Tier 1
 		}
