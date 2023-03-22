@@ -36,6 +36,7 @@ WaveSchedule
 	LuaScriptFile "scripts/freelance_mercenary_logic.lua"
 	LuaScriptFile "scripts/dover2_custom_weapons.lua"
 	LuaScriptFile "scripts/dover2_bosses.lua"
+	LuaScriptFile "scripts/dover2_boss_resistance.lua"
 	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua"
 
     CustomWeapon 
@@ -634,17 +635,34 @@ WaveSchedule
             Action Trigger
         }
 
+		// WaveSpawn
+		// {
+		// 	Name "1_shotgunboys"
+		// 	Where flankers
+		// 	TotalCount 18
+		// 	MaxActive 4
+		// 	SpawnCount 4
+		// 	WaitBeforeStarting 0
+		// 	WaitBetweenSpawns 2
+		
+		// 	TotalCurrency 20
+		
+		// 	TFBot
+		// 	{ 
+		// 		Template T_TFBot_Heavyweapons_Shotgun
+		// 	}
+		// }
 		
 		WaveSpawn
 		{
 			Name "1_col_droneman"
 			Where spawnbot
-			TotalCount 20
+			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 50
+			TotalCurrency 100
 			TFBot
 			{
 				Template T_TFBot_Col_Droneman

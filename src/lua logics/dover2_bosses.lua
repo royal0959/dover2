@@ -23,7 +23,7 @@ function ColDronemanSpawn(_, activator)
         local drone = ents.CreateWithKeys("obj_sentrygun", {
             teamnum = activator.m_iTeamNum,
             defaultupgrade = 0,
-			-- SolidToPlayer = 0,
+			SolidToPlayer = 0,
 			spawnflags = 8, -- inf ammo
             skin = 3,
 

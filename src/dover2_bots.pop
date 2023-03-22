@@ -76,6 +76,7 @@ WaveSchedule
             Attributes UseBossHealthBar
 
 			Action FetchFlag
+			tag boss_resistance
 
 			FireInput
 			{
