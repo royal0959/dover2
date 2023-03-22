@@ -63,6 +63,7 @@ WaveSchedule
             Name "Colonel Droneman"
 
 			Class Engineer
+			ClassIcon engineer_wrangler_lite
 			Health 30000
 
 			Skill Expert
@@ -82,7 +83,7 @@ WaveSchedule
 				Action "$ColDronemanPhase2"
 				Delay 0
 				Repeats 1
-				IfHealthBelow 22000
+				IfHealthBelow 20000
 			}
 
 			FireInput
@@ -91,7 +92,7 @@ WaveSchedule
 				Action "$ColDronemanEngaged"
 				Delay 0
 				Repeats 1
-				IfHealthBelow 12000
+				IfHealthBelow 10000
 			}
 
 			EventChangeAttributes
@@ -131,18 +132,27 @@ WaveSchedule
 	// bot weapons
 	CustomWeapon
 	{
+		// unused
 		HOMING_ROCKETLAUNCHER_DRONE
 		{
-				OriginalItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+			OriginalItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
 
-				"mod projectile heat seek power" 180
-				"mod projectile heat aim error" 0
-				"mod projectile heat aim time" 3
-				"projectile trail particle" "eyeboss_projectile"
+			"mod projectile heat seek power" 180
+			"mod projectile heat aim error" 0
+			"mod projectile heat aim time" 3
+			"projectile trail particle" "eyeboss_projectile"
 
-				"projectile lifetime" 10
+			"projectile lifetime" 10
 
-				"Projectile speed decreased" 0.4
+			"Projectile speed decreased" 0.4
+		}
+
+		STICKYBOMB_DRONE
+		{
+			OriginalItemName "Upgradeable TF_WEAPON_PIPEBOMBLAUNCHER"
+
+			"max pipebombs decreased" -6
+			"damage penalty" 0.8
 		}
 	}
 }

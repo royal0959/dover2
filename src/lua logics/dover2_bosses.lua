@@ -87,8 +87,10 @@ function ColDronemanPhase2(_, activator, forced)
     end
 
     for _, drone in pairs(getDrones(activator)) do
-        drone["$fireratemult"] = 5
-        drone["$bulletweapon"] = "HOMING_ROCKETLAUNCHER_DRONE"
+        drone["$fireratemult"] = 4.5
+        drone["$bulletweapon"] = "STICKYBOMB_DRONE"
+        -- drone["$fireratemult"] = 5
+        -- drone["$bulletweapon"] = "HOMING_ROCKETLAUNCHER_DRONE"
     end
 end
 
@@ -99,13 +101,14 @@ function ColDronemanEngaged(_, activator, forced)
 
     removeAllDrones(activator)
 
+    activator:ChangeAttributes("Engaged")
+
     -- crit jumpscare prevention
-    activator:SetAttributeValue("no_attack", 3)
+    activator:SetAttributeValue("no_attack", 2)
     timer.Simple(1, function()
         activator:SetAttributeValue("no_attack", nil)
     end)
 
-    activator:ChangeAttributes("Engaged")
     for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
         if wearable.m_hOwnerEntity == activator then
             wearable.m_flModelScale = 1.5
