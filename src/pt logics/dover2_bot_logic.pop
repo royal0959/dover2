@@ -92,6 +92,11 @@ WaveSchedule
 				Target "popscript"
 				Action "$ColDronemanSpawn"
 			}
+			OnParentKilledOutput
+			{
+				Target "popscript"
+				Action "$ColDronemanDeath"
+			}
 		}
     }
 }
