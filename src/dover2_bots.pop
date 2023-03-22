@@ -59,8 +59,9 @@ WaveSchedule
         // bosses
         T_TFBot_Col_Droneman
         {
+            SpawnTemplate "Yakuza_Title_Card_Droneman"
             SpawnTemplate "ColDroneman"
-            Name "Colonel Droneman"
+            Name "Colonel Dronemann"
 
 			Class Engineer
 			ClassIcon engineer_wrangler_lite
@@ -70,7 +71,8 @@ WaveSchedule
 			Item "Dustbowl Devil"
             Item "The Frontier Justice"
             Item "The Wrangler"
-			
+
+			Attributes AlwaysCrit // only applied for crit outline
 			Attributes MiniBoss
 			Attributes HoldFireUntilFullReload
             Attributes UseBossHealthBar
@@ -115,14 +117,14 @@ WaveSchedule
 				"override projectile type" 2
 				"projectile spread angle penalty" 3
 				"fire rate bonus" 0.1
-				"Projectile speed decreased" 0.5
+				"Projectile speed decreased" 0.3
 				"always crit" 1
 			}
 
 			CharacterAttributes
 			{
 				"head scale" 0.7
-				"move speed bonus" 0.4
+				"move speed bonus" 0.35
 				"damage force reduction" 0.5
 				"airblast vulnerability multiplier" 0.5
 				"override footstep sound set" 4
@@ -152,8 +154,8 @@ WaveSchedule
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_PIPEBOMBLAUNCHER"
 
-			"max pipebombs decreased" -6
-			"damage penalty" 0.8
+			"max pipebombs decreased" -4
+			"damage penalty" 0.9
 		}
 	}
 }

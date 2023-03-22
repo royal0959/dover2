@@ -62,10 +62,6 @@ local function minigunDynamicResistance(bot)
         local diff = recentDamage / MAXIMUM_BASE_RECENT_DAMAGE
         local reductionMult =  1 / diff
 
-        -- print(reductionMult)
-        -- for _, player in pairs(ents.GetAllPlayers()) do
-        --     player:AcceptInput("$DisplayTextChat", "Damage Reduction Multiplier: "..tostring(reductionMult))
-        -- end
         damageInfo.Damage = damageInfo.Damage * reductionMult
 
         return true

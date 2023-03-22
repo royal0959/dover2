@@ -254,6 +254,118 @@ function WingerDashRefunded(_, activator)
 	end
 end
 
+local function _parry(activator)
+	local handle = activator:GetHandleIndex()
+
+	weaponsData.Parry[handle] = true
+
+	timer.Simple(PARRY_TIME, function()
+		weaponsData.Parry[handle] = nil
+	end)
+end
+
+function ParryAddictionEquip(_, activator)
+	-- fix weird quirk with template being spawned after you switch to a different class
+	if classIndices_Internal[activator:DumpProperties().m_iClass] ~= "Demoman" then
+		return
+	end
+
+	print("parry addiction equipped")
+	local handle = activator:GetHandleIndex()
+
+	if callbacks.Parry[handle] then
+		ParryAddictionUnequip(activator, handle)
+	end
+
+	callbacks.Parry[handle] = {}
+
+	local parryCallbacks = callbacks.Parry[handle]
+
+	-- on key press
+	parryCallbacks.keyPress = activator:AddCallback(7, function(_, key)
+		if key ~= IN_ATTACK2 then
+			return
+		end
+
+		if activator.m_flChargeMeter < 100 then
+			return
+		end
+
+		if weaponsData.Parry[handle] then
+			activator.m_flChargeMeter = 0
+			-- activator:AcceptInput("$SetProp$m_flChargeMeter", "0")
+			return
+		end
+
+		activator:AddCond(46, PARRY_TIME)
+
+		activator.m_flChargeMeter = 0
+		-- activator:AcceptInput("$SetProp$m_flChargeMeter", "0")
+
+		_parry(activator)
+	end)
+
+	-- on damage
+	parryCallbacks.onDamagePre = activator:AddCallback(3, function(_, damageInfo)
+		if not weaponsData.Parry[handle] then
+			return
+		end
+
+		if not damageInfo.Attacker then
+			-- negate damage, don't try deflecting
+			damageInfo.Damage = 0
+			return true
+		end
+
+		if damageInfo.Attacker == activator then
+			return
+		end
+
+		local deflectDmg = damageInfo.Damage * 2
+
+		local deflectDmgInfo = {
+			Attacker = activator,
+			Inflictor = nil,
+			Weapon = nil,
+			Damage = deflectDmg,
+			DamageType = 0,
+			DamageCustom = 0,
+			DamagePosition = Vector(0, 0, 0),
+			DamageForce = Vector(0, 0, 0),
+			ReportedPosition = Vector(0, 0, 0),
+		}
+
+		-- negate damage
+		damageInfo.Damage = 0
+
+		-- deflect
+		damageInfo.Attacker:TakeDamage(deflectDmgInfo)
+
+		return true
+	end)
+
+	parryCallbacks.onRemoved = activator:AddCallback(ON_REMOVE, function()
+		ParryAddictionUnequip(activator, handle)
+	end)
+
+	parryCallbacks.onDeath = activator:AddCallback(9, function()
+		ParryAddictionUnequip(activator, handle)
+	end)
+
+	parryCallbacks.onSpawn = activator:AddCallback(1, function()
+		ParryAddictionUnequip(activator, handle)
+	end)
+end
+
+function ParryAddictionUnequip(activator, handle)
+	if not IsValid(activator) then
+		activator = nil
+	end
+
+	ClearCallbacks("Parry", activator, handle)
+	ClearData("Parry", activator, handle)
+end
+
 
 local noReprogram = {}
 function OnWaveSpawnBot(bot, _, tags)
