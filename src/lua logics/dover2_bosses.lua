@@ -81,12 +81,15 @@ function ColDronemanDeath(_, activator)
     removeAllDrones(activator)
 end
 
-function ColeDronemanPhase2(_, activator, forced)
+function ColDronemanPhase2(_, activator, forced)
     if not forced and #getDrones(activator) == 0 then
         return
     end
 
-    
+    for _, drone in pairs(getDrones(activator)) do
+        drone["$fireratemult"] = 5
+        drone["$bulletweapon"] = "HOMING_ROCKETLAUNCHER_DRONE"
+    end
 end
 
 function ColDronemanEngaged(_, activator, forced)
