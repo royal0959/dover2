@@ -1,9 +1,6 @@
 -- Colonel Droneman
 -- 2 drones on each side of him that can be destroyed, has the wrangler out
 function ColDronemanSpawn(_, activator)
-    -- removes alwayscrit, which is applied for crit outline
-    activator:RemoveCond(34)
-
     local bulletWeapons = {
         [1] = "Upgradeable TF_WEAPON_ROCKETLAUNCHER",
         [2] = "Upgradeable TF_WEAPON_GRENADELAUNCHER"
@@ -105,8 +102,6 @@ function ColDronemanEngaged(_, activator, forced)
     removeAllDrones(activator)
 
     activator:ChangeAttributes("Engaged")
-
-    activator:RemoveCond(34)
 
     -- crit jumpscare prevention
     activator:SetAttributeValue("no_attack", 2)

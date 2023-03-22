@@ -65,14 +65,14 @@ WaveSchedule
 
 			Class Engineer
 			ClassIcon engineer_wrangler_lite
-			Health 30000
+			Health 25000
 
 			Skill Expert
 			Item "Dustbowl Devil"
             Item "The Frontier Justice"
             Item "The Wrangler"
 
-			Attributes AlwaysCrit // only applied for crit outline
+			Attributes AlwaysCrit
 			Attributes MiniBoss
 			Attributes HoldFireUntilFullReload
             Attributes UseBossHealthBar
@@ -86,7 +86,7 @@ WaveSchedule
 				Action "$ColDronemanPhase2"
 				Delay 0
 				Repeats 1
-				IfHealthBelow 20000
+				IfHealthBelow 15000
 			}
 
 			FireInput
@@ -95,7 +95,7 @@ WaveSchedule
 				Action "$ColDronemanEngaged"
 				Delay 0
 				Repeats 1
-				IfHealthBelow 10000
+				IfHealthBelow 8000
 			}
 
 			EventChangeAttributes
@@ -118,7 +118,7 @@ WaveSchedule
 				"projectile spread angle penalty" 3
 				"fire rate bonus" 0.1
 				"Projectile speed decreased" 0.3
-				"always crit" 1
+				// "always crit" 1
 			}
 
 			CharacterAttributes
