@@ -97,7 +97,7 @@ local resistanceTags = {
     end
 }
 
-function OnWaveSpawnBot(bot, wave, tags)
+function _OnWaveSpawnBot_BossResistance(bot, wave, tags)
     for _, tag in pairs(tags) do
         if resistanceTags[tag] then
             print(tag)

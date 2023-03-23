@@ -368,7 +368,7 @@ end
 
 
 local noReprogram = {}
-function OnWaveSpawnBot(bot, _, tags)
+function _OnWaveSpawnBot_CustomWeapon(bot, _, tags)
 	noReprogram[bot] = nil
 
 	if not findInTable(tags, "no_reprogram") then

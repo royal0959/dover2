@@ -36,6 +36,7 @@ WaveSchedule
 	LuaScriptFile "scripts/freelance_mercenary_logic.lua"
 	LuaScriptFile "scripts/dover2_custom_weapons.lua"
 	LuaScriptFile "scripts/dover2_bosses.lua"
+	LuaScriptFile "scripts/dover2_bots.lua"
 	LuaScriptFile "scripts/dover2_boss_resistance.lua"
 	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua"
 
@@ -953,6 +954,26 @@ WaveSchedule
 
 		WaveSpawn
 		{
+			Name "2_punchies"
+			WaitForAllSpawned 2_buffban
+			Where spawnbot
+			TotalCount 20
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 50
+			Support Limited
+		
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ  
+			}
+		}
+
+		WaveSpawn
+		{
 			Name "2_knightgauntlet"
 			WaitForAllDead 2_ambulance
 			Where spawnbot
@@ -1000,26 +1021,92 @@ WaveSchedule
 		
 			TFBot
 			{
-				Template T_TFBot_Soldier_RocketShotgun
+				Template T_TFBot_Giant_Soldier_RocketShotgun
 			}
+		}
+
+		// WaveSpawn
+		// {
+		// 	Name "2_rocketmann"
+		// 	WaitForAllDead 2_knightgauntlet
+		// 	Where spawnbot
+		// 	TotalCount 1
+		// 	MaxActive 1
+		// 	SpawnCount 1
+		// 	WaitBeforeStarting 5
+		// 	WaitBetweenSpawns 0
+		
+		// 	TotalCurrency 500
+		
+		// 	TFBot
+		// 	{
+		// 		Template T_TFBot_Rocketman
+		// 	}
+		// }
+	}
+
+	Wave // Wave #
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
 		}
 
 		WaveSpawn
 		{
-			Name "2_rocketmann"
-			WaitForAllDead 2_knightgauntlet
+			Name "3"
 			Where spawnbot
-			TotalCount 1
-			MaxActive 1
+			TotalCount 5
+			MaxActive 5
 			SpawnCount 1
-			WaitBeforeStarting 5
-			WaitBetweenSpawns 0
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0.1
 		
-			TotalCurrency 500
+			TotalCurrency 0
 		
-			TFBot
+			Squad
 			{
-				Template T_TFBot_Rocketman
+				NoWaitForFormation 1
+				NoFormation 1
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Fast
+					Health 1
+					tag "pair_scoutA_carrier"
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Fast
+					Health 1
+					tag "pair_scoutA_carried"
+					tag "pair_scoutB_carrier"
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Fast
+					Health 1
+					tag "pair_scoutB_carried"
+					tag "pair_scoutC_carrier"
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Fast
+					Health 1
+					tag "pair_scoutC_carried"
+					tag "pair_scoutD_carrier"
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Fast
+					Health 1
+					tag "pair_scoutD_carried"
+				}
 			}
 		}
 	}

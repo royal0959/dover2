@@ -139,7 +139,7 @@ WaveSchedule
 
 			Class Soldier
 			// ClassIcon engineer_wrangler_lite
-			Health 25000
+			Health 28000
 
 			Skill Expert
 			Item "Hawk Warrior"
@@ -150,23 +150,23 @@ WaveSchedule
 
 			tag boss_resistance
 
-			FireInput
-			{
-				Target "popscript"
-				Action "$ColDronemanPhase2"
-				Delay 0
-				Repeats 1
-				IfHealthBelow 15000
-			}
+			// FireInput
+			// {
+			// 	Target "popscript"
+			// 	Action "$ColDronemanPhase2"
+			// 	Delay 0
+			// 	Repeats 1
+			// 	IfHealthBelow 15000
+			// }
 
-			FireInput
-			{
-				Target "popscript"
-				Action "$ColDronemanEngaged"
-				Delay 0
-				Repeats 1
-				IfHealthBelow 8000
-			}
+			// FireInput
+			// {
+			// 	Target "popscript"
+			// 	Action "$ColDronemanEngaged"
+			// 	Delay 0
+			// 	Repeats 1
+			// 	IfHealthBelow 8000
+			// }
 
 			ItemAttributes
 			{
