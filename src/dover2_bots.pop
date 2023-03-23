@@ -130,6 +130,58 @@ WaveSchedule
 				"override footstep sound set" 4
 			}
         }
+
+        T_TFBot_Rocketman
+        {
+            SpawnTemplate "Yakuza_Title_Card_Rocketman"
+            SpawnTemplate "Rocketman"
+            Name "Sergeant Rocketmann"
+
+			Class Soldier
+			// ClassIcon engineer_wrangler_lite
+			Health 25000
+
+			Skill Expert
+			Item "Hawk Warrior"
+            Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+
+			Attributes MiniBoss
+            Attributes UseBossHealthBar
+
+			tag boss_resistance
+
+			FireInput
+			{
+				Target "popscript"
+				Action "$ColDronemanPhase2"
+				Delay 0
+				Repeats 1
+				IfHealthBelow 15000
+			}
+
+			FireInput
+			{
+				Target "popscript"
+				Action "$ColDronemanEngaged"
+				Delay 0
+				Repeats 1
+				IfHealthBelow 8000
+			}
+
+			ItemAttributes
+			{
+				ItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+
+			}
+
+			CharacterAttributes
+			{
+				"move speed bonus" 0.5
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 4
+			}
+        }
     }
 
 	// bot weapons

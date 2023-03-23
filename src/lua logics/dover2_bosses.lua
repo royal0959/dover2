@@ -1,4 +1,4 @@
--- Colonel Droneman
+-- Colonel Dronemann
 -- 2 drones on each side of him that can be destroyed, has the wrangler out
 function ColDronemanSpawn(_, activator)
     local bulletWeapons = {
@@ -6,8 +6,8 @@ function ColDronemanSpawn(_, activator)
         [2] = "Upgradeable TF_WEAPON_GRENADELAUNCHER"
     }
     local firerateMult = {
-        [1] = 3,
-        [2] = 3.5
+        [1] = 4,
+        [2] = 4.5
     }
 
     for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
@@ -87,7 +87,7 @@ function ColDronemanPhase2(_, activator, forced)
     end
 
     for _, drone in pairs(getDrones(activator)) do
-        drone["$fireratemult"] = 4.5
+        drone["$fireratemult"] = 4
         drone["$bulletweapon"] = "STICKYBOMB_DRONE"
         -- drone["$fireratemult"] = 5
         -- drone["$bulletweapon"] = "HOMING_ROCKETLAUNCHER_DRONE"
@@ -114,4 +114,17 @@ function ColDronemanEngaged(_, activator, forced)
             wearable.m_flModelScale = 1.5
         end
     end
+end
+
+-- Sergeant Rocketmann
+function RocketmanSpawn(_, activator)
+    for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
+        if wearable.m_hOwnerEntity == activator then
+            wearable.m_flModelScale = 1.5
+        end
+    end
+end
+
+function RocketmanDeath()
+    
 end

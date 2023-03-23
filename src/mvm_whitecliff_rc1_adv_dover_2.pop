@@ -855,7 +855,7 @@ WaveSchedule
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 3
 		
-			TotalCurrency 0
+			TotalCurrency 50
 			Support 1
 		
 			TFBot
@@ -899,6 +899,97 @@ WaveSchedule
 			TFBot
 			{
 				Template T_TFBot_Giant_Pyro_Flare_Spammer  
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_buffban"
+			WaitForAllDead 2_gflare
+			Where spawnbot
+			TotalCount 15
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Buff_Banner  
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_knightgauntlet"
+			WaitForAllDead 2_ambulance
+			Where spawnbot
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 200
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_DemoMan_PrinceTavish  
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Fist  
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Fist  
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Fist  
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_gbb"
+			WaitForAllSpawned 2_knightgauntlet
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_RocketShotgun
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_rocketmann"
+			WaitForAllDead 2_knightgauntlet
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 500
+		
+			TFBot
+			{
+				Template T_TFBot_Rocketman
 			}
 		}
 	}
