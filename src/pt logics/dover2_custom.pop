@@ -60,6 +60,32 @@ WaveSchedule
 			}
 		}
 
+		WomrholeDiver_Spawn
+		{
+			OnSpawnOutput
+			{
+				Target popscript
+				Action "$WormholeDiverEquip" 
+				Delay 0.1
+			}
+			OnParentKilledOutput
+			{
+				Target popscript
+				Action "$WormholeDiverUnequip" 
+				Delay 0.1
+			}
+		}
+
+		WomrholeDiver_Shot
+		{
+			OnSpawnOutput
+			{
+				Target popscript
+				Action "$WormholeDiverShot" 
+				Delay 0.1
+			}
+		}
+
 		HolyDiver_Spawn
 		{
 			OnSpawnOutput

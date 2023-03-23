@@ -127,6 +127,21 @@ WaveSchedule
 			"special item description 2" "+125% damage bonus on melee weapon"
 		}
 
+		"Wormhole Diver"
+		{
+			OriginalItemName "The Detonator"
+
+			"damage penalty" 0
+			"Projectile speed decreased" 0.4
+
+			"paintkit_proto_def_index" 408 // hypergon
+			"set_item_texture_wear" 0
+
+			"lunchbox adds minicrits" 0 // disable m2
+			"special item description" "Alt-Fire: Teleport to projectile position"
+			"projectile trail particle" "eyeboss_projectile"
+		}
+
 		"Thunderdome"
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_MINIGUN" 
@@ -234,7 +249,8 @@ WaveSchedule
 		}
 		Pyro 
 		{
-			Primary {Item "Holy Diver"}
+			// Primary {Item "Holy Diver"}
+			Secondary {Item "Wormhole Diver"}
 		}
 		Demoman 
 		{
@@ -577,6 +593,20 @@ WaveSchedule
 		Name HolyDiver_Spawn
 		ItemName "Holy Diver"
 	}
+
+	PlayerItemEquipSpawnTemplate 
+	{
+		Name WomrholeDiver_Spawn
+		ItemName "Wormhole Diver"
+	}
+
+	PlayerShootTemplate
+	{
+		Name WomrholeDiver_Shot
+		ItemName "Wormhole Diver"
+		AttachToProjectile 1
+	}
+
 
 	PlayerItemEquipSpawnTemplate 
 	{

@@ -72,7 +72,7 @@ local callbacks = {}
 local weaponsData = {}
 local weaponTimers = {}
 
-local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD", "SmolShield", "WingerDash", "Scavenger" }
+local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD", "SmolShield", "WingerDash", "Scavenger", "Diver" }
 for _, weaponIndex in pairs(CUSTOM_WEAPONS_INDICES) do
 	callbacks[weaponIndex] = {}
 	weaponsData[weaponIndex] = {}
@@ -1109,3 +1109,68 @@ ents.AddCreateCallback("tf_projectile_arrow", function(arrow)
         end)
     end)
 end)
+
+-- wormhole Diver
+
+-- disable collision with func_respawnroomvisualizer
+for _, visualizer in pairs(ents.FindAllByClass("func_respawnroomvisualizer")) do
+	visualizer:AddCallback(ON_SHOULD_COLLIDE, function(_, other)
+		if other.IsWormHole then
+			other:Remove()
+		end
+	end)
+end
+
+function WormholeDiverShot(_, projectile)
+	projectile.IsWormHole = true
+end
+
+local diverCallbacks = {}
+function WormholeDiverEquip(_, activator)
+	-- fix weird quirk with template being spawned after you switch to a different class
+	if classIndices_Internal[activator:DumpProperties().m_iClass] ~= "Pyro" then
+		return
+	end
+
+	local handle = activator:GetHandleIndex()
+
+	diverCallbacks[handle] = {}
+	local playerCallbacks = diverCallbacks[handle]
+
+	-- on key press
+	playerCallbacks.keyPress = activator:AddCallback(ON_KEY_PRESSED, function(_, key)
+		if key ~= IN_ATTACK2 then
+			return
+		end
+
+		if activator.m_hActiveWeapon ~= activator:GetPlayerItemBySlot(LOADOUT_POSITION_SECONDARY) then
+			return
+		end
+
+		for _, flare in pairs(ents.FindAllByClass("tf_projectile_flare")) do
+			if flare.m_hOwnerEntity == activator then
+				local flareOrigin = flare:GetAbsOrigin()
+				local DefaultTraceInfo = {
+					start = activator:GetAbsOrigin(),
+					endpos = flareOrigin,
+					mask = (CONTENTS_PLAYERCLIP),
+					collisiongroup = COLLISION_GROUP_PLAYER,
+				}
+
+				-- trace for player clip
+				local trace = util.Trace(DefaultTraceInfo)
+
+				activator:SetAbsOrigin(trace.HitPos or flareOrigin)
+				flare:Remove()
+
+				break
+			end
+		end
+	end)
+end
+
+function WormholeDiverUnequip(_, activator)
+	for _, id in pairs(diverCallbacks[activator:GetHandleIndex()]) do
+		activator:RemoveCallback(id)
+	end
+end
