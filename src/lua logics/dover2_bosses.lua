@@ -2,11 +2,12 @@
 -- 2 drones on each side of him that can be destroyed, has the wrangler out
 function ColDronemanSpawn(_, activator)
     local bulletWeapons = {
-        [1] = "Upgradeable TF_WEAPON_ROCKETLAUNCHER",
+        -- [1] = "Upgradeable TF_WEAPON_ROCKETLAUNCHER",
+        [1] = "MARKER",
         [2] = "Upgradeable TF_WEAPON_GRENADELAUNCHER"
     }
     local firerateMult = {
-        [1] = 4,
+        [1] = 5,
         [2] = 4.5
     }
 

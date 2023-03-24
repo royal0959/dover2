@@ -12,7 +12,7 @@
 
 WaveSchedule
 {
-    StartingCurrency 1800
+    StartingCurrency 1500
     CanBotsAttackWhileInSpawnRoom no
     RespawnWaveTime 5
     AddSentryBusterWhenDamageDealtExceeds 3000
@@ -365,14 +365,14 @@ WaveSchedule
 		{
 			Name "Unstable Mod: Red Sun" 
 			Attribute "throwable damage" 
-			Description "A single shield infront of you that does not rotate. -100 max health"
+			Description "A single shield infront of you that does not rotate. -150 max health"
 			Cap 1
 			Increment 1
 			Cost 0
 
 			SecondaryAttributes
 			{
-				"max health additive penalty" -100
+				"max health additive penalty" -150
 			}
 
 			AllowedWeapons 
@@ -702,7 +702,7 @@ WaveSchedule
 			MaxActive 8
 			SpawnCount 4
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 15
+			WaitBetweenSpawns 10
 		
 			TotalCurrency 50
 		
@@ -1075,15 +1075,6 @@ WaveSchedule
 				TFBot
 				{
 					Template T_TFBot_Giant_Soldier_Spammer
-					tag "pair_towerA_carried"
-					tag "pair_towerB_carrier"
-					tag collective_bot
-					
-					ClassIcon scout_bat
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_Spammer_Reload
 					tag "pair_towerB_carried"
 					tag "pair_towerC_carrier"
 					tag collective_bot
@@ -1092,9 +1083,17 @@ WaveSchedule
 				}
 				TFBot
 				{
-					Template T_TFBot_Giant_Soldier_SlowBarrage
+					Template T_TFBot_Giant_Soldier_Spammer_Reload
 					tag "pair_towerC_carried"
 					tag "pair_towerD_carrier"
+					tag collective_bot
+					
+					ClassIcon scout_bat
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_SlowBarrage
+					tag "pair_towerD_carried"
 					tag collective_bot
 					
 					ClassIcon scout_bat
@@ -1105,7 +1104,7 @@ WaveSchedule
 		WaveSpawn
 		{
 			Name "2_tower_healthbar"
-			WaitForAllDead 2_knightgauntlet
+			WaitForAllDead 2_gheavy
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
@@ -1172,6 +1171,23 @@ WaveSchedule
 		{
 			Target wave_finished_relay
 			Action Trigger
+		}
+
+				WaveSpawn
+		{
+			Name "1_col_droneman"
+			// WaitForAllDead 1_gshotgun
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 500
+			TFBot
+			{
+				Template T_TFBot_Col_Droneman
+			}
 		}
 
 		// WaveSpawn

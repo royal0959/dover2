@@ -930,10 +930,10 @@ function ThunderdomeEquipped(_, activator)
 		local shieldAngles = i == 1 and Vector(0, 0, 0) or Vector(-180, 0, -180)
 
 		if hasRedSun then
-			shieldOffset = Vector(60, 0, 0)
+			shieldOffset = Vector(100, 0, 0)
 			shieldAngles = Vector(0, 0, 0)
 		elseif hasCommunist then
-			shieldOffset = Vector(-30, 0, 0)
+			shieldOffset = Vector(-50, 0, 0)
 			shieldAngles = Vector(-180, 0, -180)
 		end
 

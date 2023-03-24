@@ -51,6 +51,10 @@ local function minigunDynamicResistance(bot)
         removeCallbacks()
     end)
     callbacks[3] = bot:AddCallback(ON_DAMAGE_RECEIVED_PRE, function(_, damageInfo)
+        if not damageInfo.Weapon then
+            return
+        end
+
         if damageInfo.Weapon.m_iClassname ~= "tf_weapon_minigun" then
             return
         end
@@ -67,6 +71,10 @@ local function minigunDynamicResistance(bot)
         return true
     end)
     callbacks[4] = bot:AddCallback(ON_DAMAGE_RECEIVED_POST, function(_, damageInfo)
+        if not damageInfo.Weapon then
+            return
+        end
+
         if damageInfo.Weapon.m_iClassname ~= "tf_weapon_minigun" then
             return
         end

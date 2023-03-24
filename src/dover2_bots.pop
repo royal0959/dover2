@@ -202,12 +202,22 @@ WaveSchedule
 			"Projectile speed decreased" 0.4
 		}
 
+		MARKER
+		{
+			OriginalItemName "Upgradeable TF_WEAPON_SNIPERRIFLE"
+
+			"damage penalty" 0.1
+			"add cond on hit" 30 // mark for death
+			"add cond on hit duration" 5
+			"sniper fires tracer" 1
+		}
+
 		STICKYBOMB_DRONE
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_PIPEBOMBLAUNCHER"
 
-			"max pipebombs decreased" -4
-			"damage penalty" 0.9
+			"max pipebombs decreased" -6
+			"damage penalty" 0.8
 		}
 	}
 }
