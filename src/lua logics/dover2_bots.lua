@@ -35,20 +35,25 @@ local function updateCollective()
     local totalHealth = 0
     local totalMaxHealth = 0
     for bot, _ in pairs(collectiveBots) do
-        totalHealth = totalHealth + bot.m_iHealth
+        local health = bot:IsAlive() and bot.m_iHealth or 0
+
+        totalHealth = totalHealth + health
         totalMaxHealth = totalMaxHealth + getMaxHealth(bot)
     end
 
-    print(totalHealth, totalMaxHealth)
     collectiveHealthBarBot.m_iHealth = totalHealth
     if totalMaxHealth > getMaxHealth(collectiveHealthBarBot) then
         collectiveHealthBarBot:SetAttributeValue("hidden maxhealth non buffed", totalMaxHealth - 1)
     end
-    collectiveHealthBarBot:AddHealth(10)
+
+    if totalHealth <= 0 then
+        collectiveHealthBarBot:Suicide()
+    end
 end
 
 local function handleCollectiveTagCheck(bot, tag)
     if tag == "collective_healthbar" then
+        bot.m_bIsMiniBoss = 0
         collectiveHealthBarBot = bot
 
         local callbacks = {}
@@ -89,6 +94,8 @@ local function handleCollectiveTagCheck(bot, tag)
             end
             collectiveBots[bot] = nil
         end)
+
+        updateCollective()
         return true
     end
 end

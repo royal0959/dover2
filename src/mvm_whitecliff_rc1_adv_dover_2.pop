@@ -702,7 +702,7 @@ WaveSchedule
 			MaxActive 8
 			SpawnCount 4
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 8
+			WaitBetweenSpawns 15
 		
 			TotalCurrency 50
 		
@@ -718,10 +718,10 @@ WaveSchedule
 			WaitForAllSpawned 1_bb
 			Where flankers
 			TotalCount 8
-			MaxActive 2
+			MaxActive 4
 			SpawnCount 2
 			WaitBeforeStarting 5
-			WaitBetweenSpawns 3
+			WaitBetweenSpawns 8
 		
 			TotalCurrency 75
 		
@@ -755,17 +755,28 @@ WaveSchedule
 			Name "1_gshotgun"
 			WaitForAllDead 1_gpyro
 			Where spawnbot
-			TotalCount 1
-			MaxActive 1
-			SpawnCount 1
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 		
 			TotalCurrency 100
 		
-			TFBot
-			{ 
-				Template T_TFBot_Giant_Heavyweapons_Shotgun
+			Squad
+			{
+				TFBot
+				{ 
+					Template T_TFBot_Giant_Heavyweapons_Shotgun
+				}
+				TFBot
+				{ 
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{ 
+					Template T_TFBot_Medic_BigHeal
+				}	
 			}
 		}
 
@@ -919,9 +930,9 @@ WaveSchedule
 		{
 			Name "2_gflare"
 			Where spawnbot
-			TotalCount 0
-			MaxActive 0
-			SpawnCount 0
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 		
@@ -957,7 +968,7 @@ WaveSchedule
 			Name "2_punchies"
 			WaitForAllSpawned 2_buffban
 			Where spawnbot
-			TotalCount 20
+			TotalCount 24
 			MaxActive 4
 			SpawnCount 4
 			WaitBeforeStarting 5
@@ -1008,7 +1019,7 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Name "2_gbb"
+			Name "2_gheavy"
 			WaitForAllSpawned 2_knightgauntlet
 			Where spawnbot
 			TotalCount 1
@@ -1021,8 +1032,113 @@ WaveSchedule
 		
 			TFBot
 			{
-				Template T_TFBot_Giant_Soldier_RocketShotgun
+				Template T_TFBot_Giant_Heavyweapons
 			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_potato_tower"
+			WaitForAllDead 2_gheavy
+			Where flankers
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 5.1
+			WaitBetweenSpawns 0.1
+		
+			TotalCurrency 0
+
+			HideIcon 1
+		
+			Squad
+			{
+				NoWaitForFormation 1
+				NoFormation 1
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+					tag "pair_towerA_carrier"
+					tag collective_bot
+					
+					ClassIcon scout_bat
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Crit
+					tag "pair_towerA_carried"
+					tag "pair_towerB_carrier"
+					tag collective_bot
+					
+					ClassIcon scout_bat
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer
+					tag "pair_towerA_carried"
+					tag "pair_towerB_carrier"
+					tag collective_bot
+					
+					ClassIcon scout_bat
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Reload
+					tag "pair_towerB_carried"
+					tag "pair_towerC_carrier"
+					tag collective_bot
+					
+					ClassIcon scout_bat
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_SlowBarrage
+					tag "pair_towerC_carried"
+					tag "pair_towerD_carrier"
+					tag collective_bot
+					
+					ClassIcon scout_bat
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_tower_healthbar"
+			WaitForAllDead 2_knightgauntlet
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 0
+			// Support 1
+		
+			// RandomChoice
+			// {
+			// 	RandomChoice
+			// 	{
+					TFBot
+					{
+						// SpawnTemplate Yakuza_Title_Card_Tower
+						Class Scout
+						Attributes UseBossHealthBar
+						Attributes MiniBoss
+						ClassIcon soldier_robot_nys
+						// ClassIcon heavy_robot_nys
+						CharacterAttributes
+						{
+							"move speed penalty" 0.0001
+							"no_jump" 1
+							"cannot pick up intelligence" 1
+							"max health additive penalty" -124
+						}
+						tag collective_healthbar
+					}
+			// 	}
+			// }
 		}
 
 		// WaveSpawn
@@ -1045,7 +1161,7 @@ WaveSchedule
 		// }
 	}
 
-	Wave // Wave #
+	Wave // Wave 3
 	{
 		StartWaveOutput
 		{
@@ -1058,97 +1174,97 @@ WaveSchedule
 			Action Trigger
 		}
 
-		WaveSpawn
-		{
-			Name "3"
-			Where spawnbot
-			TotalCount 5
-			MaxActive 5
-			SpawnCount 1
-			WaitBeforeStarting 0.1
-			WaitBetweenSpawns 0.1
+		// WaveSpawn
+		// {
+		// 	Name "3"
+		// 	Where spawnbot
+		// 	TotalCount 5
+		// 	MaxActive 5
+		// 	SpawnCount 1
+		// 	WaitBeforeStarting 0.1
+		// 	WaitBetweenSpawns 0.1
 		
-			TotalCurrency 0
+		// 	TotalCurrency 0
 		
-			Squad
-			{
-				NoWaitForFormation 1
-				NoFormation 1
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_Fast
-					tag "pair_scoutA_carrier"
-					tag collective_bot
-					Action Mobber
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_Fast
-					tag "pair_scoutA_carried"
-					tag "pair_scoutB_carrier"
-					tag collective_bot
-					Action Mobber
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_Fast
-					tag "pair_scoutB_carried"
-					tag "pair_scoutC_carrier"
-					tag collective_bot
-					Action Mobber
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_Fast
-					tag "pair_scoutC_carried"
-					tag "pair_scoutD_carrier"
-					tag collective_bot
-					Action Mobber
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_Fast
-					tag "pair_scoutD_carried"
-					tag collective_bot
-					Action Mobber
-				}
-			}
-		}
+		// 	Squad
+		// 	{
+		// 		NoWaitForFormation 1
+		// 		NoFormation 1
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Giant_Scout_Fast
+		// 			tag "pair_scoutA_carrier"
+		// 			tag collective_bot
+		// 			Action Mobber
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Giant_Scout_Fast
+		// 			tag "pair_scoutA_carried"
+		// 			tag "pair_scoutB_carrier"
+		// 			tag collective_bot
+		// 			Action Mobber
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Giant_Scout_Fast
+		// 			tag "pair_scoutB_carried"
+		// 			tag "pair_scoutC_carrier"
+		// 			tag collective_bot
+		// 			Action Mobber
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Giant_Scout_Fast
+		// 			tag "pair_scoutC_carried"
+		// 			tag "pair_scoutD_carrier"
+		// 			tag collective_bot
+		// 			Action Mobber
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template T_TFBot_Giant_Scout_Fast
+		// 			tag "pair_scoutD_carried"
+		// 			tag collective_bot
+		// 			Action Mobber
+		// 		}
+		// 	}
+		// }
 
-		WaveSpawn
-		{
-			Name "2_tower_healthbar"
-			Where spawnbot
-			TotalCount 1
-			MaxActive 1
-			SpawnCount 1
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
+		// WaveSpawn
+		// {
+		// 	Name "2_tower_healthbar"
+		// 	Where spawnbot
+		// 	TotalCount 1
+		// 	MaxActive 1
+		// 	SpawnCount 1
+		// 	WaitBeforeStarting 0
+		// 	WaitBetweenSpawns 0
 		
-			TotalCurrency 0
-			Support 1
+		// 	TotalCurrency 0
+		// 	Support 1
 		
-			RandomChoice
-			{
-				RandomChoice
-				{
-					TFBot
-					{
-						Class Scout
-						Attributes UseBossHealthBar
-						Attributes MiniBoss
-						ClassIcon heavy_robot_nys
-						CharacterAttributes
-						{
-							"move speed penalty" 0.0001
-							"no_jump" 1
-							"cannot pick up intelligence" 1
-							"max health additive penalty" -124
-						}
-						tag collective_healthbar
-					}
-				}
-			}
-		}
+		// 	RandomChoice
+		// 	{
+		// 		RandomChoice
+		// 		{
+		// 			TFBot
+		// 			{
+		// 				Class Scout
+		// 				Attributes UseBossHealthBar
+		// 				Attributes MiniBoss
+		// 				ClassIcon heavy_robot_nys
+		// 				CharacterAttributes
+		// 				{
+		// 					"move speed penalty" 0.0001
+		// 					"no_jump" 1
+		// 					"cannot pick up intelligence" 1
+		// 					"max health additive penalty" -124
+		// 				}
+		// 				tag collective_healthbar
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 }
