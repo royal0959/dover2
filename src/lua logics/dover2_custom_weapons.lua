@@ -1115,7 +1115,7 @@ end)
 -- disable collision with func_respawnroomvisualizer
 for _, visualizer in pairs(ents.FindAllByClass("func_respawnroomvisualizer")) do
 	visualizer:AddCallback(ON_SHOULD_COLLIDE, function(_, other)
-		if other.IsWormHole then
+		if other.IsWormHole and other.m_iTeamNum == visualizer.m_iTeamNum then
 			other:Remove()
 		end
 	end)

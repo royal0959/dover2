@@ -1065,7 +1065,7 @@ WaveSchedule
 			TotalCount 5
 			MaxActive 5
 			SpawnCount 1
-			WaitBeforeStarting 0
+			WaitBeforeStarting 0.1
 			WaitBetweenSpawns 0.1
 		
 			TotalCurrency 0
@@ -1077,35 +1077,76 @@ WaveSchedule
 				TFBot
 				{
 					Template T_TFBot_Giant_Scout_Fast
-					Health 1
 					tag "pair_scoutA_carrier"
+					tag collective_bot
+					Action Mobber
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Scout_Fast
-					Health 1
 					tag "pair_scoutA_carried"
 					tag "pair_scoutB_carrier"
+					tag collective_bot
+					Action Mobber
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Scout_Fast
-					Health 1
 					tag "pair_scoutB_carried"
 					tag "pair_scoutC_carrier"
+					tag collective_bot
+					Action Mobber
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Scout_Fast
-					Health 1
 					tag "pair_scoutC_carried"
 					tag "pair_scoutD_carrier"
+					tag collective_bot
+					Action Mobber
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Scout_Fast
-					Health 1
 					tag "pair_scoutD_carried"
+					tag collective_bot
+					Action Mobber
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_tower_healthbar"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 0
+			Support 1
+		
+			RandomChoice
+			{
+				RandomChoice
+				{
+					TFBot
+					{
+						Class Scout
+						Attributes UseBossHealthBar
+						Attributes MiniBoss
+						ClassIcon heavy_robot_nys
+						CharacterAttributes
+						{
+							"move speed penalty" 0.0001
+							"no_jump" 1
+							"cannot pick up intelligence" 1
+							"max health additive penalty" -124
+						}
+						tag collective_healthbar
+					}
 				}
 			}
 		}

@@ -1,3 +1,97 @@
+-- collective health bar 
+local collectiveBots = {}
+local collectiveHealthBarBot = false
+
+-- function GetMaxHealth(player)
+-- 	local net = player:GetNetIndex() + 1
+
+-- 	local playerResource = ents.FindByClass("tf_player_manager")
+
+-- 	local props = playerResource:DumpProperties()
+
+-- 	for playerNetIndex, maxHealth in pairs(props.m_iMaxBuffedHealth) do
+-- 		if playerNetIndex == net then
+-- 			return maxHealth + player:GetAttributeValueByClass("add_maxhealth_nonbuffed", 0)
+-- 		end
+-- 	end
+-- end
+
+-- COLLECTIVE CONSCIOUSNESS CONTROLLED AS YOU WILL SEEEEEEEEEE
+local function updateCollective()
+    local playerResource = ents.FindByClass("tf_player_manager")
+
+    local props = playerResource:DumpProperties()
+
+    local function getMaxHealth(player)
+        local net = player:GetNetIndex() + 1
+
+        for playerNetIndex, maxHealth in pairs(props.m_iMaxBuffedHealth) do
+            if playerNetIndex == net then
+                return maxHealth + player:GetAttributeValueByClass("add_maxhealth_nonbuffed", 0)
+            end
+        end
+    end
+
+    local totalHealth = 0
+    local totalMaxHealth = 0
+    for bot, _ in pairs(collectiveBots) do
+        totalHealth = totalHealth + bot.m_iHealth
+        totalMaxHealth = totalMaxHealth + getMaxHealth(bot)
+    end
+
+    print(totalHealth, totalMaxHealth)
+    collectiveHealthBarBot.m_iHealth = totalHealth
+    if totalMaxHealth > getMaxHealth(collectiveHealthBarBot) then
+        collectiveHealthBarBot:SetAttributeValue("hidden maxhealth non buffed", totalMaxHealth - 1)
+    end
+    collectiveHealthBarBot:AddHealth(10)
+end
+
+local function handleCollectiveTagCheck(bot, tag)
+    if tag == "collective_healthbar" then
+        collectiveHealthBarBot = bot
+
+        local callbacks = {}
+        callbacks[1] = bot:AddCallback(ON_DEATH, function()
+            for _, id in pairs(callbacks) do
+                bot:RemoveCallback(id)
+            end
+            collectiveHealthBarBot = false
+        end)
+        callbacks[2] = bot:AddCallback(ON_SPAWN, function()
+            for _, id in pairs(callbacks) do
+                bot:RemoveCallback(id)
+            end
+            collectiveHealthBarBot = false
+        end)
+        return true
+    end
+
+    if tag == "collective_bot" then
+        local callbacks = {}
+
+        collectiveBots[bot] = true
+
+        callbacks[1] = bot:AddCallback(ON_DAMAGE_RECEIVED_POST, function()
+            updateCollective()
+        end)
+
+        callbacks[2] = bot:AddCallback(ON_DEATH, function()
+            for _, id in pairs(callbacks) do
+                bot:RemoveCallback(id)
+            end
+            updateCollective()
+            collectiveBots[bot] = nil
+        end)
+        callbacks[3] = bot:AddCallback(ON_SPAWN, function()
+            for _, id in pairs(callbacks) do
+                bot:RemoveCallback(id)
+            end
+            collectiveBots[bot] = nil
+        end)
+        return true
+    end
+end
 
 -- pair/totem bots
 -- tag format: pair_<PAIR GROUP NAME>_[carrier/carried]
@@ -13,6 +107,10 @@ function OnWaveSpawnBot(bot, wave, tags)
     _OnWaveSpawnBot_BossResistance(bot, wave ,tags)
 
     for _, tag in pairs(tags) do
+        if handleCollectiveTagCheck(bot, tag) then
+            goto continue
+        end
+
         local split = {}
 
         for k, _ in string.gmatch(tag, '([^_]+)') do
@@ -51,6 +149,8 @@ function OnWaveSpawnBot(bot, wave, tags)
                 waiting.Carried[pairName] = nil
             end
         end
+
+        ::continue::
     end
 end
 
@@ -59,6 +159,9 @@ function OnWaveInit()
         Carriers = {},
         Carried = {},
     }
+
+    collectiveBots = {}
+    collectiveHealthBarBot = false
 end
 
 function PairBots(carrier, carried)
@@ -73,6 +176,10 @@ function PairBots(carrier, carried)
 			if not lastOrigin then
 				return
 			end
+
+            if not IsValid(carried) or not carried:IsAlive() then
+                return
+            end
 
 			-- prevents carried briefly disappearing after carrier death
 			carried:SetAbsOrigin(lastOrigin + Vector(0, 0, height))
