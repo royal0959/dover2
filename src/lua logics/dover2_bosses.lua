@@ -7,8 +7,8 @@ function ColDronemanSpawn(_, activator)
         [2] = "Upgradeable TF_WEAPON_GRENADELAUNCHER"
     }
     local firerateMult = {
-        [1] = 5,
-        [2] = 4.5
+        [1] = 3,
+        [2] = 2.5
     }
 
     for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
@@ -31,6 +31,7 @@ function ColDronemanSpawn(_, activator)
             ["$sentrymodelprefix"] = "models/rcat/rcat_level2.mdl",
             ["$attributeoverride"] = 1,
             ["$fireratemult"] = firerateMult[i],
+            ["$damagemult"] = 0.5,
             ["$rangemult"] = 3,
             ["$bulletweapon"] = bulletWeapons[i]
         })

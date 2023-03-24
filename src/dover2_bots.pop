@@ -206,9 +206,9 @@ WaveSchedule
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_SNIPERRIFLE"
 
-			"damage penalty" 0.1
+			"damage penalty" 0.5
 			"add cond on hit" 30 // mark for death
-			"add cond on hit duration" 5
+			"add cond on hit duration" 2
 			"sniper fires tracer" 1
 		}
 

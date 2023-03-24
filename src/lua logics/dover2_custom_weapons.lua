@@ -1115,13 +1115,16 @@ end)
 -- disable collision with func_respawnroomvisualizer
 for _, visualizer in pairs(ents.FindAllByClass("func_respawnroomvisualizer")) do
 	visualizer:AddCallback(ON_SHOULD_COLLIDE, function(_, other)
-		if other.IsWormHole and other.m_iTeamNum ~= visualizer.m_iTeamNum then
+		if other.IsWormHole then
 			other:Remove()
 		end
 	end)
 end
 
 function WormholeDiverShot(_, projectile)
+	if not projectile then
+		return
+	end
 	projectile.IsWormHole = true
 end
 
@@ -1150,17 +1153,30 @@ function WormholeDiverEquip(_, activator)
 		for _, flare in pairs(ents.FindAllByClass("tf_projectile_flare")) do
 			if flare.m_hOwnerEntity == activator then
 				local flareOrigin = flare:GetAbsOrigin()
+				local activatorOrigin = activator:GetAbsOrigin()
+
+				-- too short, don't bother
+				-- prevents clipping
+				if flareOrigin:Distance(activatorOrigin) <= 120 then
+					break
+				end
+
 				local DefaultTraceInfo = {
 					start = activator:GetAbsOrigin(),
 					endpos = flareOrigin,
 					mask = (CONTENTS_PLAYERCLIP),
 					collisiongroup = COLLISION_GROUP_PLAYER,
+					-- mins = Vector(-150, -150, -0),
+					-- maxs = Vector(150, 150, 0),
 				}
 
 				-- trace for player clip
 				local trace = util.Trace(DefaultTraceInfo)
 
-				activator:SetAbsOrigin(trace.HitPos or flareOrigin)
+				if not trace.Entity then
+					activator:SetAbsOrigin(flareOrigin)
+				end
+				-- activator:SetAbsOrigin(trace.HitPos or flareOrigin)
 				flare:Remove()
 
 				break
