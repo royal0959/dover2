@@ -148,7 +148,7 @@ WaveSchedule
 			OriginalItemName "Upgradeable TF_WEAPON_MINIGUN" 
 
 			"hidden primary max ammo bonus" 0.0001
-			"move speed bonus" 1.5
+			"move speed bonus" 1.25
 			// "cannot be upgraded" 1
 			"special item description" "Create 2 small projectile shields that orbit around you and damage enemies"
 			"special item description 2" "Increased damage for secondary and melee"
@@ -203,6 +203,7 @@ WaveSchedule
 		{
 			OriginalItemName "The Fortified Compound"
 
+			"fire rate penalty" 1.2
 			"throwable healing" 1 // mark to fire explosive tip
 			"arrow hit kill time" 0.1
 			"special item description" "Fires explosive tipped arrows that sticks to enemies and detonate after 2 seconds"
@@ -1062,6 +1063,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					Health 8000
 				}
 				TFBot
 				{
@@ -1071,6 +1073,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					Health 8000
 				}
 				TFBot
 				{
@@ -1080,6 +1083,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					Health 8000
 				}
 				TFBot
 				{
@@ -1089,6 +1093,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					Health 8000
 				}
 				TFBot
 				{
@@ -1097,6 +1102,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					Health 7000
 				}
 			}
 		}
