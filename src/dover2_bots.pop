@@ -56,6 +56,39 @@ WaveSchedule
 			Item "The Righteous Bison"
 		}
 
+		T_TFBot_Giant_Medic_Uber
+		{
+			Class Medic
+			Name "Giant Uber Medic"
+			ClassIcon medic_uber
+			Skill Expert
+			Health 4500
+
+			Attributes MiniBoss
+
+			Attributes SpawnWithFullCharge
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_MEDIGUN"
+				"ubercharge rate bonus" 5
+				"uber duration bonus" -3
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_SYRINGEGUN_MEDIC"
+				"damage penalty" 0.1
+			}
+			CharacterAttributes
+			{
+				"heal rate bonus" 10
+				"move speed bonus"	0.5
+				"damage force reduction" 0.6
+				"airblast vulnerability multiplier" 0.6
+				"heal rate bonus" 200
+				// "health regen"	40
+			}
+		}
+
         // bosses
         T_TFBot_Col_Droneman
         {
@@ -65,7 +98,8 @@ WaveSchedule
 
 			Class Engineer
 			ClassIcon engineer_wrangler_lite
-			Health 25000
+			Health 35000
+			Scale 1.9
 
 			Skill Expert
 			Item "Dustbowl Devil"
@@ -86,7 +120,7 @@ WaveSchedule
 				Action "$ColDronemanPhase2"
 				Delay 0
 				Repeats 1
-				IfHealthBelow 15000
+				IfHealthBelow 25000
 			}
 
 			FireInput
@@ -95,7 +129,7 @@ WaveSchedule
 				Action "$ColDronemanEngaged"
 				Delay 0
 				Repeats 1
-				IfHealthBelow 8000
+				IfHealthBelow 15000
 			}
 
 			EventChangeAttributes
@@ -128,6 +162,7 @@ WaveSchedule
 				"damage force reduction" 0.5
 				"airblast vulnerability multiplier" 0.5
 				"override footstep sound set" 4
+				"rage giving scale" 0.001
 			}
         }
 

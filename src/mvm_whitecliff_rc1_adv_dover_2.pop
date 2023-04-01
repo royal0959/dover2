@@ -736,11 +736,11 @@ WaveSchedule
 		{
 			Name "1_gpyro"
 			Where spawnbot
-			TotalCount 2
-			MaxActive 2
+			TotalCount 3
+			MaxActive 3
 			SpawnCount 1
-			WaitBeforeStarting 15
-			WaitBetweenSpawns 20
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 15
 		
 			TotalCurrency 150
 		
@@ -780,6 +780,63 @@ WaveSchedule
 				}	
 			}
 		}
+	
+		WaveSpawn
+		{
+			Name "1_gpunchy"
+			WaitForAllDead 1_gpyro
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{ 
+					Template T_TFBot_Giant_Boxing_Heavy
+				}
+				TFBot
+				{ 
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{ 
+					Template T_TFBot_Medic_BigHeal
+				}	
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "1_bigboys"
+			WaitForAllDead 1_gshotgun
+			Where spawnbot
+			TotalCount 0
+			MaxActive 0
+			SpawnCount 0
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 0
+		}
+		WaveSpawn
+		{
+			Name "1_bigboys"
+			WaitForAllDead 1_gpunchy
+			Where spawnbot
+			TotalCount 0
+			MaxActive 0
+			SpawnCount 0
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 0
+		}
 
 		WaveSpawn
 		{
@@ -811,7 +868,7 @@ WaveSchedule
 		WaveSpawn
 		{
 			Name "1_col_droneman"
-			WaitForAllDead 1_gshotgun
+			WaitForAllDead 1_bigboys
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
@@ -876,7 +933,7 @@ WaveSchedule
 			{
 				Name "ambulancetank"
 				StartingPathTrackNode "tank_path_1"
-				Health 18000
+				Health 21000
 				Speed 75
 
 				Template Ambulance
@@ -931,17 +988,24 @@ WaveSchedule
 		{
 			Name "2_gflare"
 			Where spawnbot
-			TotalCount 1
-			MaxActive 1
-			SpawnCount 1
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 		
 			TotalCurrency 100
 		
-			TFBot
+			Squad
 			{
-				Template T_TFBot_Giant_Pyro_Flare_Spammer  
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Flare_Spammer  
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen  
+				}
 			}
 		}
 
@@ -950,7 +1014,7 @@ WaveSchedule
 			Name "2_buffban"
 			WaitForAllDead 2_gflare
 			Where spawnbot
-			TotalCount 15
+			TotalCount 18
 			MaxActive 3
 			SpawnCount 3
 			WaitBeforeStarting 0
@@ -969,7 +1033,7 @@ WaveSchedule
 			Name "2_punchies"
 			WaitForAllSpawned 2_buffban
 			Where spawnbot
-			TotalCount 24
+			TotalCount 40
 			MaxActive 4
 			SpawnCount 4
 			WaitBeforeStarting 5
@@ -990,10 +1054,10 @@ WaveSchedule
 			WaitForAllDead 2_ambulance
 			Where spawnbot
 			TotalCount 8
-			MaxActive 4
+			MaxActive 8
 			SpawnCount 4
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 15
 		
 			TotalCurrency 200
 		
@@ -1031,9 +1095,35 @@ WaveSchedule
 		
 			TotalCurrency 100
 		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Uber
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "2_heavy"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 50
+		
 			TFBot
 			{
-				Template T_TFBot_Giant_Heavyweapons
+				Class Heavyweapons
+				Skill Easy
 			}
 		}
 
@@ -1102,7 +1192,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
-					Health 7000
+					Health 9000
 				}
 			}
 		}
@@ -1127,7 +1217,7 @@ WaveSchedule
 			// 	{
 					TFBot
 					{
-						// SpawnTemplate Yakuza_Title_Card_Tower
+						SpawnTemplate Yakuza_Title_Card_Tower
 						Class Scout
 						Attributes UseBossHealthBar
 						Attributes MiniBoss
