@@ -545,7 +545,7 @@ function DroneFired(sentryName, projectile)
 	local mothershipUpgrade = primary:GetAttributeValue("throwable damage")
 
 	if mothershipUpgrade then
-		sentryEnt.m_flModelScale = 2.5
+		sentryEnt.m_flModelScale = 1.75
 		timer.Simple(0.1, function()
 			sentryEnt:SetHealth(250)
 		end)

@@ -470,6 +470,35 @@ WaveSchedule
 			Tier 1
 		}
 
+		wormhole_stable
+		{
+			Name "Stable Mod: Projectile follow crosshair" 
+			Attribute "mod projectile heat follow crosshair" 
+			Cap 1
+			Increment 1
+			Cost 0
+
+			AllowedWeapons 
+			{
+				ItemName "Wormhome Diver"
+			}
+			Tier 1
+		}
+		wormhole_unstable
+		{
+			Name "Unstable Mod: Faster projectile speed" 
+			Attribute "Projectile speed increased" 
+			Cap 2
+			Increment 2
+			Cost 0
+
+			AllowedWeapons 
+			{
+				ItemName "Wormhome Diver"
+			}
+			Tier 1
+		}
+
 		redeemer_dmg
 		{
 			Name "+25% damage bonus" 
