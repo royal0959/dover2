@@ -89,6 +89,33 @@ WaveSchedule
 			}
 		}
 
+		T_TFBot_Giant_Boxing_Heavy_Fast
+		{
+			Class heavyweapons
+			Name "Super Heavyweight Champ"
+			ClassIcon heavy_gru_giant
+			Skill expert
+			Health 5000
+			Item "Gloves of Running Urgently MvM"
+			// Item "Pugilist's Protector"
+			WeaponRestrictions MeleeOnly
+			Attributes MiniBoss
+			ItemAttributes
+			{
+				ItemName "Gloves of Running Urgently MvM"
+				"fire rate bonus" 0.6
+				"damage bonus" 1.2
+
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
+			}
+		}
+
         // bosses
         T_TFBot_Col_Droneman
         {
@@ -237,6 +264,21 @@ WaveSchedule
 			"Projectile speed decreased" 0.4
 		}
 
+		ROCKETLAUNCHER_WEAK
+		{
+			OriginalItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+
+			"damage penalty" 0.25
+			"mult projectile scale" 0.5
+		}
+		GRENADELAUNCHER_WEAK
+		{
+			OriginalItemName "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+
+			"damage penalty" 0.25
+			"mult projectile scale" 0.5
+		}
+
 		MARKER
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_SNIPERRIFLE"
@@ -251,7 +293,7 @@ WaveSchedule
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_PIPEBOMBLAUNCHER"
 
-			"max pipebombs decreased" -6
+			"max pipebombs decreased" -5
 			"damage penalty" 0.8
 		}
 	}

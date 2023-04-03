@@ -735,11 +735,30 @@ WaveSchedule
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 10
 		
-			TotalCurrency 50
+			TotalCurrency 25
 		
 			TFBot
 			{ 
 				Template T_TFBot_Soldier_RocketShotgun
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "1_flare"
+			WaitForAllSpawned 1_bb
+			Where flankers
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 4
+		
+			TotalCurrency 25
+		
+			TFBot
+			{ 
+				Template T_TFBot_Pyro_Flaregun
 			}
 		}
 
@@ -752,7 +771,7 @@ WaveSchedule
 			MaxActive 4
 			SpawnCount 2
 			WaitBeforeStarting 5
-			WaitBetweenSpawns 8
+			WaitBetweenSpawns 12
 		
 			TotalCurrency 75
 		
@@ -770,7 +789,7 @@ WaveSchedule
 			MaxActive 3
 			SpawnCount 1
 			WaitBeforeStarting 10
-			WaitBetweenSpawns 15
+			WaitBetweenSpawns 20
 		
 			TotalCurrency 150
 		
@@ -789,7 +808,7 @@ WaveSchedule
 			TotalCount 3
 			MaxActive 3
 			SpawnCount 3
-			WaitBeforeStarting 0
+			WaitBeforeStarting 5
 			WaitBetweenSpawns 0
 		
 			TotalCurrency 100
@@ -819,7 +838,7 @@ WaveSchedule
 			TotalCount 3
 			MaxActive 3
 			SpawnCount 3
-			WaitBeforeStarting 10
+			WaitBeforeStarting 5
 			WaitBetweenSpawns 0
 		
 			TotalCurrency 100
@@ -828,7 +847,7 @@ WaveSchedule
 			{
 				TFBot
 				{ 
-					Template T_TFBot_Giant_Boxing_Heavy
+					Template T_TFBot_Giant_Boxing_Heavy_Fast
 				}
 				TFBot
 				{ 
@@ -877,7 +896,7 @@ WaveSchedule
 			MaxActive 2
 			SpawnCount 2
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 14
+			WaitBetweenSpawns 12
 		
 			TotalCurrency 50
 			Support 1
@@ -914,7 +933,7 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Name "1_droneman_assist"
+			Name "1_droneman_assist_bat"
 			WaitForAllSpawned 1_col_droneman
 			Where flankers
 			TotalCount 3
@@ -930,6 +949,25 @@ WaveSchedule
 			{
 				Template T_TFBot_Scout_Melee
 				ClassIcon scout_bat
+			}
+		}
+		WaveSpawn
+		{
+			Name "1_droneman_assist_knights"
+			WaitForAllSpawned 1_col_droneman
+			Where flankers
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 7
+
+			TotalCurrency 25
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
 			}
 		}
     }
@@ -1359,6 +1397,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					UseMeleeThreatPrioritization 1
 					Health 8000
 				}
 				TFBot
@@ -1369,6 +1408,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					UseMeleeThreatPrioritization 1
 					Health 8000
 				}
 				TFBot
@@ -1379,6 +1419,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					UseMeleeThreatPrioritization 1
 					Attributes SpawnWithFullCharge
 					Item "The Battalion's Backup"
 					CharacterAttributes
@@ -1395,6 +1436,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					UseMeleeThreatPrioritization 1
 					Attributes SpawnWithFullCharge
 					Item "The Buff Banner"
 					CharacterAttributes
@@ -1410,6 +1452,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
+					UseMeleeThreatPrioritization 1
 					Attributes SpawnWithFullCharge
 					item "The Concheror"
 					CharacterAttributes

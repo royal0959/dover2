@@ -2,9 +2,9 @@
 -- 2 drones on each side of him that can be destroyed, has the wrangler out
 function ColDronemanSpawn(_, activator)
     local bulletWeapons = {
-        [1] = "Upgradeable TF_WEAPON_ROCKETLAUNCHER",
+        [1] = "ROCKETLAUNCHER_WEAK",
         -- [1] = "MARKER",
-        [2] = "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+        [2] = "GRENADELAUNCHER_WEAK"
     }
     local firerateMult = {
         [1] = 1.5,
@@ -32,7 +32,7 @@ function ColDronemanSpawn(_, activator)
             ["$attributeoverride"] = 1,
             ["$rapidfire"] = 1,
             ["$fireratemult"] = firerateMult[i],
-            ["$damagemult"] = 0.3,
+            -- ["$damagemult"] = 0.3,
             ["$rangemult"] = 3,
             ["$bulletweapon"] = bulletWeapons[i]
         })
@@ -90,7 +90,7 @@ function ColDronemanPhase2(_, activator, forced)
     end
 
     for _, drone in pairs(getDrones(activator)) do
-        drone["$damagemult"] = 0.5
+        -- drone["$damagemult"] = 0.5
         drone["$fireratemult"] = 2
         drone["$bulletweapon"] = "STICKYBOMB_DRONE"
         -- drone["$fireratemult"] = 5
