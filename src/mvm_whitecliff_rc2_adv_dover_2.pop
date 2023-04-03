@@ -1341,7 +1341,7 @@ WaveSchedule
 			TotalCount 5
 			MaxActive 5
 			SpawnCount 1
-			WaitBeforeStarting 5.1
+			WaitBeforeStarting 0.1
 			WaitBetweenSpawns 0.1
 		
 			TotalCurrency 0
@@ -1364,7 +1364,7 @@ WaveSchedule
 				TFBot
 				{
 					Template T_TFBot_Giant_Soldier_Crit
-					tag "pair_towerA_carried_delayed"
+					tag "pair_towerA_carried"
 					tag "pair_towerB_carrier"
 					tag collective_bot
 					
@@ -1374,24 +1374,8 @@ WaveSchedule
 				TFBot
 				{
 					Template T_TFBot_Giant_Soldier_Spammer
-					tag "pair_towerB_carried_delayed"
+					tag "pair_towerB_carried"
 					tag "pair_towerC_carrier"
-					tag collective_bot
-					
-					ClassIcon scout_bat
-					Attributes SpawnWithFullCharge
-					item "The Concheror"
-					CharacterAttributes
-					{
-						"increase buff duration"	9.0
-					}
-					Health 8000
-				}
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_Spammer_Reload
-					tag "pair_towerC_carried_delayed"
-					tag "pair_towerD_carrier"
 					tag collective_bot
 					
 					ClassIcon scout_bat
@@ -1405,13 +1389,29 @@ WaveSchedule
 				}
 				TFBot
 				{
-					Template T_TFBot_Giant_Soldier_SlowBarrage
-					tag "pair_towerD_carried_delayed"
+					Template T_TFBot_Giant_Soldier_Spammer_Reload
+					tag "pair_towerC_carried"
+					tag "pair_towerD_carrier"
 					tag collective_bot
 					
 					ClassIcon scout_bat
 					Attributes SpawnWithFullCharge
 					Item "The Buff Banner"
+					CharacterAttributes
+					{
+						"increase buff duration"	9.0
+					}
+					Health 8000
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_SlowBarrage
+					tag "pair_towerD_carried"
+					tag collective_bot
+					
+					ClassIcon scout_bat
+					Attributes SpawnWithFullCharge
+					item "The Concheror"
 					CharacterAttributes
 					{
 						"increase buff duration"	9.0
@@ -1428,7 +1428,7 @@ WaveSchedule
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 5
+			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 		
 			TotalCurrency 0
