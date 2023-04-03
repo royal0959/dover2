@@ -148,13 +148,20 @@ function OnWaveSpawnBot(bot, wave, tags)
                 waitTable[pairName] = {}
             end
 
-            table.insert(waitTable[pairName], bot)
-            if otherWaitTable[pairName] and otherWaitTable[pairName][1] then
-                PairBots(waiting.Carriers[pairName][1], waiting.Carried[pairName][1])
-
-                waiting.Carriers[pairName] = nil
-                waiting.Carried[pairName] = nil
+            local delayDuration = 0
+            if split[4] and split[4]:lower() == "delayed" then
+                delayDuration = 0.5
             end
+
+            timer.Simple(delayDuration, function()
+                table.insert(waitTable[pairName], bot)
+                if otherWaitTable[pairName] and otherWaitTable[pairName][1] then
+                    PairBots(waiting.Carriers[pairName][1], waiting.Carried[pairName][1])
+    
+                    waiting.Carriers[pairName] = nil
+                    waiting.Carried[pairName] = nil
+                end
+            end)
         end
 
         ::continue::
