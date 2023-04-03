@@ -2,13 +2,13 @@
 -- 2 drones on each side of him that can be destroyed, has the wrangler out
 function ColDronemanSpawn(_, activator)
     local bulletWeapons = {
-        -- [1] = "Upgradeable TF_WEAPON_ROCKETLAUNCHER",
-        [1] = "MARKER",
+        [1] = "Upgradeable TF_WEAPON_ROCKETLAUNCHER",
+        -- [1] = "MARKER",
         [2] = "Upgradeable TF_WEAPON_GRENADELAUNCHER"
     }
     local firerateMult = {
-        [1] = 3,
-        [2] = 2.5
+        [1] = 1.5,
+        [2] = 2
     }
 
     for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
@@ -30,8 +30,9 @@ function ColDronemanSpawn(_, activator)
 
             ["$sentrymodelprefix"] = "models/rcat/rcat_level2.mdl",
             ["$attributeoverride"] = 1,
+            ["$rapidfire"] = 1,
             ["$fireratemult"] = firerateMult[i],
-            ["$damagemult"] = 0.5,
+            ["$damagemult"] = 0.3,
             ["$rangemult"] = 3,
             ["$bulletweapon"] = bulletWeapons[i]
         })
@@ -41,7 +42,7 @@ function ColDronemanSpawn(_, activator)
         -- end)
         drone:SetName(dronePrefix..tostring(drone:GetHandleIndex()))
         -- drone:SetOwner(activator)
-        drone:SetHealth(2500)
+        drone:SetHealth(7500)
 
         local offsetMult = i == 1 and 1 or -1
         local offset = Vector(0, 75 * offsetMult, 100)
@@ -89,7 +90,8 @@ function ColDronemanPhase2(_, activator, forced)
     end
 
     for _, drone in pairs(getDrones(activator)) do
-        drone["$fireratemult"] = 4
+        drone["$damagemult"] = 0.5
+        drone["$fireratemult"] = 2
         drone["$bulletweapon"] = "STICKYBOMB_DRONE"
         -- drone["$fireratemult"] = 5
         -- drone["$bulletweapon"] = "HOMING_ROCKETLAUNCHER_DRONE"

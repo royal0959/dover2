@@ -470,34 +470,35 @@ WaveSchedule
 			Tier 1
 		}
 
-		wormhole_stable
-		{
-			Name "Stable Mod: Projectile follow crosshair" 
-			Attribute "mod projectile heat follow crosshair" 
-			Cap 1
-			Increment 1
-			Cost 0
+		// TODO: change the attributes of these to be unique so drone walker won't be unable to upgrade
+		// wormhole_stable
+		// {
+		// 	Name "Stable Mod: Projectile follow crosshair" 
+		// 	Attribute "mod projectile heat follow crosshair" 
+		// 	Cap 1
+		// 	Increment 1
+		// 	Cost 0
 
-			AllowedWeapons 
-			{
-				ItemName "Wormhome Diver"
-			}
-			Tier 1
-		}
-		wormhole_unstable
-		{
-			Name "Unstable Mod: Faster projectile speed" 
-			Attribute "Projectile speed increased" 
-			Cap 2
-			Increment 2
-			Cost 0
+		// 	AllowedWeapons 
+		// 	{
+		// 		ItemName "Wormhome Diver"
+		// 	}
+		// 	Tier 1
+		// }
+		// wormhole_unstable
+		// {
+		// 	Name "Unstable Mod: Faster projectile speed" 
+		// 	Attribute "Projectile speed increased" 
+		// 	Cap 2
+		// 	Increment 2
+		// 	Cost 0
 
-			AllowedWeapons 
-			{
-				ItemName "Wormhome Diver"
-			}
-			Tier 1
-		}
+		// 	AllowedWeapons 
+		// 	{
+		// 		ItemName "Wormhome Diver"
+		// 	}
+		// 	Tier 1
+		// }
 
 		redeemer_dmg
 		{
@@ -1116,9 +1117,9 @@ WaveSchedule
 			Name "2_gheavy"
 			WaitForAllSpawned 2_knightgauntlet
 			Where spawnbot
-			TotalCount 1
-			MaxActive 1
-			SpawnCount 1
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
 			WaitBeforeStarting 15
 			WaitBetweenSpawns 0
 		
