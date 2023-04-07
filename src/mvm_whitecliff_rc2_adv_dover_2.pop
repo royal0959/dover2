@@ -1221,7 +1221,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
-					Health 8000
+					Health 7500
 				}
 				TFBot
 				{
@@ -1231,7 +1231,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
-					Health 8000
+					Health 7500
 				}
 				TFBot
 				{
@@ -1241,12 +1241,12 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
-					Attributes SpawnWithFullCharge
-					item "The Concheror"
-					CharacterAttributes
-					{
-						"increase buff duration"	9.0
-					}
+					// Attributes SpawnWithFullCharge
+					// item "The Concheror"
+					// CharacterAttributes
+					// {
+					// 	"increase buff duration"	9.0
+					// }
 					Health 8000
 				}
 				TFBot
@@ -1258,7 +1258,7 @@ WaveSchedule
 					
 					ClassIcon scout_bat
 					Attributes SpawnWithFullCharge
-					Item "The Battalion's Backup"
+					item "The Concheror"
 					CharacterAttributes
 					{
 						"increase buff duration"	9.0
