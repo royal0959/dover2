@@ -114,7 +114,7 @@ function _OnWaveSpawnBot_BossResistance(bot, wave, tags)
     end
 end
 
-local activeShieldOwners
+local activeShieldOwners = {}
 ents.AddCreateCallback("entity_medigun_shield", function (shield)
 	if not shieldCanteenBot then
 		return

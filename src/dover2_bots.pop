@@ -249,11 +249,11 @@ WaveSchedule
 	// bot weapons
 	CustomWeapon
 	{
-		// unused
 		HOMING_ROCKETLAUNCHER_DRONE
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
 
+			"damage bonus" 1.5
 			"mod projectile heat seek power" 180
 			"mod projectile heat aim error" 0
 			"mod projectile heat aim time" 3
@@ -261,21 +261,21 @@ WaveSchedule
 
 			"projectile lifetime" 10
 
-			"Projectile speed decreased" 0.4
+			"Projectile speed decreased" 0.3
 		}
 
 		ROCKETLAUNCHER_WEAK
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
 
-			"damage penalty" 0.25
+			"damage penalty" 0.75
 			"mult projectile scale" 0.5
 		}
 		GRENADELAUNCHER_WEAK
 		{
 			OriginalItemName "Upgradeable TF_WEAPON_GRENADELAUNCHER"
 
-			"damage penalty" 0.25
+			"damage penalty" 0.5
 			"mult projectile scale" 0.5
 		}
 
@@ -294,7 +294,7 @@ WaveSchedule
 			OriginalItemName "Upgradeable TF_WEAPON_PIPEBOMBLAUNCHER"
 
 			"max pipebombs decreased" -5
-			"damage penalty" 0.8
+			"damage penalty" 0.9
 		}
 	}
 }
