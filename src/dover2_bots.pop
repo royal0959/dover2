@@ -195,12 +195,13 @@ WaveSchedule
 
 		T_TFBot_Helicopter_Base
 		{
+            SpawnTemplate "Yakuza_Title_Card_Helicopter"
 			SpawnTemplate "Helicopter"
 
 			Name "Helicopter"
 
 			Class Soldier
-			ClassIcon helicopter_nys
+			ClassIcon helicopter_blu_nys
 			Health 35000
 
 			Skill Expert

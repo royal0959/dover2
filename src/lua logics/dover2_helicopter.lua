@@ -37,12 +37,38 @@ function HelicopterBot(_, activator)
         skin = 1,
     })
 
+    helicopterBaseBoss:AddCallback(ON_DAMAGE_RECEIVED_PRE, function(_, damageInfo)
+        if not damageInfo.Weapon then
+            return
+        end
+
+        if damageInfo.Weapon.m_iClassname == "tf_weapon_minigun" then
+            -- 70% damage resistance to minigun
+            damageInfo.Damage = damageInfo.Damage * 0.3
+        end
+
+
+        if damageInfo.DamageType & DMG_CRITICAL ~= 0 then
+            -- 40% damage resistance to crit
+            damageInfo.Damage = damageInfo.Damage * 0.6
+        end
+
+        return true
+    end)
+
+    helicopterBaseBoss:AddCallback(ON_SHOULD_COLLIDE, function(_, other)
+        if other:IsPlayer() then
+            return false
+        end
+    end)
+
     helicopterBaseBoss:AddCallback(ON_DAMAGE_RECEIVED_POST, function(_, damageInfo)
         activator.m_iHealth = helicopterBaseBoss.m_iHealth
     end)
 
     helicopterBaseBoss:AddCallback(ON_REMOVE, function()
         activator:Suicide()
+	    util.ParticleEffect("asplode_hoodoo", helicopterBaseBoss:GetAbsOrigin(), Vector(0, 0, 0))
     end)
 
     helicopterBaseBoss:SetCollisionFilter(redFilter)
@@ -157,10 +183,10 @@ function HelicopterBot(_, activator)
         local didHitObstacle
         for _, traceOffset in pairs(traceOffsets) do
             local origin = activatorOrigin + traceOffset
-            local obstacle, obstaclePos = traceBetween(origin, origin + (Vector(0, 0, MAX_OFFSET + 50) + traceOffset))
+            local obstacle, obstaclePos = traceBetween(origin, origin + (Vector(0, 0, MAX_OFFSET + 80) + traceOffset))
 
             if obstacle then
-                local obstacleDistance = origin.z - obstaclePos.z
+                local obstacleDistance = (origin.z - obstaclePos.z) - 30
                 offsetGoal = MAX_OFFSET + obstacleDistance
                 didHitObstacle = true
 

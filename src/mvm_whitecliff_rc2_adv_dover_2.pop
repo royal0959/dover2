@@ -3,6 +3,7 @@
 
 #base robot_standard.pop
 #base robot_giant.pop
+#base robot_gatebot.pop
 #base dover2_bots.pop
 
 #base rotating_shield_whitecliff.pop
@@ -1344,6 +1345,7 @@ WaveSchedule
 		// }
 	}
 
+	// the first wave where I remembered whitecliff is a gate map
 	Wave // Wave 3
 	{
 		StartWaveOutput
@@ -1366,10 +1368,42 @@ WaveSchedule
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 500
+			TotalCurrency 400
 			TFBot
 			{
 				Template T_TFBot_Helicopter_Base
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_fastbombboys"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_fastgateboys"
+			Where spawnbot
+			TotalCount 25
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 3
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFGateBot_Scout_Hard
 			}
 		}
 	}
