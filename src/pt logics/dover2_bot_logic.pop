@@ -99,6 +99,29 @@ WaveSchedule
 			}
 		}
 
+		Helicopter
+		{
+			OnSpawnOutput
+			{
+				Target "popscript"
+				Action "$HelicopterBot"
+			}
+		}
+
+		ColDroneman
+		{
+			OnSpawnOutput
+			{
+				Target "popscript"
+				Action "$ColDronemanSpawn"
+			}
+			OnParentKilledOutput
+			{
+				Target "popscript"
+				Action "$ColDronemanDeath"
+			}
+		}
+
 		Rocketman
 		{
 			OnSpawnOutput

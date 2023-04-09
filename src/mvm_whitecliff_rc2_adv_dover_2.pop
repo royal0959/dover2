@@ -21,6 +21,7 @@ WaveSchedule
 	PrecacheModel "models/props_mvm/mvm_comically_small_player_shield.mdl"
     PrecacheModel "models/bots/demo/red_sentry_buster.mdl"
 	PrecacheModel "models/rcat/rcat_level2.mdl"
+	PrecacheModel "models/props_frontline/helicopter_windows.mdl"
 	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
 
     Advanced 1
@@ -36,6 +37,7 @@ WaveSchedule
 	LuaScriptFile "scripts/freelance_mercenary_logic.lua"
 	LuaScriptFile "scripts/dover2_custom_weapons.lua"
 	LuaScriptFile "scripts/dover2_bosses.lua"
+	LuaScriptFile "scripts/dover2_helicopter.lua"
 	LuaScriptFile "scripts/dover2_bots.lua"
 	LuaScriptFile "scripts/dover2_boss_resistance.lua"
 	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua"
@@ -1054,7 +1056,7 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Name "2_gflare"
+			Name "2_gdemo"
 			Where spawnbot
 			TotalCount 2
 			MaxActive 2
@@ -1068,7 +1070,7 @@ WaveSchedule
 			{
 				TFBot
 				{
-					Template T_TFBot_Giant_Pyro_Flare_Spammer  
+					Template T_TFBot_Giant_Demoman  
 				}
 				TFBot
 				{
@@ -1080,7 +1082,7 @@ WaveSchedule
 		WaveSpawn
 		{
 			Name "2_buffban"
-			WaitForAllDead 2_gflare
+			WaitForAllDead 2_gdemo
 			Where spawnbot
 			TotalCount 18
 			MaxActive 3
@@ -1357,6 +1359,36 @@ WaveSchedule
 
 		WaveSpawn
 		{
+			Name "3_heli"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 500
+			TFBot
+			{
+				Template T_TFBot_Helicopter_Base
+			}
+		}
+	}
+
+	Wave // Wave 4
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+
+		WaveSpawn
+		{
 			Name "1_col_droneman"
 			// WaitForAllDead 1_gshotgun
 			Where spawnbot
@@ -1371,98 +1403,5 @@ WaveSchedule
 				Template T_TFBot_Col_Droneman
 			}
 		}
-
-		// WaveSpawn
-		// {
-		// 	Name "3"
-		// 	Where spawnbot
-		// 	TotalCount 5
-		// 	MaxActive 5
-		// 	SpawnCount 1
-		// 	WaitBeforeStarting 0.1
-		// 	WaitBetweenSpawns 0.1
-		
-		// 	TotalCurrency 0
-		
-		// 	Squad
-		// 	{
-		// 		NoWaitForFormation 1
-		// 		NoFormation 1
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Giant_Scout_Fast
-		// 			tag "pair_scoutA_carrier"
-		// 			tag collective_bot
-		// 			Action Mobber
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Giant_Scout_Fast
-		// 			tag "pair_scoutA_carried"
-		// 			tag "pair_scoutB_carrier"
-		// 			tag collective_bot
-		// 			Action Mobber
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Giant_Scout_Fast
-		// 			tag "pair_scoutB_carried"
-		// 			tag "pair_scoutC_carrier"
-		// 			tag collective_bot
-		// 			Action Mobber
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Giant_Scout_Fast
-		// 			tag "pair_scoutC_carried"
-		// 			tag "pair_scoutD_carrier"
-		// 			tag collective_bot
-		// 			Action Mobber
-		// 		}
-		// 		TFBot
-		// 		{
-		// 			Template T_TFBot_Giant_Scout_Fast
-		// 			tag "pair_scoutD_carried"
-		// 			tag collective_bot
-		// 			Action Mobber
-		// 		}
-		// 	}
-		// }
-
-		// WaveSpawn
-		// {
-		// 	Name "2_tower_healthbar"
-		// 	Where spawnbot
-		// 	TotalCount 1
-		// 	MaxActive 1
-		// 	SpawnCount 1
-		// 	WaitBeforeStarting 0
-		// 	WaitBetweenSpawns 0
-		
-		// 	TotalCurrency 0
-		// 	Support 1
-		
-		// 	RandomChoice
-		// 	{
-		// 		RandomChoice
-		// 		{
-		// 			TFBot
-		// 			{
-		// 				Class Scout
-		// 				Attributes UseBossHealthBar
-		// 				Attributes MiniBoss
-		// 				ClassIcon heavy_robot_nys
-		// 				CharacterAttributes
-		// 				{
-		// 					"move speed penalty" 0.0001
-		// 					"no_jump" 1
-		// 					"cannot pick up intelligence" 1
-		// 					"max health additive penalty" -124
-		// 				}
-		// 				tag collective_healthbar
-		// 			}
-		// 		}
-		// 	}
-		// }
 	}
 }
