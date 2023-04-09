@@ -37,6 +37,14 @@ function HelicopterBot(_, activator)
         skin = 1,
     })
 
+    helicopterBaseBoss:AddCallback(ON_DAMAGE_RECEIVED_POST, function(_, damageInfo)
+        activator.m_iHealth = helicopterBaseBoss.m_iHealth
+    end)
+
+    helicopterBaseBoss:AddCallback(ON_REMOVE, function()
+        activator:Suicide()
+    end)
+
     helicopterBaseBoss:SetCollisionFilter(redFilter)
 
     helicopterBaseBoss.effects = 32 -- no draw
@@ -119,7 +127,9 @@ function HelicopterBot(_, activator)
         activator:RemoveCallback(collideCallback)
 
         timer.Stop(logic)
-        helicopterBaseBoss:Remove()
+        if IsValid(helicopterBaseBoss) then
+            helicopterBaseBoss:Remove()
+        end
         helicopterModel:Remove()
         rocketMimic:Remove()
         stickyMimic:Remove()
