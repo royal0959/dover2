@@ -179,6 +179,7 @@ WaveSchedule
 				"projectile spread angle penalty" 3
 				"fire rate bonus" 0.1
 				"Projectile speed decreased" 0.3
+				"dmg bonus vs buildings" 2
 				// "always crit" 1
 			}
 
@@ -202,7 +203,7 @@ WaveSchedule
 
 			Class Soldier
 			ClassIcon helicopter_blu_nys
-			Health 35000
+			Health 30000
 
 			Skill Expert
 			Action Mobber
@@ -323,7 +324,7 @@ WaveSchedule
 			"damage bonus" 1.5
 			"mod projectile heat seek power" 180
 			"mod projectile heat aim error" 0
-			"mod projectile heat aim time" 3
+			"mod projectile heat aim time" 1
 			"projectile trail particle" "eyeboss_projectile"
 
 			"projectile lifetime" 10
@@ -361,7 +362,9 @@ WaveSchedule
 			OriginalItemName "Upgradeable TF_WEAPON_PIPEBOMBLAUNCHER"
 
 			"max pipebombs decreased" -5
-			"damage penalty" 0.9
+			"mult projectile scale" 1.25
+			"dmg bonus vs buildings" 2
+			// "damage penalty" 0.9
 		}
 	}
 }

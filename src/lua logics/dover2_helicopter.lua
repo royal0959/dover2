@@ -34,6 +34,7 @@ function HelicopterBot(_, activator)
     local helicopterBaseBoss = ents.CreateWithKeys("base_boss", {
         teamnum = activator.m_iTeamNum,
         model = "models/props_frontline/helicopter_windows.mdl",
+        solid = 0,
         skin = 1,
     })
 
@@ -42,15 +43,23 @@ function HelicopterBot(_, activator)
             return
         end
 
-        if damageInfo.Weapon.m_iClassname == "tf_weapon_minigun" then
-            -- 70% damage resistance to minigun
-            damageInfo.Damage = damageInfo.Damage * 0.3
+        if not damageInfo.DamageType then
+            return
         end
 
+        if damageInfo.Weapon.m_iClassname == "tf_weapon_minigun" then
+            -- 10% damage resistance to minigun
+            damageInfo.Damage = damageInfo.Damage * 0.9
+        end
 
         if damageInfo.DamageType & DMG_CRITICAL ~= 0 then
             -- 40% damage resistance to crit
             damageInfo.Damage = damageInfo.Damage * 0.6
+        end
+
+        if damageInfo.DamageType & DMG_MELEE ~= 0 then
+            -- take crippling damage to melee
+            damageInfo.Damage = damageInfo.Damage * 5
         end
 
         return true
@@ -110,7 +119,7 @@ function HelicopterBot(_, activator)
 		["ModelScale"] = 1,
         ["$positiononly"] = 1,
 
-        damage = 125,
+        damage = 100,
     })
 
     local stickyMimic = ents.CreateWithKeys("tf_point_weapon_mimic", {
@@ -141,6 +150,22 @@ function HelicopterBot(_, activator)
     -- helicopterModel["$fakeparentoffset"] = Vector(0, 0, MAX_OFFSET)
     -- helicopterModel:SetFakeParent(activator)
 
+
+    local annotation = ents.CreateWithKeys("training_annotation", {
+        display_text = "The helicopter is vulnerable to melee damage!",
+        lifetime = 5,
+    })
+
+    timer.Simple(1, function ()
+        annotation:SetAbsOrigin(helicopterBaseBoss:GetAbsOrigin())
+        annotation:Show()
+    end)
+
+    timer.Simple(7, function()
+        annotation:Remove()
+    end)
+
+
     local offset = MAX_OFFSET
     local offsetGoal = offset
     local offsetLerp = 1
@@ -153,12 +178,11 @@ function HelicopterBot(_, activator)
         activator:RemoveCallback(collideCallback)
 
         timer.Stop(logic)
-        if IsValid(helicopterBaseBoss) then
-            helicopterBaseBoss:Remove()
+        for _, e in pairs({helicopterBaseBoss, redFilter, helicopterModel, rocketMimic, stickyMimic}) do
+            if IsValid(e) then
+                e:Remove()
+            end
         end
-        helicopterModel:Remove()
-        rocketMimic:Remove()
-        stickyMimic:Remove()
     end
 
     logic = timer.Create(0, function()

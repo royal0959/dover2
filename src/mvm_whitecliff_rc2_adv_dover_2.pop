@@ -135,6 +135,8 @@ WaveSchedule
 		{
 			OriginalItemName "The Detonator"
 
+			"penetrate teammates" 1
+
 			"damage penalty" 0
 			"Projectile speed decreased" 0.4
 
@@ -280,6 +282,13 @@ WaveSchedule
 		}
 
 		Action {Item "Freelance Mercenary"}
+	}
+
+	DisallowUpgrade
+	{
+		Upgrade	"damage bonus" 
+		MaxLevel 2
+		ItemName "PHD Jumper"
 	}
 
 	DisallowUpgrade
@@ -1224,7 +1233,13 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
-					Health 7500
+					Attributes SpawnWithFullCharge
+					item "The Concheror"
+					CharacterAttributes
+					{
+						"increase buff duration"	9.0
+					}
+					Health 7000
 				}
 				TFBot
 				{
@@ -1234,7 +1249,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
-					Health 7500
+					Health 7000
 				}
 				TFBot
 				{
@@ -1250,7 +1265,7 @@ WaveSchedule
 					// {
 					// 	"increase buff duration"	9.0
 					// }
-					Health 8000
+					Health 7500
 				}
 				TFBot
 				{
@@ -1260,13 +1275,7 @@ WaveSchedule
 					tag collective_bot
 					
 					ClassIcon scout_bat
-					Attributes SpawnWithFullCharge
-					item "The Concheror"
-					CharacterAttributes
-					{
-						"increase buff duration"	9.0
-					}
-					Health 8000
+					Health 7500
 				}
 				TFBot
 				{
@@ -1281,7 +1290,7 @@ WaveSchedule
 					{
 						"increase buff duration"	9.0
 					}
-					Health 9000
+					Health 8000
 				}
 			}
 		}
@@ -1387,7 +1396,7 @@ WaveSchedule
 			TotalCurrency 100
 			TFBot
 			{
-				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				Template T_TFBot_Giant_Boxing_Heavy_Fast
 			}
 		}
 
@@ -1395,15 +1404,154 @@ WaveSchedule
 		{
 			Name "3_fastgateboys"
 			Where spawnbot
-			TotalCount 25
-			MaxActive 5
-			SpawnCount 5
+			TotalCount 24
+			MaxActive 4
+			SpawnCount 4
 			WaitBeforeStarting 10
 			WaitBetweenSpawns 3
-			TotalCurrency 100
+			TotalCurrency 50
 			TFBot
 			{
 				Template T_TFGateBot_Scout_Hard
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_soldierboys"
+			Where spawnbot
+			TotalCount 15
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			TFBot
+			{
+				Template T_TFGateBot_Soldier_Hard
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_critman"
+			WaitForAllDead 3_fastbombboys
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_bighealflares_support"
+			WaitForAllDead 3_critman
+			Where spawnbot
+			TotalCount 24
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+
+			Support Limited
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro_Flaregun
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_heaterboy"
+			WaitForAllDead 3_critman
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heater
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_SlowRecharge
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_SlowRecharge
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_postcritgate"
+			WaitForAllDead 3_critman
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 12
+			TotalCurrency 25
+
+			Support 1
+
+			TFBot
+			{
+				Template T_TFGateBot_Heavy_Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "3_finale"
+			WaitForAllDead 3_critman
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_DemoMan_PrinceTavish
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Extended_Concheror
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Extended_Concheror
+				}
 			}
 		}
 	}

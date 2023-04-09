@@ -111,6 +111,16 @@ function ColDronemanPhase2(_, activator, forced)
         drone["$weaponname"] = "STICKYBOMB_DRONE"
 		drone["$firetime"] = 0.8
 	end
+
+	local oneLiner = "{blue}"
+	.. "Colonel Dronemann:"
+	.. "{reset} These babies are in second gear now. Watch your steps"
+
+	local allPlayers = ents.GetAllPlayers()
+
+	for _, player in pairs(allPlayers) do
+		player:AcceptInput("$DisplayTextChat", oneLiner)
+	end
 end
 
 function ColDronemanEngaged(_, activator, forced)
@@ -132,6 +142,16 @@ function ColDronemanEngaged(_, activator, forced)
 		if wearable.m_hOwnerEntity == activator then
 			wearable.m_flModelScale = 1.5
 		end
+	end
+
+	local oneLiner = "{blue}"
+	.. "Colonel Dronemann:"
+	.. "{reset} Ring-a-Ding-Ding baby!"
+
+	local allPlayers = ents.GetAllPlayers()
+
+	for _, player in pairs(allPlayers) do
+		player:AcceptInput("$DisplayTextChat", oneLiner)
 	end
 end
 
