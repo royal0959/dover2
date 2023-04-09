@@ -113,8 +113,8 @@ function ColDronemanPhase2(_, activator, forced)
 	end
 
 	local oneLiner = "{blue}"
-	.. "Colonel Dronemann:"
-	.. "{reset} These babies are in second gear now. Watch your steps"
+	.. "Colonel Dronemann"
+	.. "{reset}: These babies are in second gear now. Watch your steps"
 
 	local allPlayers = ents.GetAllPlayers()
 
@@ -145,8 +145,8 @@ function ColDronemanEngaged(_, activator, forced)
 	end
 
 	local oneLiner = "{blue}"
-	.. "Colonel Dronemann:"
-	.. "{reset} Ring-a-Ding-Ding baby!"
+	.. "Colonel Dronemann"
+	.. "{reset}: Ring-a-Ding-Ding baby!"
 
 	local allPlayers = ents.GetAllPlayers()
 
