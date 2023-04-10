@@ -1218,7 +1218,7 @@ WaveSchedule
 			WaitBeforeStarting 5.1
 			WaitBetweenSpawns 0.1
 		
-			TotalCurrency 0
+			TotalCurrency 300
 
 			HideIcon 1
 		
@@ -1387,7 +1387,7 @@ WaveSchedule
 		WaveSpawn
 		{
 			Name "3_fastbombboys"
-			Where spawnbot
+			Where flankers
 			TotalCount 3
 			MaxActive 3
 			SpawnCount 3
@@ -1403,12 +1403,12 @@ WaveSchedule
 		WaveSpawn
 		{
 			Name "3_fastgateboys"
-			Where spawnbot
+			Where flankers
 			TotalCount 24
 			MaxActive 4
 			SpawnCount 4
 			WaitBeforeStarting 10
-			WaitBetweenSpawns 3
+			WaitBetweenSpawns 6
 			TotalCurrency 50
 			TFBot
 			{
@@ -1420,9 +1420,9 @@ WaveSchedule
 		{
 			Name "3_soldierboys"
 			Where spawnbot
-			TotalCount 15
-			MaxActive 5
-			SpawnCount 5
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 4
 			WaitBeforeStarting 30
 			WaitBetweenSpawns 0
 			TotalCurrency 50
@@ -1442,7 +1442,7 @@ WaveSchedule
 			SpawnCount 2
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 100
+			TotalCurrency 200
 			TFBot
 			{
 				Template T_TFBot_Giant_Soldier_Crit
@@ -1453,7 +1453,7 @@ WaveSchedule
 		{
 			Name "3_bighealflares_support"
 			WaitForAllDead 3_critman
-			Where spawnbot
+			Where flankers
 			TotalCount 24
 			MaxActive 4
 			SpawnCount 4
@@ -1486,13 +1486,14 @@ WaveSchedule
 			SpawnCount 3
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 100
+			TotalCurrency 200
 
 			Squad
 			{
 				TFBot
 				{
 					Template T_TFBot_Heavyweapons_Heater
+					Name "Giant Heater Heavy"
 				}
 				TFBot
 				{
@@ -1515,7 +1516,7 @@ WaveSchedule
 			SpawnCount 3
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 12
-			TotalCurrency 25
+			TotalCurrency 50
 
 			Support 1
 
@@ -1571,19 +1572,198 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Name "1_col_droneman"
-			// WaitForAllDead 1_gshotgun
+			Name "4_wrangler"
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
-			TotalCurrency 500
+			TotalCurrency 50
 			TFBot
 			{
-				Template T_TFBot_Col_Droneman
+				Template T_TFBot_Giant_Engie_Drone
 			}
+		}
+
+		WaveSpawn
+		{
+			Name "4_carrier"
+			WaitForAllDead 4_wrangler
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0.1
+			TotalCurrency 50
+
+			Squad
+			{
+				NoWaitForFormation 1
+				NoFormation 1
+
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Fast
+					tag "pair_scoutbarrage_carrier"
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_SlowBarrage
+					tag "pair_scoutbarrage_carried"
+					Attributes AlwaysCrit
+				}
+			}
+		}
+
+		
+		WaveSpawn
+		{
+			Name "4_chan"
+			Where flankers
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			TFBot
+			{
+				Template T_TFBot_Demoman_Samurai
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "4_buffshotgun"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Buff_Banner
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Shotgun
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Shotgun
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Shotgun
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Shotgun
+				}
+			}
+		}		
+
+		WaveSpawn
+		{
+			Name "4_burstbros"
+			WaitForAllDead 4_buffshotgun
+			Where spawnbot
+			TotalCount 25
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Demo_Burst
+			}
+		}		
+
+		WaveSpawn
+		{
+			Name "4_stackingmedics"
+			WaitForAllDead 4_carrier
+			Where spawnbot
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0.1
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+					tag "pair_medstack1_carrier"
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+					tag "pair_medstack1_carried"
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+					tag "pair_medstack2_carrier"
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+					tag "pair_medstack2_carried"
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "4_pyrostream"
+			WaitForAllSpawned 4_stackingmedics
+			Where spawnbot
+			TotalCount 32
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+
+			Support Limited
+
+			TFBot
+			{
+				Class Pyro
+				Skill Expert
+
+				Attributes AlwaysFireWeapon
+			}
+		}		
+	}
+
+	Wave // Wave 5
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
 		}
 	}
 }

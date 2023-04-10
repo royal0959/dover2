@@ -56,17 +56,46 @@ WaveSchedule
 			Item "The Righteous Bison"
 		}
 
+		T_TFBot_Sniper_ExplosiveBow
+		{
+			Name "Explosive Touch Sniper"
+
+			Class Sniper
+			ClassIcon soldier_bison
+
+			Skill Expert
+			Health 1200
+
+			WeaponRestrictions PrimaryOnly
+			Item "Explosive Touch"
+
+			Scale 1.5
+
+			ItemAttributes
+			{
+				ItemName "Explosive Touch"
+				"fire rate bonus" 0.8
+			}
+			CharacterAttributes
+			{
+				"head scale" 0.7
+				"move speed bonus"	0.85
+			}
+		}
+
 		T_TFBot_Giant_Medic_Uber
 		{
-			Class Medic
 			Name "Giant Uber Medic"
+
+			Class Medic
 			ClassIcon medic_uber
+	
 			Skill Expert
 			Health 4500
 
 			Attributes MiniBoss
-
 			Attributes SpawnWithFullCharge
+
 			ItemAttributes
 			{
 				ItemName "TF_WEAPON_MEDIGUN"
@@ -115,6 +144,35 @@ WaveSchedule
 				"override footstep sound set" 2
 			}
 		}
+
+		T_TFBot_Giant_Engie_Drone
+        {
+            SpawnTemplate "ColDroneman"
+            Name "Giant Drone Wrangler"
+
+			Class Engineer
+			ClassIcon engineer_wrangler_lite
+			Health 4500
+
+			Skill Expert
+			Item "The Sightliner"
+            Item "The Wrangler"
+
+			Attributes MiniBoss
+			Attributes SuppressFire
+			WeaponRestrictions SecondaryOnly
+
+			Action FetchFlag
+
+			CharacterAttributes
+			{
+				"head scale" 0.7
+				"move speed bonus" 0.5
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 4
+			}
+        }
 
         // bosses
         T_TFBot_Col_Droneman
@@ -202,7 +260,7 @@ WaveSchedule
 			Name "Helicopter"
 
 			Class Soldier
-			ClassIcon helicopter_blu_nys
+			ClassIcon helicopter_blue_nys
 			Health 30000
 
 			Skill Expert
@@ -312,6 +370,23 @@ WaveSchedule
 				"override footstep sound set" 4
 			}
         }
+
+		T_TFBot_Umbra_Soldier
+		{
+
+
+			Name "Soldier Umbra"
+
+			Class Soldier
+			Health 30000
+			Scale 1.5
+
+			Skill Expert
+			Action Mobber
+
+			Attributes MiniBoss
+            Attributes UseBossHealthBar
+		}
     }
 
 	// bot weapons
