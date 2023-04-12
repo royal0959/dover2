@@ -183,7 +183,7 @@ WaveSchedule
 
 			Class Engineer
 			ClassIcon engineer_wrangler_lite
-			Health 35000
+			Health 30000
 			Scale 1.9
 
 			Skill Expert
@@ -205,7 +205,7 @@ WaveSchedule
 				Action "$ColDronemanPhase2"
 				Delay 0
 				Repeats 1
-				IfHealthBelow 25000
+				IfHealthBelow 23000
 			}
 
 			FireInput
@@ -261,7 +261,7 @@ WaveSchedule
 
 			Class Soldier
 			ClassIcon helicopter_blue_nys
-			Health 30000
+			Health 25000
 
 			Skill Expert
 			Action Mobber

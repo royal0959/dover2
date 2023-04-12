@@ -36,6 +36,11 @@ function HelicopterBot(_, activator)
         model = "models/props_frontline/helicopter_windows.mdl",
         solid = 0,
         skin = 1,
+
+        ["$modules"] = "rotator",
+        ["$rotationspeedx"] = 100,
+        ["$rotationspeedy"] = 100,
+        ["$rotationlimitx"] = 1,
     })
 
     helicopterBaseBoss:AddCallback(ON_DAMAGE_RECEIVED_PRE, function(_, damageInfo)
@@ -65,19 +70,33 @@ function HelicopterBot(_, activator)
         return true
     end)
 
-    helicopterBaseBoss:AddCallback(ON_SHOULD_COLLIDE, function(_, other)
-        if other:IsPlayer() then
-            return false
-        end
-    end)
+    -- helicopterBaseBoss:AddCallback(ON_SHOULD_COLLIDE, function(_, other)
+    --     if other:IsPlayer() then
+    --         return false
+    --     end
+    -- end)
 
     helicopterBaseBoss:AddCallback(ON_DAMAGE_RECEIVED_POST, function(_, damageInfo)
         activator.m_iHealth = helicopterBaseBoss.m_iHealth
     end)
 
     helicopterBaseBoss:AddCallback(ON_REMOVE, function()
+        local explosionPoint = helicopterBaseBoss:GetAbsOrigin()
+
         activator:Suicide()
-	    util.ParticleEffect("asplode_hoodoo", helicopterBaseBoss:GetAbsOrigin(), Vector(0, 0, 0))
+	    -- util.ParticleEffect("asplode_hoodoo", helicopterBaseBoss:GetAbsOrigin(), Vector(0, 0, 0))
+
+        local particle = ents.CreateWithKeys("info_particle_system", {
+            effect_name = "asplode_hoodoo",
+            start_active = 1,
+            flag_as_weather = 0,
+        }, true, true)
+        particle:SetAbsOrigin(explosionPoint)
+        particle:Start()
+
+        timer.Simple(1, function()
+            particle:Remove()
+        end)
     end)
 
     helicopterBaseBoss:SetCollisionFilter(redFilter)
@@ -137,33 +156,31 @@ function HelicopterBot(_, activator)
         damage = 100,
     })
 
+    -- setting owner will make base bot take knockback from stickies
     -- rocketMimic["$SetOwner"](rocketMimic, activator)
     -- stickyMimic["$SetOwner"](stickyMimic, activator)
 
-    helicopterBaseBoss:SetFakeParent(helicopterModel)
-    helicopterBaseBoss["$fakeparentoffset"] = Vector(0, 0, 50)
+    -- helicopterBaseBoss:SetFakeParent(helicopterModel)
+    -- helicopterBaseBoss["$fakeparentoffset"] = Vector(0, 0, 50)
     rocketMimic:SetFakeParent(helicopterModel)
     rocketMimic["$fakeparentoffset"] = Vector(0, 0, 50)
     stickyMimic:SetFakeParent(helicopterModel)
     stickyMimic["$fakeparentoffset"] = Vector(0, 0, 50)
 
-    -- helicopterModel["$fakeparentoffset"] = Vector(0, 0, MAX_OFFSET)
-    -- helicopterModel:SetFakeParent(activator)
 
+    -- local annotation = ents.CreateWithKeys("training_annotation", {
+    --     display_text = "The helicopter is vulnerable to melee damage!",
+    --     lifetime = 5,
+    -- })
 
-    local annotation = ents.CreateWithKeys("training_annotation", {
-        display_text = "The helicopter is vulnerable to melee damage!",
-        lifetime = 5,
-    })
+    -- timer.Simple(1, function ()
+    --     annotation:SetAbsOrigin(helicopterBaseBoss:GetAbsOrigin())
+    --     annotation:Show()
+    -- end)
 
-    timer.Simple(1, function ()
-        annotation:SetAbsOrigin(helicopterBaseBoss:GetAbsOrigin())
-        annotation:Show()
-    end)
-
-    timer.Simple(7, function()
-        annotation:Remove()
-    end)
+    -- timer.Simple(7, function()
+    --     annotation:Remove()
+    -- end)
 
 
     local offset = MAX_OFFSET
@@ -233,6 +250,7 @@ function HelicopterBot(_, activator)
         offsetLerp = math.min(offsetLerp + 0.005, 1)
 
         local newOrigin = activatorOrigin + Vector(0, 0, offset)
+        helicopterBaseBoss:SetAbsOrigin(newOrigin + Vector(0, 0, 50))
         helicopterModel:SetAbsOrigin(newOrigin)
         -- rocketMimic:SetAbsOrigin(newOrigin)
         -- stickyMimic:SetAbsOrigin(newOrigin)
@@ -279,6 +297,7 @@ function HelicopterBot(_, activator)
 
         playerTarget = closest[1]
 
+        helicopterBaseBoss:RotateTowards(playerTarget)
         helicopterModel:RotateTowards(playerTarget)
     end, 0)
 end

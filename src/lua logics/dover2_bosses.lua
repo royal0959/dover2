@@ -165,3 +165,18 @@ function RocketmanSpawn(_, activator)
 end
 
 function RocketmanDeath() end
+
+-- class umbras
+
+local function findFirstPlayerOfClass(classIndex)
+	for _, player in pairs(ents.GetAllPlayers()) do
+		if player.m_iClass == classIndex then
+			return player
+		end
+	end
+end
+
+-- soldier umbra - rocket specialist
+function SoldierUmbra(_, activator)
+	
+end

@@ -1574,11 +1574,11 @@ WaveSchedule
 		{
 			Name "4_wrangler"
 			Where spawnbot
-			TotalCount 1
-			MaxActive 1
+			TotalCount 3
+			MaxActive 3
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 8
 			TotalCurrency 50
 			TFBot
 			{
@@ -1589,12 +1589,12 @@ WaveSchedule
 		WaveSpawn
 		{
 			Name "4_carrier"
-			WaitForAllDead 4_wrangler
+			// WaitForAllDead 4_wrangler
 			Where spawnbot
 			TotalCount 2
 			MaxActive 2
 			SpawnCount 2
-			WaitBeforeStarting 0
+			WaitBeforeStarting 10
 			WaitBetweenSpawns 0.1
 			TotalCurrency 50
 
@@ -1617,32 +1617,15 @@ WaveSchedule
 			}
 		}
 
-		
-		WaveSpawn
-		{
-			Name "4_chan"
-			Where flankers
-			TotalCount 4
-			MaxActive 2
-			SpawnCount 2
-			WaitBeforeStarting 10
-			WaitBetweenSpawns 0
-			TotalCurrency 50
-			TFBot
-			{
-				Template T_TFBot_Demoman_Samurai
-			}
-		}
-
 		WaveSpawn
 		{
 			Name "4_buffshotgun"
 			Where spawnbot
-			TotalCount 30
-			MaxActive 5
+			TotalCount 20
+			MaxActive 10
 			SpawnCount 5
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 15
 			TotalCurrency 50
 
 			Squad
@@ -1728,6 +1711,25 @@ WaveSchedule
 				}
 			}
 		}
+
+				
+		WaveSpawn
+		{
+			Name "4_chan"
+			WaitForAllSpawned 4_stackingmedics
+			Where flankers
+			TotalCount 4
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			TFBot
+			{
+				Template T_TFBot_Demoman_Samurai
+			}
+		}
+
 
 		WaveSpawn
 		{
