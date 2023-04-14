@@ -374,60 +374,60 @@ WaveSchedule
 			Tier 1
 		}
 
-		dome_unstable
-		{
-			Name "Unstable Mod: Red Sun" 
-			Attribute "throwable damage" 
-			Description "A single shield infront of you that does not rotate. -150 max health"
-			Cap 1
-			Increment 1
-			Cost 0
+		// dome_unstable
+		// {
+		// 	Name "Unstable Mod: Red Sun" 
+		// 	Attribute "throwable damage" 
+		// 	Description "A single shield infront of you that does not rotate. -150 max health"
+		// 	Cap 1
+		// 	Increment 1
+		// 	Cost 0
 
-			SecondaryAttributes
-			{
-				"max health additive penalty" -150
-			}
+		// 	SecondaryAttributes
+		// 	{
+		// 		"max health additive penalty" -150
+		// 	}
 
-			AllowedWeapons 
-			{
-				ItemName "Thunderdome"
-			}
+		// 	AllowedWeapons 
+		// 	{
+		// 		ItemName "Thunderdome"
+		// 	}
 
-			OnApply
-			{
-				Output "popscript,$ThunderdomeRefresh,,0"
-			}
-			OnDowngrade
-			{
-				Output "popscript,$ThunderdomeRefresh,,0"
-			}
-			Tier 1
-		}
+		// 	OnApply
+		// 	{
+		// 		Output "popscript,$ThunderdomeRefresh,,0"
+		// 	}
+		// 	OnDowngrade
+		// 	{
+		// 		Output "popscript,$ThunderdomeRefresh,,0"
+		// 	}
+		// 	Tier 1
+		// }
 
-		dome_stable
-		{
-			Name "Stable Mod: Communist Block" 
-			Attribute "throwable fire speed" 
-			Description "A single shield behind you that does not rotate"
-			Cap 2
-			Increment 1
-			Cost 0
+		// dome_stable
+		// {
+		// 	Name "Stable Mod: Communist Block" 
+		// 	Attribute "throwable fire speed" 
+		// 	Description "A single shield behind you that does not rotate"
+		// 	Cap 2
+		// 	Increment 1
+		// 	Cost 0
 
-			AllowedWeapons 
-			{
-				ItemName "Thunderdome"
-			}
+		// 	AllowedWeapons 
+		// 	{
+		// 		ItemName "Thunderdome"
+		// 	}
 
-			OnApply
-			{
-				Output "popscript,$ThunderdomeRefresh,,0"
-			}
-			OnDowngrade
-			{
-				Output "popscript,$ThunderdomeRefresh,,0"
-			}
-			Tier 1
-		}
+		// 	OnApply
+		// 	{
+		// 		Output "popscript,$ThunderdomeRefresh,,0"
+		// 	}
+		// 	OnDowngrade
+		// 	{
+		// 		Output "popscript,$ThunderdomeRefresh,,0"
+		// 	}
+		// 	Tier 1
+		// }
 
 		ET_unstable
 		{
@@ -1724,6 +1724,9 @@ WaveSchedule
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 50
+
+			Support Limited
+
 			TFBot
 			{
 				Template T_TFBot_Demoman_Samurai
