@@ -1770,5 +1770,27 @@ WaveSchedule
 			Target wave_finished_relay
 			Action Trigger
 		}
+
+		// SpawnTemplate
+		// {
+		// 	Name "ForceRightPath"
+		// }
+
+		WaveSpawn
+		{
+			Name "bigguy"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Sergeant_Sizer
+			}
+		}	
 	}
 }

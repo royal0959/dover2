@@ -155,16 +155,122 @@ function ColDronemanEngaged(_, activator, forced)
 	end
 end
 
--- Sergeant Rocketmann
-function RocketmanSpawn(_, activator)
-	for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
-		if wearable.m_hOwnerEntity == activator then
-			wearable.m_flModelScale = 1.5
-		end
-	end
+local SCALE_MAX = 2
+local SCALE_HEALTH = 15000
+local BASE_HEIGHT = 80
+
+local PHASES = {
+	[0] = {
+		Name = "Default",
+	},
+	[1] = {
+		Name = "Shotgun",
+	},
+	[2] = {
+		Name = "Tomislav",
+	},
+	[3] = {
+		Name = "Minigun",
+	},
+}
+
+-- base health is 35000
+local THRESHOLD = {
+	[1] = 32500,
+	[2] = 28000,
+}
+
+local function lerp(a,b,t)
+    return a * (1-t) + b * t
 end
 
-function RocketmanDeath() end
+-- Sergeant Sizer
+-- gets bigger and moe powerful the more damage taken (eventually becoming a near-titan)
+-- scaled down to small size when near deathr
+function SergeantSizer(_, activator)
+	local maxHealth = activator.m_iHealth
+	local lastHealth = activator.m_iHealth
+
+	local currentPhase = 0
+
+	-- local growing = false
+
+	-- local iterateCount = 10
+	-- local function grow(goalSize)
+	-- 	growing = true
+
+	-- 	local vscriptBase = "activator.SetScaleOverride(%s)"
+
+	-- 	local startSize = activator.m_flModelScale
+	-- 	local curLerp = 0
+
+	-- 	for i = 1, iterateCount do
+	-- 		curLerp = curLerp + 1 / iterateCount
+	-- 		timer.Simple(0.05 * i, function ()
+	-- 			local vscript = vscriptBase:format(tostring(lerp(startSize, goalSize, curLerp)))
+
+	-- 			activator:RunScriptCode(vscript, activator)
+
+	-- 			if i == iterateCount then
+	-- 				growing = false
+	-- 			end
+	-- 		end)
+	-- 	end
+	-- end
+
+	local logic
+	logic = timer.Create(0.1, function()
+		if not activator:IsAlive() then
+			timer.Stop(logic)
+			return
+		end
+
+		-- if growing then
+		-- 	return
+		-- end
+
+		local health = activator.m_iHealth
+
+		if health == lastHealth then
+			return
+		end
+
+		local height = BASE_HEIGHT * (activator.m_flModelScale)
+
+		-- local DefaultTraceInfo = {
+		-- 	start = activator:GetAbsOrigin(),
+		-- 	endpos = activator:GetAbsOrigin() + height * 1.2,
+		-- 	mask = MASK_SOLID,
+		-- 	collisiongroup = COLLISION_GROUP_DEBRIS,
+		-- }
+
+		-- local trace = util.Trace(DefaultTraceInfo)
+
+		-- -- don't grow if it'd end up stuck
+		-- if trace.Hit then
+		-- 	return
+		-- end
+
+		local nextThreshol = THRESHOLD[currentPhase + 1]
+
+		if nextThreshol then
+			if health <= nextThreshol then
+				currentPhase = currentPhase + 1
+				activator:ChangeAttributes(PHASES[currentPhase].Name)
+			end
+		end
+
+		local ratio = math.min((maxHealth - health) / SCALE_HEALTH, 1)
+
+		local size = lerp(1, SCALE_MAX, ratio)
+
+		local vscript = ("activator.SetScaleOverride(%s)"):format(tostring(size))
+		activator:RunScriptCode(vscript, activator)
+
+		lastHealth = health
+		-- grow(PHASES[goalPhase].Scale)
+	end, 0)
+end
 
 -- class umbras
 

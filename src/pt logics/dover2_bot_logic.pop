@@ -2,6 +2,27 @@ WaveSchedule
 {
 	PointTemplates
 	{
+		ForceRightPath
+		{
+			OnSpawnOutput
+			{
+				Target "bombpath_clearall_relay"
+				Action "Trigger"
+				Delay 1
+			}
+			OnSpawnOutput
+			{
+				Target "bombpath_arrows_clear_relay"
+				Action "Trigger"
+				Delay 1
+			}
+			OnSpawnOutput
+			{
+				Target "bombpath_b"
+				Action "Trigger"
+				Delay 1.1
+			}
+		}
 		Ambulance_Tank
 		{
 			OnSpawnOutput 
@@ -105,6 +126,15 @@ WaveSchedule
 			{
 				Target "popscript"
 				Action "$HelicopterBot"
+			}
+		}
+	
+		SergeantSizer
+		{
+			OnSpawnOutput
+			{
+				Target "popscript"
+				Action "$SergeantSizer"
 			}
 		}
 
@@ -272,6 +302,54 @@ WaveSchedule
 				"origin" "1984 1984 99999"
 				"targetname" "middle_text"
 				"message" "ATTACK HELICOPTER"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "1"
+				"spawnflags" "1"
+				"color" "255 255 255"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "4.8"
+			}
+		}
+		Yakuza_Title_Card_Sizer
+		{
+			OnSpawnOutput
+			{
+				Target "upper_text"
+				Action "Display"
+				Delay 0
+			}
+
+			OnSpawnOutput
+			{
+				Target "middle_text"
+				Action "Display"
+				Delay 0.2
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "upper_text"
+				"message" "TINY GIANT"
+				"x" "-1"
+				"y" "0.4"
+				"spawnflags" "1"
+				"effect" "2"
+				"channel" "2"
+				"color" "255 255 255"
+				"fxtime" "0.2"
+				"fadeout" "1"
+				//"fadein" "0"
+				"holdtime" "5"
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "middle_text"
+				"message" "SERGEANT SIZER"
 				"x" "-1"
 				"y" "0.45"
 				"channel" "1"
