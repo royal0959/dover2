@@ -1655,24 +1655,6 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Name "4_burstbros"
-			WaitForAllDead 4_buffshotgun
-			Where spawnbot
-			TotalCount 25
-			MaxActive 5
-			SpawnCount 5
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 0
-			TotalCurrency 50
-
-			TFBot
-			{
-				Template T_TFBot_Demo_Burst
-			}
-		}		
-
-		WaveSpawn
-		{
 			Name "4_stackingmedics"
 			WaitForAllDead 4_carrier
 			Where spawnbot
@@ -1766,6 +1748,26 @@ WaveSchedule
 				Template T_TFBot_Sergeant_Sizer
 			}
 		}	
+
+		WaveSpawn
+		{
+			Name "4_burstbros"
+			WaitForAllDead 4_stackingmedics
+			Where spawnbot
+			TotalCount 30
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+
+			Support Limited
+
+			TFBot
+			{
+				Template T_TFBot_Demo_Burst
+			}
+		}		
 				
 		WaveSpawn
 		{
@@ -1790,14 +1792,14 @@ WaveSchedule
 			Name "4_pyrostream"
 			WaitForAllSpawned 4_stackingmedics
 			Where spawnbot
-			TotalCount 32
+			TotalCount 8
 			MaxActive 4
 			SpawnCount 2
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 6
 			TotalCurrency 50
 
-			Support Limited
+			Support 1
 
 			TFBot
 			{
