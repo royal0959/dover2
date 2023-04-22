@@ -328,7 +328,7 @@ WaveSchedule
 			Name "Sergeant Sizer"
 
 			Class Heavyweapons
-			Health 35000
+			Health 25000
 
 			Skill Expert
 
@@ -397,7 +397,24 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 0.7
+						"move speed bonus" 0.5
+					}
+				}
+				BrassBeast
+				{
+					WeaponRestrictions PrimaryOnly
+
+					Item "The Brass Beast"
+
+					ItemAttributes
+					{
+						ItemName "The Brass Beast"
+						"damage bonus" 1.8
+					}
+
+					CharacterAttributes
+					{
+						"move speed bonus" 0.35
 					}
 				}
 			}

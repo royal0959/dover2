@@ -156,7 +156,7 @@ function ColDronemanEngaged(_, activator, forced)
 end
 
 local SCALE_MAX = 2
-local SCALE_HEALTH = 15000
+local SCALE_HEALTH = 10000
 local BASE_HEIGHT = 80
 
 local PHASES = {
@@ -172,12 +172,17 @@ local PHASES = {
 	[3] = {
 		Name = "Minigun",
 	},
+	[4] = {
+		Name = "BrassBeast",
+	},
 }
 
--- base health is 35000
+-- base health is 25000
 local THRESHOLD = {
-	[1] = 32500,
-	[2] = 28000,
+	[1] = 21000,
+	[2] = 18000,
+	[3] = 14000,
+	[4] = 10000,
 }
 
 local function lerp(a,b,t)

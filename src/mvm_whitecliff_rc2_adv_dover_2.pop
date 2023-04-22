@@ -1712,6 +1712,60 @@ WaveSchedule
 			}
 		}
 
+		WaveSpawn
+		{
+			Name "4_3knights"
+			WaitForAllDead 4_stackingmedics
+			Where flankers
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_DemoMan_PrinceTavish 
+				Attributes AlwaysCrit
+			}
+		}		
+
+		WaveSpawn
+		{
+			Name "4_conch"
+			WaitForAllDead 4_stackingmedics
+			Where flankers
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Extended_Concheror 
+			}
+		}		
+
+		WaveSpawn
+		{
+			Name "bigguy"
+			WaitForAllDead 4_stackingmedics
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+			TotalCurrency 200
+
+			TFBot
+			{
+				Template T_TFBot_Sergeant_Sizer
+			}
+		}	
 				
 		WaveSpawn
 		{
@@ -1725,14 +1779,11 @@ WaveSchedule
 			WaitBetweenSpawns 0
 			TotalCurrency 50
 
-			Support Limited
-
 			TFBot
 			{
 				Template T_TFBot_Demoman_Samurai
 			}
 		}
-
 
 		WaveSpawn
 		{
