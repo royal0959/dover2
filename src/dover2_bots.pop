@@ -331,6 +331,7 @@ WaveSchedule
 			Health 25000
 
 			Skill Expert
+			Item "The All-Father"
 
 			Attributes MiniBoss
             Attributes UseBossHealthBar
@@ -345,7 +346,7 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 0.9
+						"move speed bonus" 1.2
 					}
 				}
 				Shotgun
@@ -363,7 +364,7 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 0.7
+						"move speed bonus" 0.9
 					}
 				}
 				Tomislav
@@ -380,7 +381,7 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 0.5
+						"move speed bonus" 0.6
 					}
 				}
 				Minigun
@@ -414,19 +415,63 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 0.35
+						"move speed bonus" 0.4
 					}
 				}
 			}
 
 			CharacterAttributes
 			{
+				"not solid to players" 1
 				"damage force reduction" 0.5
 				"airblast vulnerability multiplier" 0.5
 				"override footstep sound set" 4
 				"rage giving scale" 0.001
 			}
 		}
+
+		
+        T_TFBot_MajorMannpower
+        {
+            SpawnTemplate "Yakuza_Title_Card_Mannpower"
+            SpawnTemplate "MajorMannpower"
+            Name "Major Mannpower"
+
+			Class Demoman
+			// ClassIcon engineer_wrangler_lite
+			Health 35000
+			Scale 1.9
+
+			Skill Expert
+			Item "The Headtaker's Hood"
+            Item "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+            Item "Upgradeable TF_WEAPON_PIPEBOMBLAUNCHER"
+
+			Attributes MiniBoss
+            Attributes UseBossHealthBar
+			Attributes HoldFireUntilFullReload
+
+			tag boss_resistance
+
+			ItemAttributes
+			{
+				ItemName "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+
+				"damage bonus" 1.5
+				"fire rate bonus" 0.3
+				"Reload time decreased" 0.5
+				"clip size bonus" 2
+				"projectile spread angle penalty" 3
+			}
+
+			CharacterAttributes
+			{
+				"move speed bonus" 0.3
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 4
+			}
+        }
 
         T_TFBot_Rocketman
         {

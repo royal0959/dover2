@@ -1831,7 +1831,7 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Name "bigguy"
+			Name "mann"
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
@@ -1842,7 +1842,7 @@ WaveSchedule
 
 			TFBot
 			{
-				Template T_TFBot_Sergeant_Sizer
+				Template T_TFBot_MajorMannpower
 			}
 		}	
 	}

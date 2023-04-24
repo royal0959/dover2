@@ -159,6 +159,8 @@ local SCALE_MAX = 2
 local SCALE_HEALTH = 10000
 local BASE_HEIGHT = 80
 
+local MINI_THRESHOLD = 1000
+
 local PHASES = {
 	[0] = {
 		Name = "Default",
@@ -191,7 +193,7 @@ end
 
 -- Sergeant Sizer
 -- gets bigger and moe powerful the more damage taken (eventually becoming a near-titan)
--- scaled down to small size when near deathr
+-- scaled down to small size when near death
 function SergeantSizer(_, activator)
 	local maxHealth = activator.m_iHealth
 	local lastHealth = activator.m_iHealth
@@ -230,17 +232,33 @@ function SergeantSizer(_, activator)
 			return
 		end
 
-		-- if growing then
-		-- 	return
-		-- end
-
 		local health = activator.m_iHealth
 
 		if health == lastHealth then
 			return
 		end
 
-		local height = BASE_HEIGHT * (activator.m_flModelScale)
+		if health <= MINI_THRESHOLD then
+			activator:ChangeAttributes("Default")
+
+			for i = SCALE_MAX, 0.7, -0.1 do
+				timer.Simple(0.1 * i, function ()
+					local vscript = ("activator.SetScaleOverride(%s)"):format(tostring(i))
+					activator:RunScriptCode(vscript, activator)
+
+					for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
+						if wearable.m_hOwnerEntity == activator then
+							wearable.m_flModelScale = i
+						end
+					end
+				end)
+			end
+
+			timer.Stop(logic)
+			return
+		end
+
+		-- local height = BASE_HEIGHT * (activator.m_flModelScale)
 
 		-- local DefaultTraceInfo = {
 		-- 	start = activator:GetAbsOrigin(),
@@ -272,9 +290,118 @@ function SergeantSizer(_, activator)
 		local vscript = ("activator.SetScaleOverride(%s)"):format(tostring(size))
 		activator:RunScriptCode(vscript, activator)
 
+		for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
+			if wearable.m_hOwnerEntity == activator then
+				wearable.m_flModelScale = size
+			end
+		end
+
 		lastHealth = health
 		-- grow(PHASES[goalPhase].Scale)
 	end, 0)
+end
+
+-- major mannpower
+-- switches between multiple mannpower powerups
+-- fires projectiles with mannpower conds attached
+
+local PARTICLE_PREFIX = "powerup_icon_"
+-- local MANNPOWERS = {
+-- 	"agility", "haste", "king", "plague", "regen", "resistance", "precision", "knockout"
+-- }
+local MANNPOWERS = {
+	"agility", "haste", "crit"
+}
+local MANNPOWER_EFFECT_BEGIN = {
+	agility = function(activator)
+		activator:SetAttributeValue("CARD: move speed bonus", 1.3)
+	end,
+	haste = function(activator)
+		activator:SetAttributeValue("Reload time decreased", 0.4)
+		activator:SetAttributeValue("fire rate bonus HIDDEN", 0.1)
+	end,
+	crit = function(activator)
+		activator:AddCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+	end,
+	-- precision = function(activator)
+	-- 	activator:SetAttributeValue("projectile spread angle penalty", -100)
+	-- 	activator:SetAttributeValue("Projectile speed increased", 1.5)
+	-- end,
+}
+local MANNPOWER_EFFECT_END = {
+	agility = function(activator)
+		activator:SetAttributeValue("CARD: move speed bonus", nil)
+	end,
+	haste = function(activator)
+		activator:SetAttributeValue("Reload time decreased", nil)
+		activator:SetAttributeValue("fire rate bonus HIDDEN", nil)
+	end,
+	crit = function(activator)
+		activator:RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+	end,
+	-- precision = function(activator)
+	-- 	activator:SetAttributeValue("projectile spread angle penalty", nil)
+	-- 	activator:SetAttributeValue("Projectile speed increased", nil)
+	-- end,
+}
+
+function MajorMannpower(_, activator)
+	local particles = {}
+	for _, name in pairs(MANNPOWERS) do
+		-- local particle = ents.CreateWithKeys("info_particle_system", {
+		-- 	effect_name = PARTICLE_PREFIX..name.."_blue",
+		-- 	start_active = 0,
+		-- 	flag_as_weather = 0,
+		-- }, true, true)
+		local particle = ents.CreateWithKeys("prop_dynamic", {
+			model = "models/pickups/pickup_powerup_"..name..".mdl",
+			ModelScale = 0.9,
+			skin = 2,
+			DefaultAnim = "spin",
+			rendermode = 1,
+
+			["$positiononly"] = 1,
+		}, true, true)
+
+		particle:Alpha(225 )
+		particle["$attachment"] = "eyes" -- I don't think this works
+		particle["$fakeparentoffset"] = Vector(0, 0, 135)
+		particle:SetFakeParent(activator)
+		particle:Disable()
+
+		particles[name] = particle
+	end
+
+	local function setPowerupIcon(name)
+		for pName, particle in pairs(particles) do
+			particle:Disable()
+			if MANNPOWER_EFFECT_END[pName] then
+				MANNPOWER_EFFECT_END[pName](activator)
+			end
+		end
+
+		particles[name]:Enable()
+	end
+
+	local function setPowerup(name)
+		setPowerupIcon(name)
+		MANNPOWER_EFFECT_BEGIN[name](activator)
+	end
+
+	setPowerup("agility")
+	local logic
+	timer.Create(10, function ()
+		logic = timer.Create(5, function()
+			if not activator:IsAlive() then
+				timer.Stop(logic)
+				for _, particle in pairs(particles) do
+					particle:Remove()
+				end
+				return
+			end
+			setPowerup(MANNPOWERS[math.random(#MANNPOWERS)])
+		end, 0)
+	end)
 end
 
 -- class umbras
