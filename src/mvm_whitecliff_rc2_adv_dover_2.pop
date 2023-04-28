@@ -287,7 +287,7 @@ WaveSchedule
 	DisallowUpgrade
 	{
 		Upgrade	"damage bonus" 
-		MaxLevel 2
+		MaxLevel 3
 		ItemName "PHD Jumper"
 	}
 
@@ -1424,7 +1424,7 @@ WaveSchedule
 			MaxActive 4
 			SpawnCount 4
 			WaitBeforeStarting 30
-			WaitBetweenSpawns 0
+			WaitBetweenSpawns 5
 			TotalCurrency 50
 			TFBot
 			{
@@ -1515,7 +1515,7 @@ WaveSchedule
 			MaxActive 3
 			SpawnCount 3
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 12
+			WaitBetweenSpawns 20
 			TotalCurrency 50
 
 			Support 1
@@ -1617,6 +1617,24 @@ WaveSchedule
 			}
 		}
 
+		// WaveSpawn
+		// {
+		// 	Name "4_huntspam"
+		// 	WaitForAllDead 4_wrangler
+		// 	Where spawnbot
+		// 	TotalCount 9
+		// 	MaxActive 3
+		// 	SpawnCount 3
+		// 	WaitBeforeStarting 0
+		// 	WaitBetweenSpawns 5
+		// 	TotalCurrency 50
+
+		// 	TFBot
+		// 	{
+		// 		Template T_TFBot_Sniper_Huntsman_Spammer
+		// 	}
+		// }
+
 		WaveSpawn
 		{
 			Name "4_buffshotgun"
@@ -1661,7 +1679,7 @@ WaveSchedule
 			TotalCount 5
 			MaxActive 5
 			SpawnCount 5
-			WaitBeforeStarting 0
+			WaitBeforeStarting 10
 			WaitBetweenSpawns 0.1
 			TotalCurrency 50
 
@@ -1669,7 +1687,7 @@ WaveSchedule
 			{
 				TFBot
 				{
-					Template T_TFBot_Giant_Heavyweapons_Deflector
+					Template T_TFBot_Giant_Heavyweapons
 				}
 				TFBot
 				{
@@ -1739,7 +1757,7 @@ WaveSchedule
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 15
+			WaitBeforeStarting 25
 			WaitBetweenSpawns 0
 			TotalCurrency 200
 
@@ -1824,25 +1842,144 @@ WaveSchedule
 			Action Trigger
 		}
 
-		// SpawnTemplate
-		// {
-		// 	Name "ForceRightPath"
-		// }
-
 		WaveSpawn
 		{
-			Name "mann"
+			Name "5_mann"
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_MajorMannpower
+			}
+		}	
+
+		WaveSpawn
+		{
+			Name "5_rush"
+			Where spawnbot
+			TotalCount 25
+			MaxActive 5
+			SpawnCount 5
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 6
 			TotalCurrency 50
 
 			TFBot
 			{
-				Template T_TFBot_MajorMannpower
+				Template T_TFBot_Scout_Bonk
+				ClassIcon scout_bonk_nys
+			}
+		}	
+
+		WaveSpawn
+		{
+			Name "5_21_guns" // haha like the green day song
+			Where flankers
+			TotalCount 21
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Shotgun
+				Attributes AlwaysCrit
+			}
+		}	
+
+		WaveSpawn
+		{
+			Name "5_boxboys"
+			Where flankers
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 15
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Boxing_Heavy
+				Attributes AlwaysCrit
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "5_shieldtank"
+			WaitForAllDead 5_mann
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 100
+		
+			Tank
+			{
+				Name "shieldtank"
+				StartingPathTrackNode "tank_path_1"
+				Health 25000
+				Speed 75
+
+				ClassIcon tank_shield
+				Template RShieldLvL1
+
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}	
+
+		WaveSpawn
+		{
+			Name "5_this_is_just_like_dover_1"
+			Where flankers
+			WaitForAllDead 5_mann
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_RocketShotgun
+				Attributes AlwaysCrit
+			}
+		}	
+		WaveSpawn
+		{
+			Name "5_finale_support"
+			WaitForAllDead 5_mann
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+		
+			TotalCurrency 50
+
+			Support 1
+		
+			TFBot
+			{
+				Class Scout
+				Skill Hard
 			}
 		}	
 	}

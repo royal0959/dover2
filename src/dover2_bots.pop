@@ -238,6 +238,7 @@ WaveSchedule
 				"fire rate bonus" 0.1
 				"Projectile speed decreased" 0.3
 				"dmg bonus vs buildings" 2
+				"damage bonus" 8
 				// "always crit" 1
 			}
 
@@ -269,6 +270,7 @@ WaveSchedule
 			Attributes MiniBoss
             Attributes UseBossHealthBar
 			Attributes SuppressFire
+			ExtAttr IgnoreBuildings
 		
 			WeaponRestrictions MeleeOnly
 
@@ -338,6 +340,8 @@ WaveSchedule
 		
 			Scale 1
 
+			tag boss_resistance
+
 			EventChangeAttributes
 			{
 				Default
@@ -346,7 +350,7 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 1.2
+						"move speed bonus" 1
 					}
 				}
 				Shotgun
@@ -411,6 +415,7 @@ WaveSchedule
 					{
 						ItemName "The Brass Beast"
 						"damage bonus" 1.8
+						"mod minigun can holster while spinning" 1
 					}
 
 					CharacterAttributes
@@ -438,7 +443,7 @@ WaveSchedule
             Name "Major Mannpower"
 
 			Class Demoman
-			// ClassIcon engineer_wrangler_lite
+			ClassIcon demo_scatter
 			Health 35000
 			Scale 1.9
 
@@ -466,7 +471,7 @@ WaveSchedule
 
 			CharacterAttributes
 			{
-				"move speed bonus" 0.3
+				"move speed bonus" 0.4
 				"damage force reduction" 0.5
 				"airblast vulnerability multiplier" 0.5
 				"override footstep sound set" 4

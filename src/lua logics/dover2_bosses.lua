@@ -225,10 +225,16 @@ function SergeantSizer(_, activator)
 	-- 	end
 	-- end
 
+	local smol = false
+
 	local logic
 	logic = timer.Create(0.1, function()
 		if not activator:IsAlive() then
 			timer.Stop(logic)
+			return
+		end
+
+		if smol then
 			return
 		end
 
@@ -239,10 +245,13 @@ function SergeantSizer(_, activator)
 		end
 
 		if health <= MINI_THRESHOLD then
+			smol = true
 			activator:ChangeAttributes("Default")
 
+			local iterate = 0
 			for i = SCALE_MAX, 0.7, -0.1 do
-				timer.Simple(0.1 * i, function ()
+				iterate = iterate + 1
+				timer.Simple(0.1 * iterate, function ()
 					local vscript = ("activator.SetScaleOverride(%s)"):format(tostring(i))
 					activator:RunScriptCode(vscript, activator)
 
@@ -310,17 +319,29 @@ local PARTICLE_PREFIX = "powerup_icon_"
 -- 	"agility", "haste", "king", "plague", "regen", "resistance", "precision", "knockout"
 -- }
 local MANNPOWERS = {
-	"agility", "haste", "crit"
+	"agility", "haste", "crit", "regen", "king"
+}
+
+local MANNPOWER_CYCLE = {
+	"haste", "crit", "regen"
 }
 local MANNPOWER_EFFECT_BEGIN = {
 	agility = function(activator)
-		activator:SetAttributeValue("CARD: move speed bonus", 1.3)
+		activator:SetAttributeValue("CARD: move speed bonus", 2)
 	end,
 	haste = function(activator)
 		activator:SetAttributeValue("Reload time decreased", 0.4)
 		activator:SetAttributeValue("fire rate bonus HIDDEN", 0.1)
 	end,
+	regen = function(activator)
+		activator:SetAttributeValue("Reload time decreased", -0.8)
+	end,
 	crit = function(activator)
+		activator:AddCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+	end,
+	king = function(activator)
+		activator:SetAttributeValue("Reload time decreased", 0.6)
+		-- activator:SetAttributeValue("fire rate bonus HIDDEN", 0.15)
 		activator:AddCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 	end,
 	-- precision = function(activator)
@@ -336,6 +357,9 @@ local MANNPOWER_EFFECT_END = {
 		activator:SetAttributeValue("Reload time decreased", nil)
 		activator:SetAttributeValue("fire rate bonus HIDDEN", nil)
 	end,
+	regen = function(activator)
+		activator:SetAttributeValue("Reload time decreased", nil)
+	end,
 	crit = function(activator)
 		activator:RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 	end,
@@ -344,6 +368,8 @@ local MANNPOWER_EFFECT_END = {
 	-- 	activator:SetAttributeValue("Projectile speed increased", nil)
 	-- end,
 }
+
+local KINGPHASE_THRESHOLD = 20000
 
 function MajorMannpower(_, activator)
 	local particles = {}
@@ -389,19 +415,37 @@ function MajorMannpower(_, activator)
 	end
 
 	setPowerup("agility")
+
+	local nextCycle = CurTime() + 6
+	local phase2 = false
+
 	local logic
-	timer.Create(10, function ()
-		logic = timer.Create(5, function()
-			if not activator:IsAlive() then
-				timer.Stop(logic)
-				for _, particle in pairs(particles) do
-					particle:Remove()
-				end
-				return
+	logic = timer.Create(0.1, function()
+		if not activator:IsAlive() then
+			timer.Stop(logic)
+			for _, particle in pairs(particles) do
+				particle:Remove()
 			end
-			setPowerup(MANNPOWERS[math.random(#MANNPOWERS)])
-		end, 0)
-	end)
+			return
+		end
+
+		if phase2 then
+			return
+		end
+
+		if activator.m_iHealth <= KINGPHASE_THRESHOLD then
+			phase2 = true
+			setPowerup("king")
+			return
+		end
+
+		if CurTime() < nextCycle then
+			return
+		end
+
+		setPowerup(MANNPOWERS[math.random(#MANNPOWER_CYCLE)])
+		nextCycle = CurTime() + 5
+	end, 0)
 end
 
 -- class umbras

@@ -43,6 +43,14 @@ function HelicopterBot(_, activator)
         ["$rotationlimitx"] = 1,
     })
 
+    local engineSound = ents.CreateWithKeys("ambient_generic", {
+        message = "npc/combine_gunship/dropship_engine_distant_loop1.wav",
+        radius = 4000,
+		health = 5,
+		spawnflags = 48,
+    })
+	engineSound:SetFakeParent(helicopterBaseBoss)
+
     helicopterBaseBoss:AddCallback(ON_DAMAGE_RECEIVED_PRE, function(_, damageInfo)
         if not damageInfo.Weapon then
             return
@@ -195,7 +203,7 @@ function HelicopterBot(_, activator)
         activator:RemoveCallback(collideCallback)
 
         timer.Stop(logic)
-        for _, e in pairs({helicopterBaseBoss, redFilter, helicopterModel, rocketMimic, stickyMimic}) do
+        for _, e in pairs({helicopterBaseBoss, redFilter, helicopterModel, rocketMimic, stickyMimic, engineSound}) do
             if IsValid(e) then
                 e:Remove()
             end
