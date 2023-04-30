@@ -46,7 +46,7 @@ function HelicopterBot(_, activator)
     local engineSound = ents.CreateWithKeys("ambient_generic", {
         message = "npc/combine_gunship/dropship_engine_distant_loop1.wav",
         radius = 4000,
-		health = 5,
+		health = 10,
 		spawnflags = 48,
     })
 	engineSound:SetFakeParent(helicopterBaseBoss)

@@ -155,7 +155,7 @@ WaveSchedule
 
 			"hidden primary max ammo bonus" 0.0001
 			"move speed bonus" 1.25
-			// "cannot be upgraded" 1
+			"cannot be upgraded" 1
 			"special item description" "Create 2 small projectile shields that orbit around you and damage enemies"
 			"special item description 2" "Increased damage for secondary and melee"
 			"special item description 3" "No primary weapon"
@@ -1689,6 +1689,7 @@ WaveSchedule
 				TFBot
 				{
 					Template T_TFBot_Giant_Heavyweapons
+					Skill Easy
 				}
 				TFBot
 				{
@@ -1930,8 +1931,8 @@ WaveSchedule
 			{
 				Name "shieldtank"
 				StartingPathTrackNode "tank_path_1"
-				Health 35000
-				Speed 75
+				Health 25000
+				Speed 70
 
 				ClassIcon tank_shield
 				Template RShieldLvL1
@@ -1967,6 +1968,7 @@ WaveSchedule
 		WaveSpawn
 		{
 			Name "5_tank_support"
+			Where flankers
 			WaitForAllSpawned 5_shieldtank
 			TotalCount 30
 			MaxActive 5
@@ -1974,6 +1976,7 @@ WaveSchedule
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 2
 		
+			Support Limited
 			TotalCurrency 50
 		
 			TFBot
@@ -1986,7 +1989,8 @@ WaveSchedule
 		WaveSpawn
 		{
 			Name "5_deflector"
-			WaitForAllDead 5_shieldtank
+			Where flankers
+			WaitForAllDead 5_this_is_just_like_dover_1
 			TotalCount 18
 			MaxActive 18
 			SpawnCount 6

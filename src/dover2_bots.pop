@@ -237,7 +237,7 @@ WaveSchedule
 				"projectile spread angle penalty" 3
 				"fire rate bonus" 0.1
 				"Projectile speed decreased" 0.3
-				"dmg bonus vs buildings" 2
+				"dmg bonus vs buildings" 8
 				"damage bonus" 8
 				// "always crit" 1
 			}
@@ -337,6 +337,7 @@ WaveSchedule
 
 			Attributes MiniBoss
             Attributes UseBossHealthBar
+			AlwaysGlow 1 
 		
 			Scale 1
 
@@ -350,7 +351,7 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 1
+						"move speed bonus" 0.9
 					}
 				}
 				Shotgun
@@ -464,8 +465,8 @@ WaveSchedule
 
 				"damage bonus" 1.5
 				"fire rate bonus" 0.3
-				"Reload time decreased" 0.5
-				"clip size bonus" 2
+				"Reload time decreased" 0.3
+				"clip size bonus" 2.5
 				"projectile spread angle penalty" 3
 			}
 
