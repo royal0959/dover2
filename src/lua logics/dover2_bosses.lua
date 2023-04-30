@@ -343,7 +343,7 @@ local MANNPOWER_EFFECT_BEGIN = {
 	end,
 	king = function(activator)
 		activator:SetAttributeValue("Reload time decreased", 0.6)
-		-- activator:SetAttributeValue("fire rate bonus HIDDEN", 0.15)
+		activator:SetAttributeValue("fire rate bonus HIDDEN", 0.15)
 		activator:AddCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 	end,
 	-- precision = function(activator)
@@ -363,6 +363,11 @@ local MANNPOWER_EFFECT_END = {
 		activator:SetAttributeValue("Reload time decreased", nil)
 	end,
 	crit = function(activator)
+		activator:RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+	end,
+	king = function(activator)
+		activator:SetAttributeValue("Reload time decreased", nil)
+		activator:SetAttributeValue("fire rate bonus HIDDEN", nil)
 		activator:RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 	end,
 	-- precision = function(activator)
@@ -418,7 +423,7 @@ function MajorMannpower(_, activator)
 
 	setPowerup("agility")
 
-	local nextCycle = CurTime() + 6
+	local nextCycle = CurTime() + 12
 	local phase2 = false
 
 	local logic
@@ -445,7 +450,7 @@ function MajorMannpower(_, activator)
 			return
 		end
 
-		setPowerup(MANNPOWERS[math.random(#MANNPOWER_CYCLE)])
+		setPowerup(MANNPOWER_CYCLE[math.random(#MANNPOWER_CYCLE)])
 		nextCycle = CurTime() + 5
 	end, 0)
 end
