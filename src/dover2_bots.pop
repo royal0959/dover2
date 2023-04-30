@@ -262,7 +262,7 @@ WaveSchedule
 
 			Class Soldier
 			ClassIcon helicopter_blue_nys
-			Health 25000
+			Health 22000
 
 			Skill Expert
 			Action Mobber
@@ -477,6 +477,43 @@ WaveSchedule
 				"override footstep sound set" 4
 			}
         }
+
+		// time-constraints
+		TimeConstraint_Dronemann
+		{
+			SpawnTemplate "Yakuza_Title_Card_TimeConstraint_Dronemann"
+            SpawnTemplate "ColDroneman"
+            Name "Time-Constraint Prime"
+
+			Class Heavy
+			ClassIcon timer_lite
+			Health 30000
+
+			Skill Expert
+			WeaponRestrictions PrimaryOnly
+			Item "The Conspiracy Cap"
+
+			Attributes MiniBoss
+			// Attributes AlwaysCrit
+			Attributes SpawnWithFullCharge
+			Attributes UseBossHealthBar
+			Scale 1.9
+			
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_MINIGUN"
+				"damage bonus"	1.5
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.4
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
+
+				"rage giving scale" 0.1
+			}
+		}
 
         T_TFBot_Rocketman
         {

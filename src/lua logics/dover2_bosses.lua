@@ -389,7 +389,7 @@ function MajorMannpower(_, activator)
 			["$positiononly"] = 1,
 		}, true, true)
 
-		particle:Alpha(225 )
+		particle:Alpha(225)
 		particle["$attachment"] = "eyes" -- I don't think this works
 		particle["$fakeparentoffset"] = Vector(0, 0, 135)
 		particle:SetFakeParent(activator)

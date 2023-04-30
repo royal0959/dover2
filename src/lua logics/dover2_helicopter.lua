@@ -78,11 +78,11 @@ function HelicopterBot(_, activator)
         return true
     end)
 
-    -- helicopterBaseBoss:AddCallback(ON_SHOULD_COLLIDE, function(_, other)
-    --     if other:IsPlayer() then
-    --         return false
-    --     end
-    -- end)
+    helicopterBaseBoss:AddCallback(ON_SHOULD_COLLIDE, function(_, other, cause)
+        if other:IsPlayer() and cause == ON_SHOULD_COLLIDE_CAUSE_OTHER then
+            return false
+        end
+    end)
 
     helicopterBaseBoss:AddCallback(ON_DAMAGE_RECEIVED_POST, function(_, damageInfo)
         activator.m_iHealth = helicopterBaseBoss.m_iHealth

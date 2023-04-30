@@ -41,6 +41,7 @@ WaveSchedule
 	LuaScriptFile "scripts/dover2_helicopter.lua"
 	LuaScriptFile "scripts/dover2_bots.lua"
 	LuaScriptFile "scripts/dover2_boss_resistance.lua"
+	LuaScriptFile "scripts/timeconstraint_prime.lua"
 	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua"
 
 	// custom spawns
@@ -1879,9 +1880,9 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Name "5_21_guns" // haha like the green day song
+			Name "5_shotguns"
 			Where flankers
-			TotalCount 21
+			TotalCount 36
 			MaxActive 3
 			SpawnCount 3
 			WaitBeforeStarting 20
@@ -1929,7 +1930,7 @@ WaveSchedule
 			{
 				Name "shieldtank"
 				StartingPathTrackNode "tank_path_1"
-				Health 25000
+				Health 35000
 				Speed 75
 
 				ClassIcon tank_shield
@@ -1962,19 +1963,18 @@ WaveSchedule
 				Attributes AlwaysCrit
 			}
 		}	
+
 		WaveSpawn
 		{
-			Name "5_finale_support"
-			WaitForAllDead 5_mann
-			TotalCount 3
-			MaxActive 3
-			SpawnCount 3
+			Name "5_tank_support"
+			WaitForAllSpawned 5_shieldtank
+			TotalCount 30
+			MaxActive 5
+			SpawnCount 5
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 2
 		
 			TotalCurrency 50
-
-			Support 1
 		
 			TFBot
 			{
@@ -1982,5 +1982,96 @@ WaveSchedule
 				Skill Hard
 			}
 		}	
+
+		WaveSpawn
+		{
+			Name "5_deflector"
+			WaitForAllDead 5_shieldtank
+			TotalCount 18
+			MaxActive 18
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 25
+		
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}	
+
+		WaveSpawn
+		{
+			Name "5_huntspam_deflect_support"
+			WaitForAllDead 5_shieldtank
+			TotalCount 38
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+		
+			Support Limited
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Spammer
+			}
+		}	
+	}
+	
+	Wave // Wave 6
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+
+		WaveSpawn
+		{
+			Name "6_timeconstraint_1"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+		
+			TFBot
+			{
+				Template TimeConstraint_Dronemann
+			}
+		}
 	}
 }

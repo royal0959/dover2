@@ -163,7 +163,8 @@ function OnWaveSpawnBot(bot, wave, tags)
     end
 end
 
-function OnWaveInit()
+function OnWaveInit(wave)
+    _TimeConstraintOnWaveInit(wave)
     waiting = {
         Carriers = {},
         Carried = {},
