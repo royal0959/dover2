@@ -343,7 +343,7 @@ local MANNPOWER_EFFECT_BEGIN = {
 	end,
 	king = function(activator)
 		activator:SetAttributeValue("Reload time decreased", 0.6)
-		activator:SetAttributeValue("fire rate bonus HIDDEN", 0.15)
+		-- activator:SetAttributeValue("fire rate bonus HIDDEN", 0.15)
 		activator:AddCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 	end,
 	-- precision = function(activator)

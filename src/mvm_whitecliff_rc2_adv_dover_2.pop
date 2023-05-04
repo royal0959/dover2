@@ -1,5 +1,7 @@
-// my meds ran out
-// it's dovering time
+// marriage: divorced
+// pills: ran out
+// time: constrained
+// dover: 2
 
 #base robot_standard.pop
 #base robot_giant.pop
@@ -1759,7 +1761,7 @@ WaveSchedule
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 25
+			WaitBeforeStarting 30
 			WaitBetweenSpawns 0
 			TotalCurrency 200
 
@@ -1889,6 +1891,8 @@ WaveSchedule
 			WaitBeforeStarting 20
 			WaitBetweenSpawns 2
 			TotalCurrency 50
+
+			Support Limited
 
 			TFBot
 			{
@@ -2063,6 +2067,43 @@ WaveSchedule
 
 		WaveSpawn
 		{
+			Name "6_real"
+			// WaitForAllDead "6_tc3"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+
+			TFBot
+			{
+				Class Scout
+				Attributes IgnoreFlag
+				Attributes MiniBoss
+				Attributes AlwaysCrit
+
+				Scale 0.1
+
+				Action Idle
+
+				Name "jerma985 (ignore him"
+
+				ClassIcon timer_lite
+
+				tag realcontraint
+
+				CharacterAttributes
+				{
+					"move speed bonus" 0.0001
+					"no_jump" 1
+				}
+			}
+		}
+
+		WaveSpawn
+		{
 			Name "6_timeconstraint_1"
 			Where spawnbot
 			TotalCount 1
@@ -2072,10 +2113,106 @@ WaveSchedule
 			WaitBetweenSpawns 0
 			TotalCurrency 1
 		
-			TFBot
+			Squad
 			{
-				Template TimeConstraint_Dronemann
+				Squad
+				{
+					TFBot
+					{
+						Template TimeConstraint_Dronemann
+						tag timeconstraint1
+					}
+				}
 			}
 		}
+
+		WaveSpawn
+		{
+			Name "6_timeconstraint_2"
+			WaitForAllDead 6_timeconstraint_2
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+		
+			Squad
+			{
+				Squad
+				{
+					NoWaitForFormation 1
+					NoFormation 1
+					TFBot
+					{
+						Template T_TFBot_Giant_Soldier
+						tag "pair_towerA_carrier"
+						tag collective_bot
+						
+						ClassIcon scout_bat
+						Attributes SpawnWithFullCharge
+						item "The Concheror"
+						CharacterAttributes
+						{
+							"increase buff duration"	9.0
+						}
+						Health 7000
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Soldier_Crit
+						tag "pair_towerA_carried_delayed"
+						tag "pair_towerB_carrier"
+						tag collective_bot
+						
+						ClassIcon scout_bat
+						Health 7000
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Soldier_Spammer
+						tag "pair_towerB_carried_delayed"
+						tag "pair_towerC_carrier"
+						tag collective_bot
+						
+						ClassIcon scout_bat
+						// Attributes SpawnWithFullCharge
+						// item "The Concheror"
+						// CharacterAttributes
+						// {
+						// 	"increase buff duration"	9.0
+						// }
+						Health 7500
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Soldier_Spammer_Reload
+						tag "pair_towerC_carried_delayed"
+						tag "pair_towerD_carrier"
+						tag collective_bot
+						
+						ClassIcon scout_bat
+						Health 7500
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Soldier_SlowBarrage
+						tag "pair_towerD_carried_delayed"
+						tag collective_bot
+						
+						ClassIcon scout_bat
+						Attributes SpawnWithFullCharge
+						Item "The Buff Banner"
+						CharacterAttributes
+						{
+							"increase buff duration"	9.0
+						}
+						Health 8000
+					}
+				}
+			}
+		}
+		
 	}
 }

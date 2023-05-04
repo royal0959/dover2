@@ -351,7 +351,7 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 0.9
+						"move speed bonus" 0.5
 					}
 				}
 				Shotgun
@@ -369,7 +369,7 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 0.9
+						"move speed bonus" 0.5
 					}
 				}
 				Tomislav
@@ -386,7 +386,7 @@ WaveSchedule
 
 					CharacterAttributes
 					{
-						"move speed bonus" 0.6
+						"move speed bonus" 0.5
 					}
 				}
 				Minigun
@@ -463,7 +463,7 @@ WaveSchedule
 			{
 				ItemName "Upgradeable TF_WEAPON_GRENADELAUNCHER"
 
-				"damage bonus" 1.5
+				// "damage bonus" 1.5
 				"fire rate bonus" 0.3
 				"Reload time decreased" 0.3
 				"clip size bonus" 2.5

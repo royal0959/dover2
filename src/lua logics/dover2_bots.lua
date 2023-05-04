@@ -112,6 +112,7 @@ local waiting = {
 function OnWaveSpawnBot(bot, wave, tags)
     _OnWaveSpawnBot_CustomWeapon(bot, wave ,tags)
     _OnWaveSpawnBot_BossResistance(bot, wave ,tags)
+    _OnWaveSpawnBot_TimeConstraint(bot, wave ,tags)
 
     for _, tag in pairs(tags) do
         if handleCollectiveTagCheck(bot, tag) then

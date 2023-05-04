@@ -149,7 +149,7 @@ ents.AddCreateCallback("entity_medigun_shield", function (shield)
 
 		timer.Simple(0.8, function()
 			local empText = "{blue}"
-			.. shieldCanteenBot.m_szNetname
+			.. shieldCanteenBot:GetPlayerName()
 			.. "{reset} has used their {9BBF4D}EMP{reset} Power Up Canteen!"
 
 			shieldOwner.m_flRageMeter = 0
