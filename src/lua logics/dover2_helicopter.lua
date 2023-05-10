@@ -265,7 +265,19 @@ function HelicopterBot(_, activator)
 
         local closest = { nil, math.huge }
         for _, player in pairs(ents.GetAllPlayers()) do
-            if player:IsAlive() and player.m_iTeamNum ~= activator.m_iTeamNum then
+            local valid = true
+
+            if not player:IsAlive() then
+                valid = false
+            elseif player.m_iTeamNum == activator.m_iTeamNum then
+                valid = false
+            elseif player:InCond(TF_COND_DISGUISED) == 1 then
+                valid = false
+            elseif player:InCond(TF_COND_STEALTHED) == 1 then
+                valid = false
+            end
+
+            if valid then
                 local distance = newOrigin:Distance(player:GetAbsOrigin())
                 local hit = traceBetween(helicopterModel:GetAbsOrigin(), player:GetAbsOrigin())
 

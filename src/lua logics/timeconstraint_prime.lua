@@ -60,6 +60,13 @@ local DEATH_INSULTS = {
 	},
 }
 
+-- flags
+-- 1: main wave
+-- 2: support
+-- 4: mission support
+-- 8: giant
+-- 16: crit
+
 local WAVE_ICONS = {
     [1] = {
         [1] = {
@@ -81,7 +88,7 @@ local WAVE_ICONS = {
         },
         [3] = {
             name = "soldier_sergeant_crits",
-            flag = 8,
+            flag = 24,
             count = 1,
         },
     },
@@ -109,6 +116,10 @@ local randomIcons = {
 	"heavy_shotgun",
 }
 
+local iconFlags = {
+	soldier_sergeant_crits = 16,
+}
+
 local inWave = false
 local curWave = nil
 
@@ -120,7 +131,7 @@ local gamestateEnded = false
 local specialLinePlaying = false
 
 local function chatMessage(message)
-	local outputMessage = "{blue}" .. "Time-Constraint Prime:" .. "{reset}: " .. message
+	local outputMessage = "{blue}" .. "Time-Constraint Prime" .. "{reset}: " .. message
 
 	local allPlayers = ents.GetAllPlayers()
 
@@ -251,8 +262,9 @@ function _TimeConstraintOnWaveInit(wave)
 		chatMessage("I await")
 
 		wavebarLogic = timer.Create(0.5, function()
-			objResource.m_nMannVsMachineWaveEnemyCount = math.random(1, 100)
-
+			for i = 1, #objResource.m_iszMannVsMachineWaveClassNames do
+				objResource.m_iszMannVsMachineWaveClassNames[i] = randomIcons[math.random(#randomIcons)]
+			end
 			for i = 1, #objResource.m_nMannVsMachineWaveClassFlags do
 				local random = math.random(1, 4)
 
@@ -261,14 +273,25 @@ function _TimeConstraintOnWaveInit(wave)
 					flag = 9
 				end
 
+				local iconAtIndex = objResource.m_iszMannVsMachineWaveClassNames[i]
+
+				if iconFlags[iconAtIndex] then
+					flag = flag + iconFlags[iconAtIndex]
+				end
+
 				objResource.m_nMannVsMachineWaveClassFlags[i] = flag
 			end
-			for i = 1, #objResource.m_iszMannVsMachineWaveClassNames do
-				objResource.m_iszMannVsMachineWaveClassNames[i] = randomIcons[math.random(#randomIcons)]
-			end
+
+			local totalCount = 0
+
 			for i = 1, #objResource.m_nMannVsMachineWaveClassCounts do
-				objResource.m_nMannVsMachineWaveClassCounts[i] = math.random(0, 999)
+				local count = math.random(0, 999)
+				objResource.m_nMannVsMachineWaveClassCounts[i] = count
+
+				totalCount = totalCount + count
 			end
+
+			objResource.m_nMannVsMachineWaveEnemyCount = math.floor(totalCount * (math.random(1, 50) / 10))
 		end, 0)
 	end)
 end

@@ -488,7 +488,7 @@ WaveSchedule
 
 			Class Heavy
 			ClassIcon timer_lite
-			Health 30000
+			Health 28000
 
 			Skill Expert
 			WeaponRestrictions PrimaryOnly
