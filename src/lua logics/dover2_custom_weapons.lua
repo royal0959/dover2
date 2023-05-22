@@ -904,6 +904,8 @@ function ThunderdomeEquipped(_, activator)
 
 	local namePrefix = "thunderdome"..tostring(activator:GetHandleIndex())
 
+	local allEntities = {}
+
 	for i = 1, 2 do
 		local rotate = ents.CreateWithKeys("func_rotating", {
 			mins = Vector(-0.1, -0.1, -0.1),
@@ -953,7 +955,22 @@ function ThunderdomeEquipped(_, activator)
 		shield:SetName(shieldName)
 
 		RegisterShieldThunderdome(shieldName, activator)
+
+		table.insert(allEntities, rotate)
+		table.insert(allEntities, shield)
 	end
+
+	local thunderdomeCallbacks = {}
+	thunderdomeCallbacks[1] = activator:AddCallback(ON_REMOVE, function()
+		for _, ent in pairs(thunderdomeCallbacks) do
+			ent:Remove()
+		end
+	end)
+	thunderdomeCallbacks[2] = activator:AddCallback(ON_SPAWN, function()
+		for _, callback in pairs(thunderdomeCallbacks) do
+			activator:RemoveCallback(callback)
+		end
+	end)
 end
 
 function ThunderdomeUnequipped(_, activator)
