@@ -271,7 +271,8 @@ local SCALE_MAX = 1.8
 local SCALE_HEALTH = 10000
 local BASE_HEIGHT = 80
 
-local MINI_THRESHOLD = 1000
+local MINI_THRESHOLD = 5000
+local MINI_SPEED_BONUS = 2
 
 local PHASES = {
 	[0] = {
@@ -356,28 +357,29 @@ function SergeantSizer(_, activator)
 			return
 		end
 
-		-- if health <= MINI_THRESHOLD then
-		-- 	smol = true
-		-- 	activator:ChangeAttributes("Default")
+		if health <= MINI_THRESHOLD then
+			smol = true
+			activator:ChangeAttributes("Default")
+			activator:SetAttributeValue("move speed bonus", MINI_SPEED_BONUS)
 
-		-- 	local iterate = 0
-		-- 	for i = SCALE_MAX, 0.7, -0.1 do
-		-- 		iterate = iterate + 1
-		-- 		timer.Simple(0.1 * iterate, function ()
-		-- 			local vscript = ("activator.SetScaleOverride(%s)"):format(tostring(i))
-		-- 			activator:RunScriptCode(vscript, activator)
+			local iterate = 0
+			for i = SCALE_MAX, 0.7, -0.1 do
+				iterate = iterate + 1
+				timer.Simple(0.1 * iterate, function ()
+					local vscript = ("activator.SetScaleOverride(%s)"):format(tostring(i))
+					activator:RunScriptCode(vscript, activator)
 
-		-- 			for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
-		-- 				if wearable.m_hOwnerEntity == activator then
-		-- 					wearable.m_flModelScale = i
-		-- 				end
-		-- 			end
-		-- 		end)
-		-- 	end
+					-- for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
+					-- 	if wearable.m_hOwnerEntity == activator then
+					-- 		wearable.m_flModelScale = i
+					-- 	end
+					-- end
+				end)
+			end
 
-		-- 	timer.Stop(logic)
-		-- 	return
-		-- end
+			timer.Stop(logic)
+			return
+		end
 
 
 

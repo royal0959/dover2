@@ -37,7 +37,7 @@ WaveSchedule
 
 	CustomUpgradesFile mvm_upgrades_tomboy3.txt
 
-	LuaScriptFile "scripts/ravener_bosses.lua"
+	LuaScriptFile "scripts/dover2_bosses.lua"
 	LuaScriptFile "scripts/ravener_helicopter.lua"
 	LuaScriptFile "scripts/ravener_bots.lua"
 	LuaScriptFile "scripts/dover2_boss_resistance.lua"
