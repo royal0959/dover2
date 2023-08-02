@@ -271,7 +271,7 @@ local SCALE_MAX = 1.8
 local SCALE_HEALTH = 10000
 local BASE_HEIGHT = 80
 
-local MINI_THRESHOLD = 5000
+local MINI_THRESHOLD = 1000
 local MINI_SPEED_BONUS = 2
 
 local PHASES = {
