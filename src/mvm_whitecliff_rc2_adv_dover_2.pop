@@ -2835,6 +2835,43 @@ WaveSchedule
 
 		WaveSpawn
 		{
+			Name "6_timeconstraint_3_healthbar"
+			WaitForAllDead "6_timeconstraint_2"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 5.9
+			WaitBetweenSpawns 0
+		
+			TotalCurrency 0
+			Support 1
+		
+			RandomChoice
+			{
+				RandomChoice
+				{
+					TFBot
+					{
+						Class Scout
+						Attributes UseBossHealthBar
+						Attributes MiniBoss
+						ClassIcon timer_lite
+						CharacterAttributes
+						{
+							"move speed penalty" 0.0001
+							"no_jump" 1
+							"cannot pick up intelligence" 1
+							"max health additive penalty" -124
+						}
+						tag collective_healthbar
+					}
+				}
+			}
+		}
+
+		WaveSpawn
+		{
 			Name "6_timeconstraint_3"
 			WaitForAllDead "6_timeconstraint_2"
 			Where spawnbot
@@ -2862,6 +2899,7 @@ WaveSchedule
 					TFBot
 					{
 						Template TimeConstraint_Tower_Sergeant
+						Tag collective_bot
 						//This tag handles death events and need to be in the last bot
 						//tag timeconstraint1
 						tag "pair_towerA_carrier"
@@ -2869,6 +2907,7 @@ WaveSchedule
 					TFBot
 					{
 						Template TimeConstraint_Tower_Punch
+						Tag collective_bot
 						//This tag handles death events and need to be in the last bot
 						//tag timeconstraint1
 						tag "pair_towerA_carried_delayed"
@@ -2877,6 +2916,7 @@ WaveSchedule
 					TFBot
 					{
 						Template TimeConstraint_Tower_Bomber
+						Tag collective_bot
 						//This tag handles death events and need to be in the last bot
 						//tag timeconstraint1
 						tag "pair_towerB_carried_delayed"
@@ -2885,6 +2925,7 @@ WaveSchedule
 					TFBot
 					{
 						Template TimeConstraint_Tower_Blaster
+						Tag collective_bot
 						//This tag handles death events and need to be in the last bot
 						//tag timeconstraint1
 						tag "pair_towerC_carried_delayed"
@@ -2893,6 +2934,7 @@ WaveSchedule
 					TFBot
 					{
 						Template TimeConstraint_Tower_Hok
+						Tag collective_bot
 						tag timeconstraintFinal
 						tag "pair_towerD_carried_delayed"
 					}
