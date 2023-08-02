@@ -1,15 +1,59 @@
+local function is_point_behind_plane(point, plane_normal, plane_dist)
+    local d = point:Dot(plane_normal)
+    return d < -plane_dist
+end
+
+local function getEyeAngles(player) --from royal, gets accurate eye angles
+	local pitch = player["m_angEyeAngles[0]"]
+	local yaw = player["m_angEyeAngles[1]"]
+
+	return Vector(pitch, yaw, 0)
+end
+
 -- Colonel Dronemann
 -- 2 drones on each side of him that can be destroyed, has the wrangler out
-function ColDronemanSpawn(_, activator)
+
+local gateIsCapped = false
+local colDronemanEntity = nil
+local colDronemanIsEngaged = false
+
+function ColDronemanSpawn(status, activator)
+
+	if status == "regular" then
+		setGateUncapped(_, activator)
+	end
+
+	colDronemanIsEngaged = false
+	colDronemanEntity = activator
+
 	local bulletWeapons = {
 		[1] = "HOMING_ROCKETLAUNCHER_DRONE",
 		-- [1] = "MARKER",
-		[2] = "ROCKETLAUNCHER_WEAK",
+		[2] = "ROCKETLAUNCHER_STRONG",
+		[3] = "GRENADELAUNCHER_STRONG",
+		[4] = "HOMING_ROCKETLAUNCHER_DRONE",
+		[5] = "ROCKETLAUNCHER_STRONG",
+		[6] = "GRENADELAUNCHER_STRONG"
 	}
+
+	if status == "regular" then
+		bulletWeapons[2] = "ROCKETLAUNCHER_WEAK"
+	end
+
     local fireTime = {
-        [1] = 3,
-        [2] = 0.8
+        [1] = 2,
+        [2] = 0.6,
+		[3] = 0.73,
+		[4] = 2.07,
+        [5] = 0.607,
+		[6] = 0.737
     }
+
+	if status == "regular" then
+		fireTime[1] = 3
+		fireTime[2] = 0.8
+	end
+	
 	for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
 		if wearable.m_hOwnerEntity == activator then
 			wearable.m_flModelScale = 1.25
@@ -19,7 +63,13 @@ function ColDronemanSpawn(_, activator)
 	local dronesDeadCount = 0
 
 	local dronePrefix = "drone" .. tostring(activator:GetHandleIndex())
-	for i = 1, 2 do
+	local droneOffsets = {Vector(0, 75, 150), Vector(0, -75, 150)}
+	local droneCountToSpawn = 2
+	if status == "prime" then
+		droneOffsets = {Vector(0, 75, 175), Vector(0, 100, 150), Vector(0, 75, 125), Vector(0, -75, 175), Vector(0, -100, 150), Vector(0, -75, 125)}
+		droneCountToSpawn = 6
+	end
+	for i = 1, droneCountToSpawn do
 		local sentryModel = ents.CreateWithKeys("prop_dynamic", {
 			model = "models/rcat/rcat_level2.mdl",
             ["$positiononly"] = 1,
@@ -40,10 +90,7 @@ function ColDronemanSpawn(_, activator)
 		weaponMimic["$SetOwner"](weaponMimic, activator)
 		weaponMimic:SetParent(sentryModel)
 
-		local offsetMult = i == 1 and 1 or -1
-		local offset = Vector(0, 75 * offsetMult, 100)
-
-		sentryModel["$fakeparentoffset"] = offset
+		sentryModel["$fakeparentoffset"] = droneOffsets[i]
 		sentryModel:SetFakeParent(activator)
 
         weaponMimic["$StartFiring"](weaponMimic, math.huge)
@@ -72,11 +119,22 @@ function ColDronemanSpawn(_, activator)
 				end
 
                 if valid then
-                    local distance = curOrigin:Distance(player:GetAbsOrigin())
+					--Ignore all players behind, makes it more forgiving for spies.
+					local porigin = player:GetAbsOrigin()
+					local botEyeAngles = getEyeAngles(activator)
+
+					if (is_point_behind_plane(porigin,botEyeAngles:GetForward(),curOrigin:Length())) then
+						-- print("Player is behind us, skip check!")
+						goto skipClosestAssignment
+					end
+
+					local distance = curOrigin:Distance(porigin)
 
                     if distance < closest[2] then
                         closest = { player, distance }
                     end
+
+					::skipClosestAssignment::
                 end
 			end
 
@@ -104,30 +162,59 @@ local function getDrones(activator)
 	return ents.FindAllByName(dronePrefix .. "*")
 end
 
-local function removeAllDrones(activator)
+local function removeAllDrones(param, activator)
 	for _, drone in pairs(ents.FindAllByName("drone" .. tostring(activator:GetHandleIndex()) .. "*")) do
 		util.ParticleEffect("ExplosionCore_buildings", drone:GetAbsOrigin(), Vector(0, 0, 0))
 		drone:Remove()
 	end
 end
 
-function ColDronemanDeath(_, activator)
-	removeAllDrones(activator)
+function setGateCapped(_, activator)
+	gateIsCapped = true
+	colDronemanEntity:BotCommand("stop interrupt action")
+	colDronemanEntity:BotCommand("switch_action FetchFlag")
+	if colDronemanIsEngaged == true then
+		colDronemanEntity:ChangeAttributes("Engaged_bombbot")
+	else
+		colDronemanEntity:ChangeAttributes("Regular_bombbot")
+	end
 end
 
-function ColDronemanPhase2(_, activator, forced)
+function setGateUncapped(_, activator)
+	gateIsCapped = false
+end
+
+function ColDronemanDeath(_, activator)
+	removeAllDrones(" ", activator)
+	colDronemanEntity = nil
+end
+
+
+function ColDronemanPhase2(status, activator, forced)
 	if not forced and #getDrones(activator) == 0 then
 		return
 	end
 
 	for _, drone in pairs(getDrones(activator)) do
         drone["$weaponname"] = "STICKYBOMB_DRONE"
-		drone["$firetime"] = 0.8
+		
+		if status == "regular" then
+			drone["$firetime"] = 0.8
+		else
+			drone["$firetime"] = 0.5
+		end
+
 	end
 
 	local oneLiner = "{blue}"
 	.. "Colonel Dronemann"
 	.. "{reset}: These babies are in second gear now. Watch your steps"
+
+	if status == "prime" then
+		oneLiner = "{blue}"
+		.. "Colonel Dronemann"
+		.. "{reset}: These babies are-- you've heard this one already."
+	end
 
 	local allPlayers = ents.GetAllPlayers()
 
@@ -136,14 +223,20 @@ function ColDronemanPhase2(_, activator, forced)
 	end
 end
 
-function ColDronemanEngaged(_, activator, forced)
+function ColDronemanEngaged(status, activator, forced)
 	if not forced and #getDrones(activator) == 0 then
 		return
 	end
 
-	removeAllDrones(activator)
+	colDronemanIsEngaged = true
 
-	activator:ChangeAttributes("Engaged")
+	removeAllDrones(" ", activator)
+
+	if gateIsCapped == true and status == "regular" then
+		activator:ChangeAttributes("Engaged_bombbot")
+	else
+		activator:ChangeAttributes("Engaged_gatebot")
+	end
 
 	-- crit jumpscare prevention
 	activator:SetAttributeValue("no_attack", 2)
@@ -161,6 +254,12 @@ function ColDronemanEngaged(_, activator, forced)
 	.. "Colonel Dronemann"
 	.. "{reset}: Ring-a-Ding-Ding baby!"
 
+	if status == "prime" then
+		oneLiner = "{blue}"
+	.. "Colonel Dronemann"
+	.. "{reset}: Ring-a-ring-a-ding-ding-ding!"
+	end
+
 	local allPlayers = ents.GetAllPlayers()
 
 	for _, player in pairs(allPlayers) do
@@ -168,7 +267,7 @@ function ColDronemanEngaged(_, activator, forced)
 	end
 end
 
-local SCALE_MAX = 2
+local SCALE_MAX = 1.8
 local SCALE_HEALTH = 10000
 local BASE_HEIGHT = 80
 
@@ -192,11 +291,11 @@ local PHASES = {
 	},
 }
 
--- base health is 25000
+-- base health is 30000
 local THRESHOLD = {
-	[1] = 21000,
-	[2] = 18000,
-	[3] = 14000,
+	[1] = 26000,
+	[2] = 21000,
+	[3] = 14500,
 	[4] = 10000,
 }
 
@@ -314,11 +413,12 @@ function SergeantSizer(_, activator)
 		local vscript = ("activator.SetScaleOverride(%s)"):format(tostring(size))
 		activator:RunScriptCode(vscript, activator)
 
-		for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
-			if wearable.m_hOwnerEntity == activator then
-				wearable.m_flModelScale = size
-			end
-		end
+		--Seems to make the hat oversized af, disabled for the time being
+		-- for _, wearable in pairs(ents.FindAllByClass("tf_wearable")) do
+		-- 	if wearable.m_hOwnerEntity == activator then
+		-- 		wearable.m_flModelScale = size
+		-- 	end
+		-- end
 
 		lastHealth = health
 		-- grow(PHASES[goalPhase].Scale)
@@ -391,7 +491,8 @@ local MANNPOWER_EFFECT_END = {
 
 local KINGPHASE_THRESHOLD = 20000
 
-function MajorMannpower(_, activator)
+function MajorMannpower(status, activator)
+	
 	local particles = {}
 	for _, name in pairs(MANNPOWERS) do
 		-- local particle = ents.CreateWithKeys("info_particle_system", {
@@ -453,7 +554,7 @@ function MajorMannpower(_, activator)
 			return
 		end
 
-		if activator.m_iHealth <= KINGPHASE_THRESHOLD then
+		if activator.m_iHealth <= KINGPHASE_THRESHOLD and status ~= "tcprime" then
 			phase2 = true
 			setPowerup("king")
 			return
