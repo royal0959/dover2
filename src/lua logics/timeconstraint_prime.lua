@@ -1,6 +1,7 @@
 -- powered by schizophrenia
 
-local TIMECONSTRAINT_WAVE = 6
+local TIMECONSTRAINT_WAVE = 7
+local realcontraint
 
 local classIndices_Internal = {
 	[1] = "Scout",
@@ -16,47 +17,49 @@ local classIndices_Internal = {
 
 local DEATH_INSULTS = {
 	Scout = {
-		"Jumping won't save you, %s",
-		"Unequip the Fan-o-War, %s",
-		"Try upgrading your primary weapon, %s",
+		"Jumping won't save you, %s.",
+		"Try not running straight to the robots, %s.",
+		"Try upgrading your primary weapon, %s.",
 	},
 	Soldier = {
-		"Unbind your attack key, %s",
-		"Don't buy rocket specialist next time, %s",
+		"Try not missing your rockets, %s.",
+		"Can't rocket jump out of that one, %s?",
 	},
 	Pyro = {
-		"Hey %s! Did you know that the airblast force upgrade makes you take 50%% more damage?",
-		"Hey %s! Did you know that equipping the scorch shot makes you take 150%% more damage?",
-		"Hey %s! Unbind your airblast key",
+		--"Hey %s! Did you know that the airblast force upgrade makes you take 50%% more damage?",
+		--"Hey %s! Did you know that equipping the scorch shot makes you take 150%% more damage?",
+		"%s, have you considered not walking straight towards me?",
+		"Burn in your own failure, %s.",
 	},
 	Demoman = {
-		"Try using your movement keys next time, %s",
-		"Are you actually drunk, %s? You're playing like you are",
-		"Your incompetency is truly explosive, %s",
+		"Try using your movement keys next time, %s.",
+		"Are you actually drunk, %s? You're playing like you are.",
+		"Your incompetency is truly explosive, %s.",
 	},
 	Heavyweapons = {
-		"Consider playing a more interesting class, %s",
-		"I hope that got you to leave a negative review on the end-of-operation survey, %s",
-		"Keep standing directly infront of me, %s, see how well that goes next time",
+		"Consider playing a more interesting class, %s.",
+		"I hope that got you to leave a negative review on the end-of-operation survey, %s.",
+		"Keep standing directly in front of me, %s, see how well that goes next time.",
 	},
 	Engineer = {
-		"Build yourself better gamesense, %s",
+		"Build yourself better gamesense, %s.",
 		"Sentry blocking going well, aye %s?",
-		"Unequip the wrangler, %s",
+		-- "Unequip the wrangler, %s.",
 	},
 	Medic = {
-		"How's that canteen spam going for you, %s?",
-		"Try idling more %s, maybe that will work",
-		"Too bad you can't reanimate yourself, %s",
+		"Nice healing, %s.",
+		"Try idling more %s, maybe that will work.",
+		"Too bad you can't reanimate yourself, %s.",
 	},
 	Sniper = {
-		"Stop aiming for my head and start aiming to be better at the game, %s",
+		"Stop aiming for my body and start aiming to be better at the game, %s.",
+		"You're supposed to shoot the head, %s.",
 		"Thanks for standing still, %s!",
 	},
 	Spy = {
-		"I hate the french",
-		"Try running in circle harder, %s",
-		"Couldn't dead ring that one, %s? Unfortunate",
+		"I hate the french.",
+		"Try running in circles more, %s.",
+		"Couldn't dead ring that one, %s? Unfortunate.",
 	},
 }
 
@@ -104,7 +107,11 @@ local randomIcons = {
 	"pyro",
 	"soldier_spammer",
 	"spy",
+	"pyro_dragon_fury",
 	"soldier_blackbox",
+	"demoknight_charge",
+	"soldier_bison",
+	"demo_bow",
 	"medic_giant",
 	"timer_lite",
 	"helicopter_blue_nys",
@@ -131,7 +138,7 @@ local gamestateEnded = false
 local specialLinePlaying = false
 
 local function chatMessage(message)
-	local outputMessage = "{blue}" .. "Time-Constraint Prime" .. "{reset}: " .. message
+	local outputMessage = "{blue}" .. "Time-Constraint Prime" .. "{reset} : " .. message
 
 	local allPlayers = ents.GetAllPlayers()
 
@@ -259,7 +266,7 @@ function _TimeConstraintOnWaveInit(wave)
 			return
 		end
 
-		chatMessage("I await")
+		chatMessage("Back so soon?")
 
 		wavebarLogic = timer.Create(0.5, function()
 			for i = 1, #objResource.m_iszMannVsMachineWaveClassNames do
@@ -365,6 +372,8 @@ local function revertRollback()
 		for _, player in pairs(ents.GetAllPlayers()) do
 			if player:IsRealPlayer() then
 				player:ForceRespawn()
+			elseif player ~= realcontraint then
+				player:Suicide()
 			end
 		end
 
@@ -425,6 +434,7 @@ end
 
 local function Holder(bot)
 	timeconstraint_alive = true
+	realcontraint = bot
 
 	local allPlayers = ents.GetAllPlayers()
 
@@ -505,21 +515,107 @@ local function Handle1(bot)
 
 	storeRollback()
 
+	-- specialLinePlaying = true
+
+	-- timer.Simple(1, function()
+	-- 	chatMessage("I've been thinking...")
+	-- end)
+
+	-- timer.Simple(4, function()
+	-- 	chatMessage("If I simply do not leave spawn, I am invincible.")
+	-- end)
+
+	-- timer.Simple(8, function()
+	-- 	specialLinePlaying = false
+	-- 	chatMessage("You cannot defeat me. Give up while you can.")
+	-- end)
+
 	callbacks.died = bot:AddCallback(ON_DEATH, function()
 		specialLinePlaying = true
 
 		timer.Simple(0.5, function()
-			chatMessage("This never happened and will not occur again")
+			chatMessage("This has never happened and will not occur again.")
 		end)
 
 		timer.Simple(1.7, function()
-			chatMessage("Let's do that again")
+			chatMessage("Let's do that again.")
 		end)
 
 		timer.Simple(3.5, function()
 			setWaveBar(1)
 			specialLinePlaying = false
 			revertRollback()
+		end)
+
+		removeCallbacks(bot, callbacks)
+	end)
+	callbacks.spawned = bot:AddCallback(ON_SPAWN, function()
+		removeCallbacks(bot, callbacks)
+	end)
+end
+
+local function Handle2(bot)
+	local callbacks = {}
+
+	storeRollback()
+
+	specialLinePlaying = true
+
+	timer.Simple(1, function()
+		chatMessage("That Engineer bot had a couple of his drones rotting on the back.")
+	end)
+
+	timer.Simple(5, function()
+		specialLinePlaying = false
+		chatMessage("What a waste. I have granted them a better purpose.")
+	end)
+
+	-- timer.Simple(10, function()
+	-- 	chatMessage("Remember this? Say hello to it again.")
+	-- end)
+
+	callbacks.died = bot:AddCallback(ON_DEATH, function()
+		specialLinePlaying = true
+
+		timer.Simple(0.5, function()
+			chatMessage("I knew learning from bosses that just died was not the right choice.")
+		end)
+
+		timer.Simple(1.7, function()
+			chatMessage("Let's do that again.")
+		end)
+
+		timer.Simple(3.5, function()
+			setWaveBar(1)
+			specialLinePlaying = false
+			revertRollback()
+		end)
+
+		removeCallbacks(bot, callbacks)
+	end)
+	callbacks.spawned = bot:AddCallback(ON_SPAWN, function()
+		removeCallbacks(bot, callbacks)
+	end)
+end
+
+local function HandleFinal(bot)
+	local callbacks = {}
+
+	storeRollback()
+
+	timer.Simple(2, function()
+		chatMessage("What I couldn't do myself,  I could with five of me.")
+	end)
+
+	callbacks.died = bot:AddCallback(ON_DEATH, function()
+		specialLinePlaying = true
+
+		timer.Simple(0.5, function()
+			chatMessage("This is getting boring. I'm leaving.")
+		end)
+
+		timer.Simple(3.5, function()
+			realcontraint:Suicide()
 		end)
 
 		removeCallbacks(bot, callbacks)
@@ -538,18 +634,18 @@ local function checkBot(bot, tags)
 		Handle1(bot)
 		return true
 	end
-	-- if hasTag(tags, "timeconstraint2") then
-	-- 	Handle2(bot)
-	-- 	return true
-	-- end
+	if hasTag(tags, "timeconstraint2") then
+		Handle2(bot)
+		return true
+	end
 	-- if hasTag(tags, "timeconstraint3") then
 	-- 	Handle3(bot)
 	-- 	return true
 	-- end
-	-- if hasTag(tags, "timeconstraintFinal") then
-	-- 	HandleFinal(bot)
-	-- 	return true
-	-- end
+	if hasTag(tags, "timeconstraintFinal") then
+		HandleFinal(bot)
+		return true
+	end
 end
 
 function _OnWaveSpawnBot_TimeConstraint(bot, _, tags)
@@ -559,3 +655,4 @@ function _OnWaveSpawnBot_TimeConstraint(bot, _, tags)
 		cur_constraint = bot
 	end
 end
+

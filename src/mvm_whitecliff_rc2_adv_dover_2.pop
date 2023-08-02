@@ -41,7 +41,7 @@ WaveSchedule
 	LuaScriptFile "scripts/ravener_helicopter.lua"
 	LuaScriptFile "scripts/ravener_bots.lua"
 	LuaScriptFile "scripts/dover2_boss_resistance.lua"
-	LuaScriptFile "scripts/timeconstraint_raven.lua"
+	LuaScriptFile "scripts/timeconstraint_prime.lua"
 	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua"
 
 	// custom spawns
@@ -2982,4 +2982,3 @@ WaveSchedule
 		}
 	}
 }
-#base judge_restricts.pop
