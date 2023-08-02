@@ -397,8 +397,30 @@ local function revertRollback()
 	end)
 end
 
+-- reanimators are disabled during pvp
+-- when outside of pvp (during timeconstraint wave), reanimator flies away after 5 seconds
 ents.AddCreateCallback("entity_revive_marker", function(entity)
+	if not timeconstraint_alive then
+		return
+	end
+
 	if not pvpActive then
+		timer.Simple(1, function()
+			for i = 1, 100 do
+				timer.Simple(0.03 * i, function()
+					if not IsValid(entity) then
+						return
+					end
+
+					entity:SetAbsOrigin(entity:GetAbsOrigin() + Vector(0, 0, 5))
+
+					if i == 100 then
+						entity:Remove()
+					end
+				end)
+			end
+		end)
+
 		return
 	end
 
