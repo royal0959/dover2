@@ -177,6 +177,11 @@ local function resetWavebar()
 		wavebarLogic = nil
 	end
 
+	local objResource = ents.FindByClass("tf_objective_resource")
+
+	objResource:ResetFakeSendProp("m_nMannVsMachineWaveCount")
+	objResource:ResetFakeSendProp("m_nMannVsMachineMaxWaveCount")
+
 	-- local objResource = ents.FindByClass("tf_objective_resource")
 
 	-- objResource.m_nMannVsMachineWaveEnemyCount = 1
@@ -198,6 +203,8 @@ local function setWaveBar(subwave)
 	end
 
 	local objResource = ents.FindByClass("tf_objective_resource")
+
+	objResource:SetFakeSendProp("m_nMannVsMachineWaveCount", subwave)
 
 	local subwaveIcons = WAVE_ICONS[subwave]
 
@@ -268,7 +275,12 @@ function _TimeConstraintOnWaveInit(wave)
 
 		chatMessage("Back so soon?")
 
+		objResource:SetFakeSendProp("m_iszMvMPopfileName", "DOVER 2: TIME-CONSTRAINT'S REVENGE")
+
 		wavebarLogic = timer.Create(0.5, function()
+			objResource:SetFakeSendProp("m_nMannVsMachineWaveCount", math.random(1, 100))
+			objResource:SetFakeSendProp("m_nMannVsMachineMaxWaveCount", math.random(1, 100))
+
 			for i = 1, #objResource.m_iszMannVsMachineWaveClassNames do
 				objResource.m_iszMannVsMachineWaveClassNames[i] = randomIcons[math.random(#randomIcons)]
 			end
