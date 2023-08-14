@@ -3,6 +3,9 @@
 local TIMECONSTRAINT_WAVE = 7
 local realcontraint
 
+local RED_PVP_SPAWN = Vector(338.208954, -4131.796387, 329.597107)
+local BLU_PVP_SPAWN = Vector(787.529175, -5665.938477, 481.031311)
+
 local classIndices_Internal = {
 	[1] = "Scout",
 	[3] = "Soldier",
@@ -645,13 +648,295 @@ local function HandleFinal(bot)
 		specialLinePlaying = true
 
 		timer.Simple(0.5, function()
-			chatMessage("This is getting boring. I'm leaving.")
+			-- chatMessage("This is getting boring. I'm leaving.")
+			chatMessage("This is getting boring. I have an idea.")
 		end)
+
+		-- timer.Simple(3.5, function()
+		-- 	realcontraint:Suicide()
+		-- end)
 
 		timer.Simple(3.5, function()
-			realcontraint:Suicide()
+			setWaveBar(1)
+			specialLinePlaying = false
+			revertRollback()
 		end)
 
+		removeCallbacks(bot, callbacks)
+	end)
+	callbacks.spawned = bot:AddCallback(ON_SPAWN, function()
+		removeCallbacks(bot, callbacks)
+	end)
+end
+
+
+local function PvPBluWin()
+	if gamestateEnded then
+		return
+	end
+
+	gamestateEnded = true
+	pvpActive = false
+
+	timer.Simple(1, function ()
+		chatMessage("Masterfully done my dear friend")
+	end)
+
+	timer.Simple(2, function ()
+		chatMessage("Let us enjoy this victory together")
+	end)
+	timer.Simple(3, function ()
+		chatMessage("I hope your buddies aren't too mad at you after that")
+	end)
+
+	realcontraint:Suicide()
+end
+local function PvPRedWin()
+	if gamestateEnded then
+		return
+	end
+	
+	gamestateEnded = true
+	pvpActive = false
+
+	timer.Simple(1, function ()
+		chatMessage("How embarrassing")
+	end)
+
+	realcontraint:Suicide()
+end
+
+local function checkPvPWinCond(dontSayCount)
+	local redPlayersAlive = 0
+
+	for _, player in pairs(ents.GetAllPlayers()) do
+		if not player:IsRealPlayer() then
+			goto continue
+		end
+
+		if player.m_iTeamNum ~= 2 then
+			goto continue
+		end
+
+		if not player:IsAlive() then
+			goto continue
+		end
+
+		redPlayersAlive = redPlayersAlive + 1
+
+		::continue::
+	end
+
+	print(redPlayersAlive)
+
+	if not dontSayCount and redPlayersAlive > 0 then
+		local msg = redPlayersAlive > 1 and "%s players left" or "%s player remains!"
+		chatMessage(string.format(msg, tostring(redPlayersAlive)))
+	end
+
+	if redPlayersAlive <= 0 then
+		PvPBluWin()
+	end
+end
+
+function OnPlayerConnected(player)
+	if not pvpActive then
+		return
+	end
+
+	-- prevent spawning during pvp 
+	local callback
+	callback = player:AddCallback(ON_SPAWN, function()
+		player:SetAttributeValue("min respawn time", 999999)
+
+		player:Suicide()
+		player:RemoveCallback(callback)
+	end)
+end
+
+function OnPlayerDisconnected(player)
+	if not timeconstraint_alive then
+		return
+	end
+
+	if player.m_iTeamNum == 3 then
+		PvPRedWin()
+		return
+	end
+
+	checkPvPWinCond()
+end
+
+local function getHalfPlayers()
+	local allPlayers = ents.GetAllPlayers()
+	local allPlayersCount = #allPlayers
+
+	local players = {}
+	local playersSet = {}
+
+	local playersCount = 0
+
+	for _, player in pairs(allPlayers) do
+		if player:IsRealPlayer() and player.m_iTeamNum == 2 then
+			table.insert(players, player)
+			playersSet[player:GetHandleIndex()] = true
+
+			playersCount = playersCount + 1
+
+			if allPlayersCount / playersCount >= 2 then
+				break
+			end
+		end
+	end
+
+	return players, playersSet
+end
+
+local function HandlePvP(bot)
+	local callbacks = {}
+
+	storeRollback()
+
+	-- dialogue reused from dover 1 for now. change later!
+	chatMessage("Seeing as I myself am entirely unable to best you all")
+
+	timer.Simple(1.5, function ()
+		chatMessage("I have decided that, in order to create a fair matchup")
+	end)
+	timer.Simple(4, function ()
+		chatMessage("You will be pitted against your best players")
+	end)
+
+	local chosenPlayers = {}
+	local chosenPlayersSet = {}
+
+	timer.Simple(6.5, function ()
+		chosenPlayers, chosenPlayersSet = getHalfPlayers()
+
+		local text = "And that means you"
+
+		for _, player in pairs(chosenPlayers) do
+			text = text .. ", " .. player:GetPlayerName()
+		end
+
+		chatMessage(text)
+	end)
+
+	timer.Simple(8, function ()
+		chatMessage("Step right on up fellas, you're on my side now")
+
+		-- cur_constraint.m_bUseBossHealthBar = false
+		cur_constraint:SetAttributeValue("is suicide counter", 1)
+
+		for _, chosenPlayer in pairs(chosenPlayers) do
+			chosenPlayer:ForceRespawn()
+
+			chosenPlayer:AddCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, 5)
+
+			chosenPlayer:Teleport(BLU_PVP_SPAWN)
+			chosenPlayer:AddCond(TF_COND_REPROGRAMMED)
+	
+			-- no resistance
+			-- chosenPlayer:SetAttributeValue("dmg taken from fire reduced", nil)
+			-- chosenPlayer:SetAttributeValue("dmg taken from blast reduced", nil)
+			-- chosenPlayer:SetAttributeValue("dmg taken from bullets reduced", nil)
+			-- chosenPlayer:SetAttributeValue("dmg taken from crit reduced", nil)
+			-- chosenPlayer:SetAttributeValue("health regen", nil)
+	
+			-- chosenPlayer:SetAttributeValue("max health additive bonus", 8000)
+			chosenPlayer:SetAttributeValue("cannot pick up intelligence", 1)
+	
+			chosenPlayer.m_bUseBossHealthBar = true
+			-- chosenPlayer.m_bIsMiniBoss = true
+	
+			local chosenPlrCallbacks = {}
+			chosenPlrCallbacks.died = chosenPlayer:AddCallback(ON_DEATH, function ()
+				PvPRedWin()
+	
+				removeCallbacks(chosenPlayer, chosenPlrCallbacks)
+			end)
+			-- chosenPlrCallbacks.removed = chosenPlayer:AddCallback(ON_REMOVE, function ()
+			-- 	PvPRedWin()
+			-- end)
+		end
+
+		for _, redPlayer in pairs(ents.GetAllPlayers()) do
+			if redPlayer.m_iTeamNum == 2 then
+				redPlayer:ForceRespawn()
+
+				redPlayer:AddCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, 5)
+				redPlayer:Teleport(RED_PVP_SPAWN)
+			end
+		end
+	end)
+	timer.Simple(10, function ()
+		chatMessage("Now give me a show")
+
+		for _, player in pairs(ents.GetAllPlayers()) do
+			if not player:IsRealPlayer() then
+				goto continue
+			end
+
+			player.m_bGlowEnabled = 1
+			player:ForceRespawnDead()
+			player:SetAttributeValue("min respawn time", 999999)
+
+			local isChosen = chosenPlayersSet[player:GetHandleIndex()]
+
+			local text = not isChosen and
+				"ELIMINATE BLU PLAYERS" or
+				"ELIMINATE RED PLAYERS"
+
+			player:Print(PRINT_TARGET_CENTER, text)
+
+			if isChosen then
+				goto continue
+			end
+
+			local plrCallbacks = {}
+			plrCallbacks.died = player:AddCallback(ON_DEATH, function ()
+				checkPvPWinCond()
+				removeCallbacks(player, plrCallbacks)
+			end)
+			-- plrCallbacks.removed = player:AddCallback(ON_REMOVE, function ()
+			-- 	checkPvPWinCond()
+			-- end)
+
+			::continue::
+		end
+
+		pvpActive = true
+
+		-- incase somehow 1 manned
+		checkPvPWinCond(true)
+	end)
+
+	timer.Simple(15, function ()
+		if gamestateEnded then
+			return
+		end
+
+		chatMessage("Spawn protection for both teams have been disabled")
+
+		-- for _, door in pairs(ents.FindAllByClass("func_door")) do
+		-- 	door:Remove()
+		-- end
+		for _, kit in pairs(ents.FindAllByClass("item_healthkit*")) do
+			kit:Remove()
+		end
+		for _, room in pairs(ents.FindAllByClass("func_respawnroom")) do
+			room:Remove()
+		end
+		for _, room in pairs(ents.FindAllByClass("func_respawnroomvisualizer")) do
+			room:Remove()
+		end
+
+		if cur_constraint then
+			cur_constraint:AddCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED)
+		end
+	end)
+
+	callbacks.died = bot:AddCallback(ON_DEATH, function()
 		removeCallbacks(bot, callbacks)
 	end)
 	callbacks.spawned = bot:AddCallback(ON_SPAWN, function()
@@ -678,6 +963,11 @@ local function checkBot(bot, tags)
 	-- end
 	if hasTag(tags, "timeconstraintFinal") then
 		HandleFinal(bot)
+		return true
+	end
+
+	if hasTag(tags, "timeconstraintPvP") then
+		HandlePvP(bot)
 		return true
 	end
 end

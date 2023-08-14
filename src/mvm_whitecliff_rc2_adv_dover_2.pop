@@ -26,6 +26,7 @@ WaveSchedule
 	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
 	PrecacheModel "models/workshop/player/items/medic/taunt_the_mannbulance/taunt_the_mannbulance.mdl"
 	PrecacheModel "models/bots/bot_worker/bot_worker.mdl"
+	PrecacheSound "healbuster/mvm_healbuster_spin.wav"
 
     Advanced 1
 
@@ -37,7 +38,7 @@ WaveSchedule
 
 	CustomUpgradesFile mvm_upgrades_tomboy3.txt
 
-	LuaScriptFile "scripts/dover2_bosses.lua"
+	LuaScriptFile "scripts/ravener_bosses.lua"
 	LuaScriptFile "scripts/ravener_helicopter.lua"
 	LuaScriptFile "scripts/ravener_bots.lua"
 	LuaScriptFile "scripts/dover2_boss_resistance.lua"
@@ -84,6 +85,17 @@ WaveSchedule
 	{
 		logic
 		{
+			//Download fodder
+			ambient_generic
+            {
+                "targetname" "healbuster_downloadfodder"
+                "message" "healbuster\mvm_healbuster_spin.wav"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "17"
+                "origin" "0 0 100"
+            }
+			
 			logic_auto
 			{
 				"onmapspawn" "gate_relay,AddOutput,OnTrigger popscript:$setGateCapped:0:0:-1,0.1,-1"
@@ -2857,6 +2869,8 @@ WaveSchedule
 						Attributes UseBossHealthBar
 						Attributes MiniBoss
 						ClassIcon timer_lite
+						Attributes IgnoreFlag
+						Action Idle
 						CharacterAttributes
 						{
 							"move speed penalty" 0.0001
@@ -2907,8 +2921,8 @@ WaveSchedule
 					TFBot
 					{
 						Template TimeConstraint_Tower_Punch
-						Tag collective_bot
 						//This tag handles death events and need to be in the last bot
+						Tag collective_bot
 						//tag timeconstraint1
 						tag "pair_towerA_carried_delayed"
 						tag "pair_towerB_carrier"
@@ -2916,8 +2930,8 @@ WaveSchedule
 					TFBot
 					{
 						Template TimeConstraint_Tower_Bomber
-						Tag collective_bot
 						//This tag handles death events and need to be in the last bot
+						Tag collective_bot
 						//tag timeconstraint1
 						tag "pair_towerB_carried_delayed"
 						tag "pair_towerC_carrier"
@@ -2925,8 +2939,8 @@ WaveSchedule
 					TFBot
 					{
 						Template TimeConstraint_Tower_Blaster
-						Tag collective_bot
 						//This tag handles death events and need to be in the last bot
+						Tag collective_bot
 						//tag timeconstraint1
 						tag "pair_towerC_carried_delayed"
 						tag "pair_towerD_carrier"
@@ -3018,6 +3032,34 @@ WaveSchedule
 					TFBot
 					{
 						Template T_TFBot_Giant_Scout_Fast
+					}
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "6_pvp"
+			WaitForAllDead "6_timeconstraint_3"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+
+			Support Limited
+		
+			Squad
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template TimeConstraint_Regular
+						Action Idle
+						tag timeconstraintPvP
 					}
 				}
 			}
