@@ -1,9 +1,13 @@
 local MAX_OFFSET = 200
-local MAIN_WEAPON_COOLDOWN = 1
-local STICKIES_COOLDOWN = 5
+local MAIN_WEAPON_COOLDOWN = 2
+local STICKIES_COOLDOWN = 15
 
-local STICKIES_PER_SHOT = 15
-local DETONATE_DELAY = 3
+local STICKIES_PER_SHOT = 10
+local DETONATE_DELAY = 5
+
+local heliHealthDrainer
+local helicopterBaseBoss
+local smokeParticle
 
 local function lerp(a,b,t)
     return a * (1-t) + b * t
@@ -22,6 +26,7 @@ local function traceBetween(origin, target)
 end
 
 function HelicopterBot(_, activator)
+
     local nextWeaponFire = 0
     local nextStickyFire = 0
     local nextDetonate = 0
@@ -31,7 +36,7 @@ function HelicopterBot(_, activator)
         TeamNum = 2,
     })
 
-    local helicopterBaseBoss = ents.CreateWithKeys("base_boss", {
+    helicopterBaseBoss = ents.CreateWithKeys("base_boss", {
         teamnum = activator.m_iTeamNum,
         model = "models/props_frontline/helicopter_windows.mdl",
         solid = 0,
@@ -47,9 +52,34 @@ function HelicopterBot(_, activator)
         message = "npc/combine_gunship/dropship_engine_distant_loop1.wav",
         radius = 40000,
 		health = 30,
-		spawnflags = 48,
+		spawnflags = 0,
     })
 	engineSound:SetFakeParent(helicopterBaseBoss)
+
+    local rocketSound = ents.CreateWithKeys("ambient_generic", {
+        message = "weapons/doom_rocket_launcher.wav",
+        radius = 1024,
+		health = 30,
+		spawnflags = 48,
+    })
+	rocketSound:SetFakeParent(helicopterBaseBoss)
+
+    local stickySound = ents.CreateWithKeys("ambient_generic", {
+        message = "weapons/stickybomblauncher_shoot.wav",
+        radius = 1024,
+		health = 30,
+		spawnflags = 48,
+    })
+	stickySound:SetFakeParent(helicopterBaseBoss)
+
+    -- (-40 0 56)
+    smokeParticle = ents.CreateWithKeys("info_particle_system", {
+        start_active = 0,
+        effect_name = "underworld_skull_smoke01",
+        flag_as_weather = 0,
+    }, true, true)
+    smokeParticle:SetFakeParent(helicopterBaseBoss)
+    smokeParticle["$fakeparentoffset"] = Vector(-40, 0, 56)
 
     helicopterBaseBoss:AddCallback(ON_DAMAGE_RECEIVED_PRE, function(_, damageInfo)
         if not damageInfo.Weapon then
@@ -90,6 +120,7 @@ function HelicopterBot(_, activator)
 
     helicopterBaseBoss:AddCallback(ON_REMOVE, function()
         local explosionPoint = helicopterBaseBoss:GetAbsOrigin()
+        helicopterBaseBoss:PlaySound("mvm/mvm_tank_explode.wav")
 
         activator:Suicide()
 	    -- util.ParticleEffect("asplode_hoodoo", helicopterBaseBoss:GetAbsOrigin(), Vector(0, 0, 0))
@@ -102,6 +133,8 @@ function HelicopterBot(_, activator)
         particle:SetAbsOrigin(explosionPoint)
         particle:Start()
 
+        timer.Stop(heliHealthDrainer)
+
         timer.Simple(1, function()
             particle:Remove()
         end)
@@ -112,6 +145,7 @@ function HelicopterBot(_, activator)
     helicopterBaseBoss.effects = 32 -- no draw
 
     local maxHealth = activator.m_iHealth
+    helicopterBaseBoss.m_bloodColor = -1
     helicopterBaseBoss:SetMaxHealth(maxHealth)
     helicopterBaseBoss:SetHealth(maxHealth)
     helicopterBaseBoss:SetSpeed(0)
@@ -164,6 +198,8 @@ function HelicopterBot(_, activator)
         damage = 100,
     })
 
+    
+
     -- setting owner will make base bot take knockback from stickies
     -- rocketMimic["$SetOwner"](rocketMimic, activator)
     -- stickyMimic["$SetOwner"](stickyMimic, activator)
@@ -174,6 +210,7 @@ function HelicopterBot(_, activator)
     rocketMimic["$fakeparentoffset"] = Vector(0, 0, 50)
     stickyMimic:SetFakeParent(helicopterModel)
     stickyMimic["$fakeparentoffset"] = Vector(0, 0, 50)
+    
 
 
     -- local annotation = ents.CreateWithKeys("training_annotation", {
@@ -203,7 +240,7 @@ function HelicopterBot(_, activator)
         activator:RemoveCallback(collideCallback)
 
         timer.Stop(logic)
-        for _, e in pairs({helicopterBaseBoss, redFilter, helicopterModel, rocketMimic, stickyMimic, engineSound}) do
+        for _, e in pairs({helicopterBaseBoss, redFilter, helicopterModel, rocketMimic, stickyMimic, engineSound, rocketSound, stickySound, smokeParticle}) do
             if IsValid(e) then
                 e:Remove()
             end
@@ -271,9 +308,9 @@ function HelicopterBot(_, activator)
                 valid = false
             elseif player.m_iTeamNum == activator.m_iTeamNum then
                 valid = false
-            elseif player:InCond(TF_COND_DISGUISED) == 1 then
+            elseif player:InCond(TF_COND_DISGUISED) then
                 valid = false
-            elseif player:InCond(TF_COND_STEALTHED) == 1 then
+            elseif player:InCond(TF_COND_STEALTHED) then
                 valid = false
             end
 
@@ -303,12 +340,14 @@ function HelicopterBot(_, activator)
         if curTime >= nextWeaponFire then
             nextWeaponFire = curTime + MAIN_WEAPON_COOLDOWN
             rocketMimic["FireOnce"](rocketMimic)
+            rocketSound:AcceptInput("PlaySound")
         end
 
         if curTime >= nextStickyFire then
             nextStickyFire = curTime + STICKIES_COOLDOWN
             nextDetonate = curTime + DETONATE_DELAY
             stickyMimic["FireMultiple"](stickyMimic, STICKIES_PER_SHOT)
+            stickySound:AcceptInput("PlaySound")
         end
 
         if playerTarget == closest[1] then
@@ -320,4 +359,17 @@ function HelicopterBot(_, activator)
         helicopterBaseBoss:RotateTowards(playerTarget)
         helicopterModel:RotateTowards(playerTarget)
     end, 0)
+end
+
+function HeliHealthDrain(_, activator)
+    if not helicopterBaseBoss:isValid() then
+        print("Heli is dead")
+        return
+    end
+    helicopterBaseBoss:PlaySound("mvm/giant_soldier/giant_soldier_explode.wav")
+    print("Heli drain time")
+    heliHealthDrainer = timer.Create(1, function()
+        helicopterBaseBoss.m_iHealth = helicopterBaseBoss.m_iHealth - 750 
+    end, 20)
+    smokeParticle:Start()
 end

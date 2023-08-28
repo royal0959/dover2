@@ -71,12 +71,29 @@ WaveSchedule
 			// "special item description 3" "Cannot charge"
 		}
 
-		"Caber Buster"
-		{
-			OriginalItemName "The Ullapool Caber" 
+		// "Caber Buster"
+		// {
+		// 	OriginalItemName "The Ullapool Caber" 
 
-			"not solid to players" 1
-			"special item description" "Becomes a Sentry Buster. Taunt to detonate (revert back to a regular Demoman on detonation)"
+		// 	"not solid to players" 1
+		// 	"special item description" "Becomes a Sentry Buster. Taunt to detonate (revert back to a regular Demoman on detonation)"
+		// }
+
+		"Buster Transformer"
+		{
+			OriginalItemName "Festive Targe 2014"
+
+			//LUA code must be changed upon changing this attribute, as it is what it currently uses to identify what shield the player has equipped
+			"dmg taken from blast reduced" 0.95
+
+			"dmg taken from fire reduced" 0.75
+			"charge recharge rate increased" -10
+			//Buying something from the upgrade station refills charge grahh
+			"no resupply" 1
+
+			"special item description" "Fill up the charge meter by dealing damage"
+			"special item description 2" "When the meter is full, press MOUSE2 to transform into a sentry buster."
+			// "special item description 3" "Cannot charge"
 		}
 
 
@@ -197,6 +214,17 @@ WaveSchedule
 			"special item description" "Press the Action key to switch between classes on the fly. 5 second cooldown between uses"
 			"special item description 2" "Items with charge meter require 8 seconds to be ready after switched to"
 		}
+		"Rocket Launcher Prime"
+		{
+			OriginalItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+			"damage bonus" 2
+			"clip size bonus" 3
+			"faster reload rate" 0.15
+			"fire rate bonus" 0.15
+			"critboost on kill" 0.5
+			"rocket specialist" 1
+			"restore health on kill" 1
+		}				 
 	}
 
 	ExtraLoadoutItems
@@ -243,18 +271,25 @@ WaveSchedule
 		Action {Item "Freelance Mercenary"}
 	}
 
-	DisallowUpgrade
-	{
-		Upgrade	"damage bonus" 
-		MaxLevel 3
-		ItemName "PHD Jumper"
-	}
+	// DisallowUpgrade
+	// {
+	// 	Upgrade	"damage bonus" 
+	// 	MaxLevel 3
+	// 	ItemName "PHD Jumper"
+	// }
 
 	DisallowUpgrade
 	{
 		Upgrade	"projectile penetration" 
 		MaxLevel 0
 		ItemName "Explosive Touch"
+	}
+
+	DisallowUpgrade
+	{
+		Upgrade	"charge recharge rate increased" 
+		MaxLevel 0
+		ItemName "Buster Transformer"
 	}
 
 	DisallowUpgrade
@@ -625,9 +660,15 @@ WaveSchedule
 
 	PlayerItemEquipSpawnTemplate 
 	{
-		Name Caber_Buster
-		ItemName "Caber Buster" 
+		Name BusterTransformer_Spawn
+		ItemName "Buster Transformer"
 	}
+
+	// PlayerItemEquipSpawnTemplate 
+	// {
+	// 	Name Caber_Buster
+	// 	ItemName "Caber Buster" 
+	// }
 
 	PlayerItemEquipSpawnTemplate 
 	{

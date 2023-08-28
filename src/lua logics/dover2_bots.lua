@@ -1,3 +1,7 @@
+-- handles cancelling ambulance follower behavior
+local ambulanceFollowers = {}
+local ambulanceIsDead = false
+
 -- collective health bar 
 local collectiveBots = {}
 local collectiveHealthBarBot = false
@@ -109,15 +113,48 @@ local waiting = {
     Carried = {},
 }
 
+function OnWaveReset(wave) --Cleans list of ambulance followers
+    for index, bot in pairs(ambulanceFollowers) do
+        ambulanceFollowers[index] = nil
+    end
+    ambulanceFollowers = {}
+    ambulanceIsDead = false
+    waiting = {
+        Carriers = {},
+        Carried = {},
+    }
+end
+
 function OnWaveSpawnBot(bot, wave, tags)
     _OnWaveSpawnBot_CustomWeapon(bot, wave ,tags)
     _OnWaveSpawnBot_BossResistance(bot, wave ,tags)
     _OnWaveSpawnBot_TimeConstraint(bot, wave ,tags)
 
     for _, tag in pairs(tags) do
+
+        if tag == "ambulance_follower" then
+			if ambulanceIsDead == true then
+				print("Ambulance follower spawned but ambulance is dead lol")
+				bot:BotCommand("stop interrupt action")
+				bot:BotCommand("switch_action FetchFlag")
+				bot:SetAttributeValue("cannot pick up intelligence", 0)
+			else
+				print("An mbulance follower spawned!")
+				ambulanceFollowers[bot:GetHandleIndex()] = bot
+                timer.Simple(1, function() 
+                    bot:BotCommand("switch_action Mobber")
+                    bot:BotCommand("interrupt_action -posent ambulancetank -duration 9999")
+                end)
+                
+                bot:SetAttributeValue("cannot pick up intelligence", 1)
+			end
+		end
+
         if handleCollectiveTagCheck(bot, tag) then
             goto continue
         end
+
+        
 
         local split = {}
 
@@ -164,13 +201,28 @@ function OnWaveSpawnBot(bot, wave, tags)
     end
 end
 
+function cancelAmbulanceFollowers()
+	ambulanceIsDead = true
+	for _, bot in pairs(ambulanceFollowers) do
+		print("Cancelled a bot's ambulance follow")
+		bot:BotCommand("stop interrupt action")
+		bot:BotCommand("switch_action FetchFlag")
+		bot:SetAttributeValue("cannot pick up intelligence", 0)
+	end
+end
+
+AddEventCallback('player_death', function(event) 
+	local deadPlayer = ents.GetPlayerByUserId(event.userid)
+	ambulanceFollowers[deadPlayer:GetHandleIndex()] = nil
+end)
+
 function OnWaveInit(wave)
     _TimeConstraintOnWaveInit(wave)
     waiting = {
         Carriers = {},
         Carried = {},
     }
-
+    ambulanceIsDead = false
     collectiveBots = {}
     collectiveHealthBarBot = false
 end
@@ -244,3 +296,4 @@ function PairBots(carrier, carried)
 		endPairLogic()
 	end)
 end
+

@@ -494,7 +494,7 @@ function SeducerHit(_, activator, caller)
 		return
 	end
 
-	if caller:InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED) ~= 0 then
+	if caller:InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED) then
 		return
 	end
 
@@ -943,7 +943,7 @@ function BTEquip(_, activator)
 
 		btTimers.tauntChecker = timer.Create(0.1, function()
 			
-			if activator:InCond(TF_COND_TAUNTING) == 0 then
+			if not activator:InCond(TF_COND_TAUNTING) then
 				goto noTaunt
 			end
 
@@ -1145,7 +1145,7 @@ function PHDEquip(_, activator)
 
 			local parachuting = activator:InCond(TF_COND_PARACHUTE_ACTIVE)
 
-			if parachuting ~= 0 then
+			if parachuting then
 				timeSpentParachuting = timeSpentParachuting + 0.1
 			end
 

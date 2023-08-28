@@ -112,9 +112,9 @@ function ColDronemanSpawn(status, activator)
 					valid = false
 				elseif player.m_iTeamNum == activator.m_iTeamNum then
 					valid = false
-				elseif player:InCond(TF_COND_DISGUISED) == 1 then
+				elseif player:InCond(TF_COND_DISGUISED) then
 					valid = false
-				elseif player:InCond(TF_COND_STEALTHED) == 1 then
+				elseif player:InCond(TF_COND_STEALTHED) then
 					valid = false
 				end
 

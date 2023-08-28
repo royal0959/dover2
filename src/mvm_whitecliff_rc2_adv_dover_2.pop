@@ -26,7 +26,7 @@ WaveSchedule
 	PrecacheModel "models/bots/boss_bot/boss_blimp.mdl"
 	PrecacheModel "models/workshop/player/items/medic/taunt_the_mannbulance/taunt_the_mannbulance.mdl"
 	PrecacheModel "models/bots/bot_worker/bot_worker.mdl"
-	PrecacheSound "healbuster/mvm_healbuster_spin.wav"
+	//PrecacheSound "healbuster/mvm_healbuster_spin.wav"
 
     Advanced 1
 
@@ -84,18 +84,7 @@ WaveSchedule
 	PointTemplates
 	{
 		logic
-		{
-			//Download fodder
-			ambient_generic
-            {
-                "targetname" "healbuster_downloadfodder"
-                "message" "healbuster\mvm_healbuster_spin.wav"
-                "health" "10"
-                "radius" "2100"
-                "spawnflags" "17"
-                "origin" "0 0 100"
-            }
-			
+		{	
 			logic_auto
 			{
 				"onmapspawn" "gate_relay,AddOutput,OnTrigger popscript:$setGateCapped:0:0:-1,0.1,-1"

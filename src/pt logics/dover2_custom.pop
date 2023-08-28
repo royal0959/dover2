@@ -135,6 +135,15 @@ WaveSchedule
 			// }
 		}
 
+		BusterTransformer_Spawn
+		{
+			OnSpawnOutput
+			{
+				Target "popscript"
+				Action "$BTEquip"	
+			}
+		}
+
 		// new version, shield spawning handled in lua
 		Thunderdome_Spawn
 		{
