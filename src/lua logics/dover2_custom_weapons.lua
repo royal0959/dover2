@@ -1,4 +1,3 @@
-
 local REDEEMER_HIT_DEBOUNCE = 10
 local REDEEMER_HIT_DAMAGE = 25
 -- local REDEEMER_HIT_DAMAGE_ADDITION = 10 -- increased each hit
@@ -11,11 +10,17 @@ local WINGER_COOLDOWN = 3
 
 local DRONES_CAP = 2
 
+--This number * 100 is the damage required to fully charge, not counting natural recharge rate
+local BUSTER_TRANSFORMER_CHARGE_DIVISOR = 50
+local BUSTER_TRANSFORMER_GIANT_DAMAGE = 2000
+local BUSTER_TRANSFORMER_TANK_DAMAGE = 2000
+local BUSTER_TRANSFORMER_BLAST_RADIUS = 256
+
 local PHD_THRESHOLD = {
 	["Small"] = -100,
 	["Medium"] = 1,
-	["Medium2"] = 1.7,
-	["Large"] = 2.3,
+	["Medium2"] = 1.8,
+	["Large"] = 2.4,
 	["Nuke"] = 4,
 }
 
@@ -23,14 +28,14 @@ local PHD_EXPLOSIONS = {
 	["Small"] = { Particle = "hammer_impact_button", Radius = 144, Damage = 50 },
 	["Medium"] = { Particle = "ExplosionCore_buildings", Radius = 144, Damage = 125 },
 	["Medium2"] = { Particle = "ExplosionCore_Wall", Radius = 144, Damage = 200 },
-	["Large"] = { Particle = "ExplosionCore_Wall", Radius = 200, Damage = 350 }, --asplode_hoodoo
+	["Large"] = { Particle = "ExplosionCore_Wall", Radius = 200, Damage = 250 }, --asplode_hoodoo, adjusted for minicrits
 	["Nuke"] = { Particle = "skull_island_explosion", Radius = 600, Damage = 700 },
 }
 
 local PHD_FEEDBACK_CONDS = {
 	-- ["Medium"] = TF_COND_SNIPERCHARGE_RAGE_BUFF,
-	["Large"] = TF_COND_CRITBOOSTED_CARD_EFFECT,
-	["Nuke"] = TF_COND_SODAPOPPER_HYPE,
+	["Large"] = TF_COND_OFFENSEBUFF,
+	["Nuke"] = TF_COND_CRITBOOSTED_CARD_EFFECT,
 }
 
 local PARRY_TIME = 0.8
@@ -72,7 +77,7 @@ local callbacks = {}
 local weaponsData = {}
 local weaponTimers = {}
 
-local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD", "SmolShield", "WingerDash", "Scavenger", "Diver" }
+local CUSTOM_WEAPONS_INDICES = { "Parry", "Drone", "PHD", "SmolShield", "WingerDash", "Scavenger", "Diver", "bt" }
 for _, weaponIndex in pairs(CUSTOM_WEAPONS_INDICES) do
 	callbacks[weaponIndex] = {}
 	weaponsData[weaponIndex] = {}
@@ -178,6 +183,99 @@ local function _getPlayerCameraAngleUp(player)
 	local pitch = player["m_angEyeAngles[0]"]
 
 	return Vector(0, 0, -pitch)
+end
+
+--Used by Buster Transformer, copied from Collateral Damage
+local function fireTraceBetweenTwoEntities(pos1, pos2)
+    DefaultTraceInfo = {
+        start = pos1, -- Start position vector. Can also be set to entity, in this case the trace will start from entity eyes position
+        endpos = pos2, -- End position vector. If nil, the trace will be fired in `angles` direction with `distance` length
+        mask = MASK_SOLID, -- Solid type mask, see MASK_* globals
+        collisiongroup = COLLISION_GROUP_PLAYER, -- Pretend the trace to be fired by an entity belonging to this group. See COLLISION_GROUP_* globals
+        filter = nil -- Entity to ignore. If nil, filters start entity. Can be a single entity, table of entities, or a function with a single entity parameter that returns true if trace should hit the entity, false otherwise.
+    }
+    trace = util.Trace(DefaultTraceInfo)
+    return trace.Entity
+end
+
+--Also copied from Collateral Damage holy
+local function getAllPlayersInBusterExplosion(blastCenter, blastRadius)
+
+    local entsInBlastRadius = ents.FindInSphere(blastCenter, blastRadius)
+    local playersCaughtInBlast = {}
+
+    for _, blastVictim in pairs(entsInBlastRadius) do
+
+        if blastVictim:IsPlayer() == false then
+            goto continue
+        end
+        
+        if blastVictim:IsAlive() == false then
+            goto continue
+        end
+
+		if blastVictim.m_iTeamNum ~= 3 then
+			goto continue
+		end
+        
+        -- Jank af, didnt use
+
+        -- local hitEntityFromBlast = fireTraceBetweenTwoEntities(blastCenter, blastVictim)
+        -- -- -- print("Hit a: " .. hitEntityFromBlast:GetClassname())
+        -- if hitEntityFromBlast:GetClassname() ~= "player" then
+        --     -- print("Blast victim was behind cover!")
+        --     goto continue
+        -- end
+
+        playersCaughtInBlast[#playersCaughtInBlast+1] = blastVictim
+
+        ::continue::
+    end
+
+    return playersCaughtInBlast
+end
+
+local function getAllSentriesInBusterExplosion(blastCenter, blastRadius)
+
+    local entsInBlastRadius = ents.FindInSphere(blastCenter, blastRadius)
+    local sentriesCaughtInBlast = {}
+
+    for _, blastVictim in pairs(entsInBlastRadius) do
+
+        if blastVictim:GetClassname() ~= "obj_sentrygun" then
+            goto continue
+        end
+
+		if blastVictim.m_iTeamNum ~= 3 then
+			goto continue
+		end
+
+        sentriesCaughtInBlast[#sentriesCaughtInBlast+1] = blastVictim
+
+        ::continue::
+    end
+
+    return sentriesCaughtInBlast
+end
+
+--I'm sure these can be bundled into one function but I cba for now
+local function getAllTanksInBusterExplosion(blastCenter, blastRadius)
+
+    local entsInBlastRadius = ents.FindInSphere(blastCenter, blastRadius)
+    local tanksCaughtInBlast = {}
+
+    for _, blastVictim in pairs(entsInBlastRadius) do
+
+        if blastVictim:GetClassname() ~= "tank_boss" and blastVictim:GetClassname() ~= "base_boss" then
+            goto continue
+        end
+
+        tanksCaughtInBlast[#tanksCaughtInBlast+1] = blastVictim
+
+        ::continue::
+    end
+
+    return tanksCaughtInBlast
 end
 
 local function _dash(player)
@@ -734,6 +832,253 @@ function DroneWalkerUnequip(activator, handle)
 	ClearData("Drone", activator, handle)
 end
 
+function BTEquip(_, activator)
+	-- fix weird quirk with template being spawned after you switch to a different class
+	if classIndices_Internal[activator.m_iClass] ~= "Demoman" then
+		return
+	end
+
+	print("buster transformer equipped")
+	activator.m_flChargeMeter = 0
+	local handle = activator:GetHandleIndex()
+
+	timer.Simple(1, function()
+		--Persian and Booties are not allowed to charge this
+		local primaryWeapon = activator:GetPlayerItemBySlot(0)
+		local meleeWeapon = activator:GetPlayerItemBySlot(2)
+
+		--No booties passive with this weapon sori
+		primaryWeapon:SetAttributeValue("kill refills meter", "0")
+
+		--No persian passive either, unless... yknow i might consider it it's such a garbage weapon
+		meleeWeapon:SetAttributeValue("charge meter on hit", "0")
+		meleeWeapon:SetAttributeValue("ammo gives charge", "0")
+
+		--Failsafe
+		activator:SetAttributeValue("max health additive bonus", "0")
+		activator:SetAttributeValue("no_attack", "0")
+		activator:SetAttributeValue("move speed penalty", "1")
+		activator:SetAttributeValue("damage force reduction", "1")
+		activator:SetAttributeValue("always allow taunt", "0")
+		activator:SetAttributeValue("cannot be backstabbed", "0")
+		activator:SetAttributeValue("not solid to players", "0")
+
+		activator:AcceptInput("AddOutput", "modelscale 1")
+		activator:AcceptInput("SetForcedTauntCam", "0")
+		activator:RemoveCond(7)
+		activator:RemoveCond(32)
+		activator:RemoveCond(41)
+		--Reset model
+		activator:SetCustomModel("")
+	end)
+	
+
+	if callbacks.bt[handle] then
+		BTUnequip(activator, handle)
+	end
+
+	callbacks.bt[handle] = {}
+	weaponTimers.bt[handle] = {}
+	weaponsData.bt[handle] = {}
+
+	local btCallbacks = callbacks.bt[handle]
+	local btTimers = weaponTimers.bt[handle]
+	local btData = weaponsData.bt[handle]
+
+	btCallbacks.removed = activator:AddCallback(ON_REMOVE, function()
+		BTUnequip(activator, handle)
+	end)
+
+	btCallbacks.died = activator:AddCallback(ON_DEATH, function()
+		BTUnequip(activator, handle)
+		timer.Stop(btTimers.detonatorLogicParticle)
+		timer.Stop(btTimers.detonatorLogicMain)
+		ClearTimers("bt", activator, handle)
+	end)
+
+	btCallbacks.spawned = activator:AddCallback(ON_SPAWN, function()
+		BTUnequip(activator, handle)
+	end)
+
+	btCallbacks.onmouse2 = activator:AddCallback(ON_KEY_PRESSED, function(ent, key)
+		
+		--mouse2 is 2048
+		if key ~= 2048 or activator.m_flChargeMeter < 100 then
+			return
+		end
+
+		activator.m_flChargeMeter = 0
+		--Locked to melee
+		activator:AddCond(41)
+		--Speed boost
+		activator:AddCond(32)
+		--Force switch to melee? idk this was in the original caber buster template
+		activator:AddCond(85)
+		timer.Simple(0.015, function()
+			activator:RemoveCond(85)
+		end)
+		timer.Simple(0.11, function()
+			util.ParticleEffect("drg_wrenchmotron_teleport", activator:GetAbsOrigin(), Vector(0,0,0), activator)
+			activator:PlaySound("misc/halloween/merasmus_spell.wav")
+			activator:AcceptInput("$DisplayTextCenter", "TAUNT to explode!")
+
+			--Surely there's a better way to do this
+			activator:AcceptInput("AddOutput", "modelscale 1.75")
+			activator:AcceptInput("SetForcedTauntCam", "1")
+			activator:SetAttributeValue("max health additive bonus", "225")
+			activator:SetAttributeValue("no_attack", "1")
+			activator:SetAttributeValue("move speed penalty", "2")
+			--activator:SetAttributeValue("no resupply", "1") --Buying smth from the upgrade station refills charge grahhh
+			activator:SetAttributeValue("damage force reduction", "0.01") --Not fun getting knocked back around
+			activator:SetAttributeValue("always allow taunt", "1")
+			activator:SetAttributeValue("cannot be backstabbed", "1")
+			activator:SetAttributeValue("not solid to players", "1") --Not fun being solid to players fr
+		end)
+		timer.Simple(0.2, function()
+			activator:SetCustomModel("models/bots/demo/red_sentry_buster.mdl")
+		end)
+		timer.Simple(0.3, function()
+			activator:AddHealth(400, false)
+		end)
+
+		btTimers.tauntChecker = timer.Create(0.1, function()
+			
+			if activator:InCond(TF_COND_TAUNTING) == 0 then
+				goto noTaunt
+			end
+
+			timer.Stop(btTimers.tauntChecker)
+			activator:SetAttributeValue("move speed penalty", "0.0001")
+			activator:PlaySound("mvm/sentrybuster/mvm_sentrybuster_spin.wav")
+
+			btTimers.detonatorLogicParticle = timer.Create(1.97, function()
+				util.ParticleEffect("asplode_hoodoo", activator:GetAbsOrigin(), Vector(0,0,0), activator)
+			end)
+
+			btTimers.detonatorLogicMain = timer.Create(1.95, function()
+				
+				activator:PlaySound("mvm/sentrybuster/mvm_sentrybuster_explode.wav")
+
+				--Is there no remove attribute?
+				activator:SetAttributeValue("max health additive bonus", "0")
+				activator:SetAttributeValue("no_attack", "0")
+				activator:SetAttributeValue("move speed penalty", "1")
+				--activator:SetAttributeValue("no resupply", "0")
+				activator:SetAttributeValue("damage force reduction", "1")
+				activator:SetAttributeValue("always allow taunt", "0")
+				activator:SetAttributeValue("cannot be backstabbed", "0")
+				activator:SetAttributeValue("not solid to players", "0")
+
+				activator:AcceptInput("AddOutput", "modelscale 1")
+				activator:AcceptInput("SetForcedTauntCam", "0")
+				--Get out of taunting! No more speed boost and melee lock as well.
+				activator:RemoveCond(7)
+				activator:RemoveCond(32)
+				activator:RemoveCond(41)
+				--Temporary uber after exploding so that you dont instantly die
+				activator:AddCond(52,2)
+				--Reset model
+				activator:SetCustomModel("")
+
+				--Borrowed from collateral damage whatadeal
+				--I'm sure this can be bundled into one function but I cba for now
+				for _, blastVictim in pairs(getAllPlayersInBusterExplosion(activator:GetAbsOrigin(), BUSTER_TRANSFORMER_BLAST_RADIUS)) do
+					BusterTakeDamage = {
+						Attacker = activator, -- Attacker
+						Inflictor = activator:GetPlayerItemBySlot(2), -- Direct cause of damage, usually a projectile
+						Weapon = activator:GetPlayerItemBySlot(2),
+						Damage = 9999,
+						DamageType = DMG_BLAST, -- Damage type, see DMG_* globals. Can be combined with | operator
+						DamageCustom = TF_DMG_CUSTOM_AIR_STICKY_BURST, -- Custom damage type, see TF_DMG_* globals
+						DamagePosition = activator:GetAbsOrigin(), -- Where the target was hit at
+						DamageForce = Vector(0,0,0), -- Knockback force of the attack
+						ReportedPosition = activator:GetAbsOrigin() -- Where the attacker attacked from
+					}
+			
+					if blastVictim.m_bIsMiniBoss == 1 then
+						BusterTakeDamage.Damage = BUSTER_TRANSFORMER_GIANT_DAMAGE
+						blastVictim:TakeDamage(BusterTakeDamage)
+						goto continue
+					end
+					
+					blastVictim:TakeDamage(BusterTakeDamage)
+			
+					::continue::
+				end
+			
+				for _, blastVictim in pairs(getAllSentriesInBusterExplosion(activator:GetAbsOrigin(), BUSTER_TRANSFORMER_BLAST_RADIUS)) do
+					BusterTakeDamage = {
+						Attacker = activator, -- Attacker
+						Inflictor = activator:GetPlayerItemBySlot(2), -- Direct cause of damage, usually a projectile
+						Weapon = activator:GetPlayerItemBySlot(2),
+						Damage = 9999,
+						DamageType = DMG_BLAST, -- Damage type, see DMG_* globals. Can be combined with | operator
+						DamageCustom = TF_DMG_CUSTOM_AIR_STICKY_BURST, -- Custom damage type, see TF_DMG_* globals
+						DamagePosition = activator:GetAbsOrigin(), -- Where the target was hit at
+						DamageForce = Vector(0,0,0), -- Knockback force of the attack
+						ReportedPosition = activator:GetAbsOrigin() -- Where the attacker attacked from
+					}
+					blastVictim:TakeDamage(BusterTakeDamage)
+			
+					::continue::
+				end
+
+				for _, blastVictim in pairs(getAllTanksInBusterExplosion(activator:GetAbsOrigin(), BUSTER_TRANSFORMER_BLAST_RADIUS)) do
+					BusterTakeDamage = {
+						Attacker = activator, -- Attacker
+						Inflictor = activator:GetPlayerItemBySlot(2), -- Direct cause of damage, usually a projectile
+						Weapon = activator:GetPlayerItemBySlot(2),
+						Damage = BUSTER_TRANSFORMER_TANK_DAMAGE,
+						DamageType = DMG_BLAST, -- Damage type, see DMG_* globals. Can be combined with | operator
+						DamageCustom = TF_DMG_CUSTOM_AIR_STICKY_BURST, -- Custom damage type, see TF_DMG_* globals
+						DamagePosition = activator:GetAbsOrigin(), -- Where the target was hit at
+						DamageForce = Vector(0,0,0), -- Knockback force of the attack
+						ReportedPosition = activator:GetAbsOrigin() -- Where the attacker attacked from
+					}
+					blastVictim:TakeDamage(BusterTakeDamage)
+			
+					::continue::
+				end
+
+				activator.m_flChargeMeter = 0
+			end)
+			::noTaunt::
+		end, 0)
+		
+	end)
+end
+
+AddEventCallback('player_hurt', function(event)
+
+	if event.attacker == 0 then
+		return
+	end
+
+	local playerAttacker = ents.GetPlayerByUserId(event.attacker)
+
+	--With the current guard clauses you actually build up charge by damaging yourself
+	--But seeing as it is 1% charge per 50 damage dealt, I decided it doesn't matter
+	if playerAttacker.m_iTeamNum == 3 then
+		return
+	end
+
+	-- print("Attacker was red!")
+
+	local weaponUsed = playerAttacker:GetPlayerItemBySlot(1)
+
+	if not weaponUsed:GetAttributeValue("dmg taken from blast reduced") then
+		return
+	end
+
+	--The weapon's base 0.95 is turned into some dumb number like 0.94999... thanks float! This workaround is needed
+	if weaponUsed:GetAttributeValue("dmg taken from blast reduced") > 0.94 and weaponUsed:GetAttributeValue("dmg taken from blast reduced") < 0.96 then
+		-- print("And BT was equipped!")
+
+		--+0.01 hack job for floats
+		playerAttacker.m_flChargeMeter = playerAttacker.m_flChargeMeter + ((event.damageamount + 0.01) / BUSTER_TRANSFORMER_CHARGE_DIVISOR)
+	end
+end)
+
 
 function PHDEquip(_, activator)
 	-- fix weird quirk with template being spawned after you switch to a different class
@@ -809,7 +1154,7 @@ function PHDEquip(_, activator)
 			end
 		end
 
-		if jumping == 0 then
+		if not jumping then
 			if phdData.JumpStartTime then
 				timeSpentParachuting = 0
 
@@ -865,6 +1210,35 @@ function PHDEquip(_, activator)
 
 		phdData.JumpStartTime = CurTime()
 	end, 0)
+end
+
+function BTUnequip(activator, handle)
+	if not IsValid(activator) then
+		activator = nil
+	end
+
+	ClearCallbacks("bt", activator, handle)
+	ClearData("bt", activator, handle)
+	ClearTimers("bt", activator, handle)
+
+	--Is there no remove attribute?
+	--We need to reset all of these in the event the player dies as a sentry buster
+	activator:SetAttributeValue("max health additive bonus", "0")
+	activator:SetAttributeValue("no_attack", "0")
+	activator:SetAttributeValue("move speed penalty", "1")
+	--activator:SetAttributeValue("no resupply", "0")
+	activator:SetAttributeValue("damage force reduction", "1")
+	activator:SetAttributeValue("always allow taunt", "0")
+	activator:SetAttributeValue("cannot be backstabbed", "0")
+	activator:SetAttributeValue("not solid to players", "0")
+
+	activator:AcceptInput("AddOutput", "modelscale 1")
+	activator:AcceptInput("SetForcedTauntCam", "0")
+	activator:RemoveCond(7)
+	activator:RemoveCond(32)
+	activator:RemoveCond(41)
+	--Reset model
+	activator:SetCustomModel("")
 end
 
 function PHDUnequip(activator, handle)

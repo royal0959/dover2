@@ -208,7 +208,7 @@ function ColDronemanPhase2(status, activator, forced)
 
 	local oneLiner = "{blue}"
 	.. "Colonel Dronemann"
-	.. "{reset}: These babies are in second gear now. Watch your steps"
+	.. "{reset}: These babies are in second gear now. Watch your steps!"
 
 	if status == "prime" then
 		oneLiner = "{blue}"
