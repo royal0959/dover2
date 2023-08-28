@@ -307,7 +307,7 @@ end
 -- Sergeant Sizer
 -- gets bigger and moe powerful the more damage taken (eventually becoming a near-titan)
 -- scaled down to small size when near death
-function SergeantSizer(_, activator)
+function SergeantSizer(status, activator)
 	local maxHealth = activator.m_iHealth
 	local lastHealth = activator.m_iHealth
 
@@ -381,7 +381,9 @@ function SergeantSizer(_, activator)
 			return
 		end
 
-
+		if status == "toprime" then
+			return
+		end
 
 		-- local height = BASE_HEIGHT * (activator.m_flModelScale)
 

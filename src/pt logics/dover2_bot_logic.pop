@@ -2,6 +2,27 @@ WaveSchedule
 {
 	PointTemplates
 	{
+		ForceLeftPath
+		{
+			OnSpawnOutput
+			{
+				Target "bombpath_clearall_relay"
+				Action "Trigger"
+				Delay 1
+			}
+			OnSpawnOutput
+			{
+				Target "bombpath_arrows_clear_relay"
+				Action "Trigger"
+				Delay 1
+			}
+			OnSpawnOutput
+			{
+				Target "bombpath_a"
+				Action "Trigger"
+				Delay 1.1
+			}
+		}
 		ForceRightPath
 		{
 			OnSpawnOutput
@@ -38,11 +59,11 @@ WaveSchedule
 				Action "Enable"
 			}
 
-			OnParentKilledOutput
-			{
-				Target "ambulance_support"
-				Action "Disable"
-			}
+			// OnParentKilledOutput
+			// {
+			// 	Target "ambulance_support"
+			// 	Action "Disable"
+			// }
 
 			prop_dynamic
 			{
@@ -112,11 +133,29 @@ WaveSchedule
 			{
 				Target "popscript"
 				Action "$ColDronemanSpawn"
+				Param "regular"
 			}
 			OnParentKilledOutput
 			{
 				Target "popscript"
 				Action "$ColDronemanDeath"
+				Param "regular"
+			}
+		}
+
+		ColDronemanPrime
+		{
+			OnSpawnOutput
+			{
+				Target "popscript"
+				Action "$ColDronemanSpawn"
+				Param "prime"
+			}
+			OnParentKilledOutput
+			{
+				Target "popscript"
+				Action "$ColDronemanDeath"
+				Param "prime"
 			}
 		}
 
@@ -144,6 +183,7 @@ WaveSchedule
 			{
 				Target "popscript"
 				Action "$MajorMannpower"
+				Param "default"
 			}
 		}
 
