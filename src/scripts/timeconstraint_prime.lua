@@ -783,7 +783,7 @@ local function getHalfPlayers()
 
 			playersCount = playersCount + 1
 
-			if allPlayersCount / playersCount >= 2 then
+			if playersCount >= allPlayersCount / 2 then
 				break
 			end
 		end
