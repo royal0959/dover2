@@ -140,7 +140,7 @@ WaveSchedule
 			Class Demoman
 			ClassIcon demoknight_charge
 			Name "Pirate Knight"
-            Health 235
+            Health 200
 			
             Skill Expert
 
