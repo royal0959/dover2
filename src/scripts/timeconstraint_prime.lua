@@ -599,7 +599,7 @@ local function Handle2(bot)
 	specialLinePlaying = true
 
 	timer.Simple(1, function()
-		chatMessage("That Engineer bot had a couple of his drones rotting on the back.")
+		chatMessage("That Engineer bot had a couple of his drones rotting in the back.")
 	end)
 
 	timer.Simple(5, function()
