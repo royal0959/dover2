@@ -300,7 +300,7 @@ local THRESHOLD = {
 	[4] = 10000,
 }
 
-local SPEED_WHILE_COLLIDING = 0.5
+local SPEED_WHILE_COLLIDING = 0.25
 
 local function lerp(a,b,t)
     return a * (1-t) + b * t
