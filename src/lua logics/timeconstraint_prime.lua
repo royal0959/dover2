@@ -3,8 +3,8 @@
 local TIMECONSTRAINT_WAVE = 7
 local realcontraint
 
-local RED_PVP_SPAWN = Vector(338.208954, -4131.796387, 329.597107)
-local BLU_PVP_SPAWN = Vector(787.529175, -5665.938477, 481.031311)
+local RED_PVP_SPAWN = Vector(1600, -556, 290)
+local BLU_PVP_SPAWN = Vector(452.55, -3203, 500)
 
 local classIndices_Internal = {
 	[1] = "Scout",
@@ -769,7 +769,7 @@ end
 
 local function getHalfPlayers()
 	local allPlayers = ents.GetAllPlayers()
-	local allPlayersCount = #allPlayers
+	local allPlayersCount = 0
 
 	local players = {}
 	local playersSet = {}
@@ -778,12 +778,20 @@ local function getHalfPlayers()
 
 	for _, player in pairs(allPlayers) do
 		if player:IsRealPlayer() and player.m_iTeamNum == 2 then
+			-- print("found someone")
+			allPlayersCount = allPlayersCount + 1
+		end
+	end
+
+	for _, player in pairs(allPlayers) do
+		if player:IsRealPlayer() and player.m_iTeamNum == 2 then
+			-- print("found someone again")
 			table.insert(players, player)
 			playersSet[player:GetHandleIndex()] = true
 
 			playersCount = playersCount + 1
 
-			if allPlayersCount / playersCount >= 2 then
+			if playersCount >= allPlayersCount / 2 then
 				break
 			end
 		end
@@ -812,7 +820,9 @@ local function HandlePvP(bot)
 
 	timer.Simple(6.5, function ()
 		chosenPlayers, chosenPlayersSet = getHalfPlayers()
-
+		-- PrintTable(chosenPlayers)
+		-- PrintTable(chosenPlayersSet)
+		-- print("TEST TEST TEST TEST TEST")
 		local text = "And that means you"
 
 		for _, player in pairs(chosenPlayers) do

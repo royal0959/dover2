@@ -6,7 +6,7 @@
 #base robot_standard.pop
 #base robot_giant.pop
 #base robot_gatebot.pop
-#base ravener_bots.pop
+#base dover2_bots.pop
 
 #base rotating_shield_whitecliff.pop
 
@@ -38,9 +38,9 @@ WaveSchedule
 
 	CustomUpgradesFile mvm_upgrades_tomboy3.txt
 
-	LuaScriptFile "scripts/ravener_bosses.lua"
-	LuaScriptFile "scripts/ravener_helicopter.lua"
-	LuaScriptFile "scripts/ravener_bots.lua"
+	LuaScriptFile "scripts/dover2_bosses.lua"
+	LuaScriptFile "scripts/dover2_helicopter.lua"
+	LuaScriptFile "scripts/dover2_bots.lua"
 	LuaScriptFile "scripts/dover2_boss_resistance.lua"
 	LuaScriptFile "scripts/timeconstraint_prime.lua"
 	LuaScriptFile "scripts/projectile_shield_damage_whitecliff.lua"
