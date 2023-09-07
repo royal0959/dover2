@@ -355,7 +355,11 @@ function SergeantSizer(status, activator)
 
 	local collided = false
 
-	callbacks.shouldCollide = activator:AddCallback(ON_SHOULD_COLLIDE, function ()
+	callbacks.shouldCollide = activator:AddCallback(ON_SHOULD_COLLIDE, function (_, other)
+		if other.m_iTeamNum ~= TEAM_RED then
+			return
+		end
+
 		collided = true
 		activator:SetAttributeValue("SET BONUS: move speed set bonus", SPEED_WHILE_COLLIDING)
 		return false
