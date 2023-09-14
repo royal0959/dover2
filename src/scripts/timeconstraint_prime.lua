@@ -708,34 +708,33 @@ end
 
 local function checkPvPWinCond(dontSayCount)
 	local redPlayersAlive = 0
+	local bluPlayersAlive = 0
 
 	for _, player in pairs(ents.GetAllPlayers()) do
-		if not player:IsRealPlayer() then
-			goto continue
+		if player:IsRealPlayer() and player:IsAlive() then
+			if player.m_iTeamNum == TEAM_RED then
+				redPlayersAlive = redPlayersAlive + 1
+			elseif player.m_iTeamNum == TEAM_BLUE then
+				bluPlayersAlive = bluPlayersAlive + 1
+			end
 		end
-
-		if player.m_iTeamNum ~= 2 then
-			goto continue
-		end
-
-		if not player:IsAlive() then
-			goto continue
-		end
-
-		redPlayersAlive = redPlayersAlive + 1
-
-		::continue::
 	end
 
-	print(redPlayersAlive)
+	print(redPlayersAlive, bluPlayersAlive)
 
-	if not dontSayCount and redPlayersAlive > 0 then
-		local msg = redPlayersAlive > 1 and "%s players left" or "%s player remains!"
-		chatMessage(string.format(msg, tostring(redPlayersAlive)))
+	if dontSayCount then
+		if redPlayersAlive > 0 then
+			local msg = redPlayersAlive > 1 and "%s red players left" or "%s red  player remains!"
+			chatMessage(string.format(msg, tostring(redPlayersAlive)))
+		end
 	end
 
 	if redPlayersAlive <= 0 then
 		PvPBluWin()
+	end
+
+	if bluPlayersAlive <= 0 then
+		PvPRedWin()
 	end
 end
 
@@ -759,10 +758,10 @@ function OnPlayerDisconnected(player)
 		return
 	end
 
-	if player.m_iTeamNum == 3 then
-		PvPRedWin()
-		return
-	end
+	-- if player.m_iTeamNum == 3 then
+	-- 	PvPRedWin()
+	-- 	return
+	-- end
 
 	checkPvPWinCond()
 end
@@ -859,12 +858,12 @@ local function HandlePvP(bot)
 			chosenPlayer.m_bUseBossHealthBar = true
 			-- chosenPlayer.m_bIsMiniBoss = true
 	
-			local chosenPlrCallbacks = {}
-			chosenPlrCallbacks.died = chosenPlayer:AddCallback(ON_DEATH, function ()
-				PvPRedWin()
+			-- local chosenPlrCallbacks = {}
+			-- chosenPlrCallbacks.died = chosenPlayer:AddCallback(ON_DEATH, function ()
+			-- 	PvPRedWin()
 	
-				removeCallbacks(chosenPlayer, chosenPlrCallbacks)
-			end)
+			-- 	removeCallbacks(chosenPlayer, chosenPlrCallbacks)
+			-- end)
 			-- chosenPlrCallbacks.removed = chosenPlayer:AddCallback(ON_REMOVE, function ()
 			-- 	PvPRedWin()
 			-- end)
