@@ -140,6 +140,9 @@ local pvpActive = false
 local gamestateEnded = false
 local specialLinePlaying = false
 
+local chosenPlayers = {}
+local chosenPlayersSet = {}
+
 local function chatMessage(message)
 	local outputMessage = "{blue}" .. "Time-Constraint Prime" .. "{reset} : " .. message
 
@@ -251,6 +254,9 @@ function _TimeConstraintOnWaveInit(wave)
 	timeconstraint_alive = false
 	pvpActive = false
     specialLinePlaying = false
+
+	chosenPlayers = {}
+	chosenPlayersSet = {}
 
 	removeTimers(timers)
 	for player, plrCallbacks in pairs(playersCallback) do
@@ -695,7 +701,7 @@ local function PvPRedWin()
 	if gamestateEnded then
 		return
 	end
-	
+
 	gamestateEnded = true
 	pvpActive = false
 
@@ -712,21 +718,29 @@ local function checkPvPWinCond(dontSayCount)
 
 	for _, player in pairs(ents.GetAllPlayers()) do
 		if player:IsRealPlayer() and player:IsAlive() then
-			if player.m_iTeamNum == TEAM_RED then
-				redPlayersAlive = redPlayersAlive + 1
-			elseif player.m_iTeamNum == TEAM_BLUE then
+			-- if player.m_iTeamNum == TEAM_RED then
+			-- 	redPlayersAlive = redPlayersAlive + 1
+			-- elseif player.m_iTeamNum == TEAM_BLUE then
+			-- 	bluPlayersAlive = bluPlayersAlive + 1
+			-- end
+
+			if chosenPlayersSet[player:GetHandleIndex()] then
 				bluPlayersAlive = bluPlayersAlive + 1
+			else
+				redPlayersAlive = redPlayersAlive + 1
 			end
 		end
 	end
 
 	print(redPlayersAlive, bluPlayersAlive)
 
-	if dontSayCount then
-		if redPlayersAlive > 0 then
-			local msg = redPlayersAlive > 1 and "%s red players left" or "%s red  player remains!"
-			chatMessage(string.format(msg, tostring(redPlayersAlive)))
-		end
+	if pvpActive and not dontSayCount then
+		-- if redPlayersAlive > 0 then
+		-- 	local msg = redPlayersAlive > 1 and "%s red players left" or "%s red  player remains!"
+		-- 	chatMessage(string.format(msg, tostring(redPlayersAlive)))
+		-- end
+		local msg = bluPlayersAlive .. " Blu players left. " .. redPlayersAlive .. " Red players remain."
+		chatMessage(msg)
 	end
 
 	if redPlayersAlive <= 0 then
@@ -814,8 +828,8 @@ local function HandlePvP(bot)
 		chatMessage("You will be pitted against your best players")
 	end)
 
-	local chosenPlayers = {}
-	local chosenPlayersSet = {}
+	chosenPlayers = {}
+	chosenPlayersSet = {}
 
 	timer.Simple(6.5, function ()
 		chosenPlayers, chosenPlayersSet = getHalfPlayers()
@@ -882,36 +896,32 @@ local function HandlePvP(bot)
 		chatMessage("Now give me a show")
 
 		for _, player in pairs(ents.GetAllPlayers()) do
-			if not player:IsRealPlayer() then
-				goto continue
+			if player:IsRealPlayer() then
+				player.m_bGlowEnabled = 1
+				player:ForceRespawnDead()
+				player:SetAttributeValue("min respawn time", 999999)
+	
+				local isChosen = chosenPlayersSet[player:GetHandleIndex()]
+	
+				local text = not isChosen and
+					"ELIMINATE BLU PLAYERS" or
+					"ELIMINATE RED PLAYERS"
+	
+				player:Print(PRINT_TARGET_CENTER, text)
+	
+				-- if isChosen then
+				-- 	goto continue
+				-- end
+	
+				local plrCallbacks = {}
+				plrCallbacks.died = player:AddCallback(ON_DEATH, function ()
+					checkPvPWinCond()
+					removeCallbacks(player, plrCallbacks)
+				end)
+				-- plrCallbacks.removed = player:AddCallback(ON_REMOVE, function ()
+				-- 	checkPvPWinCond()
+				-- end)
 			end
-
-			player.m_bGlowEnabled = 1
-			player:ForceRespawnDead()
-			player:SetAttributeValue("min respawn time", 999999)
-
-			local isChosen = chosenPlayersSet[player:GetHandleIndex()]
-
-			local text = not isChosen and
-				"ELIMINATE BLU PLAYERS" or
-				"ELIMINATE RED PLAYERS"
-
-			player:Print(PRINT_TARGET_CENTER, text)
-
-			if isChosen then
-				goto continue
-			end
-
-			local plrCallbacks = {}
-			plrCallbacks.died = player:AddCallback(ON_DEATH, function ()
-				checkPvPWinCond()
-				removeCallbacks(player, plrCallbacks)
-			end)
-			-- plrCallbacks.removed = player:AddCallback(ON_REMOVE, function ()
-			-- 	checkPvPWinCond()
-			-- end)
-
-			::continue::
 		end
 
 		pvpActive = true
